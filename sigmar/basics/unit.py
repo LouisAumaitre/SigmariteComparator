@@ -5,15 +5,11 @@ from sigmar.basics.rules import Rule
 from sigmar.basics.weapon import Weapon
 
 
-def weapon_choice_name(weapon_list: List[Union[Weapon, Rule]]):
-    return str([item.name for item in weapon_list])[1:-1]
-
-
 class Unit:
     def __init__(
             self,
             name: str,
-            weapon_options: Union[List[Union[Weapon, Rule]], List[List[Union[Weapon, Rule]]]],
+            weapons: Union[List[Union[Weapon, Rule]]],
             move: Union[int, str, RandomValue],
             save: int,
             bravery: int,
@@ -22,7 +18,7 @@ class Unit:
             keywords: List[str],
     ):
         self.name = name
-        self.weapon_options = weapon_options
+        self.weapons = weapons
         self.move = rv(move)
         self.save = save
         self.bravery = bravery
@@ -35,18 +31,7 @@ class Unit:
             r.apply(self)
 
     def average_damage(self, armour=4):
-        if isinstance(self.weapon_options[0], Weapon):
-            return {
-                weapon_choice_name(self.weapon_options): sum([
-                    w.average_damage(armour) for w in self.weapon_options if isinstance(w, Weapon)
-                ])
-            }
-        else:
-            return {
-                weapon_choice_name(weapon_list): sum(
-                    [w.average_damage(armour) for w in weapon_list if isinstance(w, Weapon)]
-                ) for weapon_list in self.weapon_options
-            }
+        return sum([w.average_damage(armour) for w in self.weapons if isinstance(w, Weapon)])
 
 
 class WeaponRule(Rule):
@@ -54,7 +39,7 @@ class WeaponRule(Rule):
         if isinstance(item, Weapon):
             self.effect(item)
         elif isinstance(item, Unit):
-            self.apply(item.weapon_options)
+            self.apply(item.weapons)
         elif isinstance(item, list):
             for i in item:
                 self.apply(i)

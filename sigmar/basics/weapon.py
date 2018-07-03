@@ -44,7 +44,7 @@ class Weapon:
         save = (7 - (armour + self.rend)) / 6
         return 1 - save
 
-    def average_damage(self, armour=4, wounds=1, keywords=[]):
+    def average_damage(self, armour=4):
         attacks = self.attacks.average()
         hits = attacks * self.chances_to_hit()
         wounds = hits * self.chances_to_wound()

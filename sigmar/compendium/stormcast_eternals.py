@@ -1,6 +1,7 @@
 from sigmar.basics.rules import Rule
-from sigmar.basics.unit import Unit, WeaponRule
+from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save
+from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds
 from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL
@@ -10,16 +11,12 @@ REDEEMER = 'REDEEMER'
 
 sigmarite_shields = Rule('Sigmarite shields', reroll_1_save)
 
-liberators = Unit(
+liberators = Warscroll(
     'Liberators', [
         [Weapon('Warhammer', 1, 2, 4, 3, 0, 1, []), sigmarite_shields],
         [Weapon('Warblade', 1, 2, 3, 4, 0, 1, []), sigmarite_shields],
         [Weapon('Warhammer', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
         [Weapon('Warblade', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
-        [Weapon('Grandhammer', 1, 2, 4, 3, 1, 2, []), sigmarite_shields],
-        [Weapon('Grandblade', 1, 2, 4, 3, 1, 2, []), sigmarite_shields],
-        [Weapon('Grandhammer', 1, 2, 4, 3, 1, 2, [])],
-        [Weapon('Grandblade', 1, 2, 4, 3, 1, 2, [])],
     ], 5, 4, 6, 2, [
         WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
     ], [ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER, 'LIBERATORS'])
