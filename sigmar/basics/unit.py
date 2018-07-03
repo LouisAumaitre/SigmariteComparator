@@ -9,7 +9,7 @@ class Unit:
     def __init__(
             self,
             name: str,
-            weapon_options: Union[List[Weapon], List[List[Weapon]]],
+            weapon_options: Union[List[Weapon, Rule], List[List[Weapon, Rule]]],
             move: Union[int, str, RandomValue],
             save: int,
             bravery: int,
@@ -30,6 +30,8 @@ class Unit:
 
     def average_damage(self, armour=4):
         if isinstance(self.weapon_options[0], Weapon):
-            return [sum([w.average_damage(armour) for w in self.weapon_options])]
+            return [sum([w.average_damage(armour) for w in self.weapon_options if isinstance(w, Weapon)])]
         else:
-            return [sum([w.average_damage(armour) for w in weapon_list]) for weapon_list in self.weapon_options]
+            return [sum(
+                [w.average_damage(armour) for w in weapon_list if isinstance(w, Weapon)]
+            ) for weapon_list in self.weapon_options]
