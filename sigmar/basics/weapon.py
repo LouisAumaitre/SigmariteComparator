@@ -8,6 +8,7 @@ class Weapon:
     def __init__(
             self,
             name: str,
+            range: int,
             attacks: Union[int, str, RandomValue],
             tohit,
             towound,
@@ -16,6 +17,7 @@ class Weapon:
             rules: List[Rule],
     ):
         self.name = name
+        self.range = range
         self.attacks = rv(attacks)
         self.tohit = tohit
         self.towound = towound
@@ -42,7 +44,7 @@ class Weapon:
         save = (7 - (armour + self.rend)) / 6
         return 1 - save
 
-    def average_damage(self, armour=4):
+    def average_damage(self, armour=4, wounds=1, keywords=[]):
         attacks = self.attacks.average()
         hits = attacks * self.chances_to_hit()
         wounds = hits * self.chances_to_wound()
