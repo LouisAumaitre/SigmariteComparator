@@ -1,9 +1,13 @@
 from sigmar.compendium.stormcast_eternals import liberators
 
-units = [
+warscrolls = [
     liberators
 ]
 
-for u in units:
-    for w_c_n, w_c_d in u.average_damage().items():
-        print(f'{u.name} with {w_c_n}: {round(w_c_d, 2)} dpt')
+for ws in warscrolls:
+    for w_c_n, w_c_s in ws.stats().items():
+        damage, health = w_c_s
+        print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
+
+for ws in warscrolls:
+    ws.simplest_stats()

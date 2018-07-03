@@ -9,7 +9,7 @@ class Unit:
     def __init__(
             self,
             name: str,
-            weapons: Union[List[Union[Weapon, Rule]]],
+            weapons: Union[List[Weapon]],
             move: Union[int, str, RandomValue],
             save: int,
             bravery: int,
@@ -32,6 +32,15 @@ class Unit:
 
     def average_damage(self, armour=4):
         return sum([w.average_damage(armour) for w in self.weapons if isinstance(w, Weapon)])
+
+    def chances_to_save(self, rend):
+        chances = (7 - (self.save + rend)) / 6
+        chances *= 1 + min(self.reroll_save, (self.save + rend) - 1) / 6
+        return chances
+
+    def average_health(self, rend=0):
+        save = self.chances_to_save(rend)
+        return self.wounds / (1 - save)
 
 
 class WeaponRule(Rule):
