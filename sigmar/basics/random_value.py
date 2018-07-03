@@ -24,5 +24,7 @@ class RandomValue:
             return 0
 
 
-def rv(defined_value: Union[str, int]):
+def rv(defined_value: Union[str, int, RandomValue]):
+    if isinstance(defined_value, RandomValue):
+        return defined_value
     return RandomValue(defined_value)

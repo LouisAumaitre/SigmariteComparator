@@ -1,17 +1,26 @@
-from typing import List
+from typing import List, Union
 
-from sigmar.basics.random_value import RandomValue
+from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.rules import Rule
 
 
 class Weapon:
-    def __init__(self, name: str, attacks: RandomValue, tohit, towound, rend, wounds: RandomValue, rules: List[Rule]):
+    def __init__(
+            self,
+            name: str,
+            attacks: Union[int, str, RandomValue],
+            tohit,
+            towound,
+            rend,
+            wounds: Union[int, str, RandomValue],
+            rules: List[Rule],
+    ):
         self.name = name
-        self.attacks = attacks
+        self.attacks = rv(attacks)
         self.tohit = tohit
         self.towound = towound
         self.rend = rend
-        self.wounds = wounds
+        self.wounds = rv(wounds)
         self.rules = rules
         self.reroll_tohit, self.reroll_towound = 0, 0
 
