@@ -14,6 +14,8 @@ class Weapon:
         self.wounds = wounds
         self.rules = rules
         self.reroll_tohit, self.reroll_towound = 0, 0
+
+        self.rules = rules
         for r in rules:
             r.apply(self)
 
