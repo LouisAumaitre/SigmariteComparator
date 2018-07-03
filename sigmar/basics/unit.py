@@ -30,8 +30,8 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def average_damage(self, armour=4, range=1):
-        return sum([w.average_damage(armour, range) for w in self.weapons if isinstance(w, Weapon)])
+    def average_damage(self, armour=4, _range=1):
+        return sum([w.average_damage(armour, _range) for w in self.weapons if isinstance(w, Weapon)])
 
     def chances_to_save(self, rend):
         chances = (7 - (self.save + rend)) / 6
