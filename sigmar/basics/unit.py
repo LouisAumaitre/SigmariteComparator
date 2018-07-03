@@ -14,6 +14,8 @@ class Unit:
             save: int,
             bravery: int,
             wounds: int,
+            min_size: int,
+            base_size: int,  # mm
             rules: List[Rule],
             keywords: List[str],
     ):
@@ -23,6 +25,9 @@ class Unit:
         self.save = save
         self.bravery = bravery
         self.wounds = wounds
+        self.min_size = min_size
+        self.size = min_size
+        self.base_size = base_size
         self.keywords = keywords
         self.reroll_save = 0
 
@@ -30,17 +35,31 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def average_damage(self, armour=4, _range=1):
-        return sum([w.average_damage(armour, _range) for w in self.weapons if isinstance(w, Weapon)])
+    def average_damage(self, armour=4, _range=0, front_size=1000, nb=None):
+        if nb is None:
+            nb = self.size
+        rows = []
+        while nb > 0:
+            row = max(min(front_size // self.base_size, nb), 1)
+            rows.append(row)
+            nb -= row
+
+        total = 0
+        for row in rows:
+            total += sum([w.average_damage(armour, _range) for w in self.weapons if isinstance(w, Weapon)]) * row
+            _range += self.base_size / 25.6
+        return total
 
     def chances_to_save(self, rend):
         chances = (7 - (self.save + rend)) / 6
         chances *= 1 + min(self.reroll_save, (self.save + rend) - 1) / 6
         return chances
 
-    def average_health(self, rend=0):
+    def average_health(self, rend=0, nb=None):
+        if nb is None:
+            nb = self.size
         save = self.chances_to_save(rend)
-        return self.wounds / (1 - save)
+        return nb * self.wounds / (1 - save)
 
 
 class WeaponRule(Rule):
