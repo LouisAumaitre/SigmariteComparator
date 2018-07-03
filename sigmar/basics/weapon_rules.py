@@ -7,3 +7,7 @@ def reroll_1_tohit(w: Weapon):
 
 def reroll_all_tohit(w: Weapon):
     w.reroll_tohit = 5
+
+
+def plus_1_tohit_5_wounds(w: Weapon):
+    pass

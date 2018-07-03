@@ -19,6 +19,7 @@ class Unit:
             bravery: int,
             wounds: int,
             rules: List[Rule],
+            keywords: List[str],
     ):
         self.name = name
         self.weapon_options = weapon_options
@@ -26,6 +27,7 @@ class Unit:
         self.save = save
         self.bravery = bravery
         self.wounds = wounds
+        self.keywords = keywords
         self.reroll_save = 0
 
         self.rules = rules
@@ -45,3 +47,14 @@ class Unit:
                     [w.average_damage(armour) for w in weapon_list if isinstance(w, Weapon)]
                 ) for weapon_list in self.weapon_options
             }
+
+
+class WeaponRule(Rule):
+    def apply(self, item):
+        if isinstance(item, Weapon):
+            self.effect(item)
+        elif isinstance(item, Unit):
+            self.apply(item.weapon_options)
+        elif isinstance(item, list):
+            for i in item:
+                self.apply(i)
