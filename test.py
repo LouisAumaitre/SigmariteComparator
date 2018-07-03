@@ -1,7 +1,9 @@
+from sigmar.compendium.seraphon import saurus_warriors
 from sigmar.compendium.stormcast_eternals import liberators
 
 warscrolls = [
-    liberators
+    liberators,
+    saurus_warriors,
 ]
 
 for ws in warscrolls:
@@ -10,4 +12,4 @@ for ws in warscrolls:
         print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
 
 for ws in warscrolls:
-    ws.simplest_stats()
+    ws.simplest_stats(range=2)

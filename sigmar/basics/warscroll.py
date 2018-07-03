@@ -32,8 +32,8 @@ class Warscroll:
         }
         self.name = name
 
-    def average_damage(self, armour=4):
-        return {key: unit.average_damage(armour) for key, unit in self.units.items()}
+    def average_damage(self, armour=4, range=1):
+        return {key: unit.average_damage(armour, range) for key, unit in self.units.items()}
 
     def average_health(self, rend=0):
         return {key: unit.average_health(rend) for key, unit in self.units.items()}
@@ -41,6 +41,7 @@ class Warscroll:
     def stats(self, armour=4, rend=0):
         return {key: (unit.average_damage(armour), unit.average_health(rend)) for key, unit in self.units.items()}
 
-    def simplest_stats(self, armour=4, rend=0):
+    def simplest_stats(self, armour=4, rend=0, range=1):
         for k, v in self.units.items():
-            print(f'{v.name} with {k}: {int(round(v.average_damage(armour) * 10))}/{int(round(v.average_health(rend)))}')
+            print(f'{v.name} with {k}: {int(round(v.average_damage(armour) * 20))}'
+                  f'/{int(round(v.average_health(rend) * 2))}')
