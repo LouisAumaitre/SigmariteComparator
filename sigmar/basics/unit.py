@@ -1,6 +1,7 @@
 from typing import Union, List
 
 from sigmar.basics.random_value import RandomValue, rv
+from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.weapon import Weapon
 
@@ -22,14 +23,13 @@ class Unit:
         self.name = name
         self.weapons = weapons
         self.move = rv(move)
-        self.save = save
+        self.save = Roll(save)
         self.bravery = bravery
         self.wounds = wounds
         self.min_size = min_size
         self.size = min_size
         self.base_size = base_size
         self.keywords = keywords
-        self.reroll_save = 0
 
         self.rules = rules
         for r in self.rules:
@@ -50,15 +50,10 @@ class Unit:
             _range += self.base_size / 25.6
         return total
 
-    def chances_to_save(self, rend):
-        chances = (7 - (self.save + rend)) / 6
-        chances *= 1 + min(self.reroll_save, (self.save + rend) - 1) / 6
-        return chances
-
     def average_health(self, rend=0, nb=None):
         if nb is None:
             nb = self.size
-        save = self.chances_to_save(rend)
+        save, _ = self.save.chances(mod=rend)
         return nb * self.wounds / (1 - save)
 
 

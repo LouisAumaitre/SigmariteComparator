@@ -7,7 +7,7 @@ from sigmar.basics.weapon import Weapon
 
 
 def weapon_choice_name(weapon_list: List[Union[Weapon, Rule]]) -> str:
-    return str([item.name for item in weapon_list])[1:-1]
+    return str([item.name for item in weapon_list])[1:-1].replace('\'', '')
 
 
 class Warscroll:
