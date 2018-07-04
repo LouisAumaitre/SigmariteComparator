@@ -21,5 +21,6 @@ def plus_1_tohit_5_wounds(w: Weapon):
 def add_mw_on_6_towound_in_charge(w: Weapon):
     def buff(data):
         if data.get(CHARGING, False):
+            print('CHARGE!')
             data[MW_ON_WOUND_CRIT] = 1
     w.attack_rules.append(buff)
