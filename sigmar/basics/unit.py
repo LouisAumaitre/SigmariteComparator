@@ -60,7 +60,9 @@ class Unit:
             else:
                 break
             _range += self.base.depth / 25.6
-        return f'{rows[0]}x{len(rows)} ({attacking} attacking)'
+        if len(rows) > 1:
+            return f'({rows[0]}x{len(rows)}, {attacking} attacking)'
+        return f'({attacking} attacking)'
 
     def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
         total = 0

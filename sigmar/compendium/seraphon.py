@@ -1,6 +1,6 @@
-from sigmar.basics.base import cavalry, infantry
+from sigmar.basics.base import cavalry, infantry, large_infantry
 from sigmar.basics.rules import Rule
-from sigmar.basics.string_constants import SELF_NUMBERS
+from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import ignore_1_rend
 from sigmar.basics.warscroll import Warscroll
@@ -80,5 +80,24 @@ skinks = Warscroll(
         [Weapon('Moonstone club', 1, 1, 5, 4, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
     ], 8, 6, 10, 1, 10, infantry, [
-        Rule('Celestial cohort', celestial_cohort)
+        Rule('Celestial cohort', celestial_cohort),
+        Rule('Wary Fighters', lambda x: None),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, 'SKINKS'])
+
+
+def steel_trap_jaws(w: Weapon):
+    def buff(data):
+        data[MW_ON_WOUND_CRIT] = 35/36
+        data[EXTRA_WOUND_ON_CRIT] = -15/36
+    w.attack_rules.append(buff)
+
+
+kroxigors = Warscroll(
+    'Kroxigors', [
+        [Weapon('Drakebite Maul', 2, 4, 4, 3, 0, 2, []),
+         Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
+        [Weapon('Moon-hammer', 2, 'range', 4, 3, 1, 2, []),
+         Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
+    ], 8, 4, 10, 4, 3, large_infantry, [
+        Rule('Energy transcendence', lambda x: None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, 'KROXIGORS'])

@@ -1,13 +1,13 @@
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import CHARGING
-from sigmar.compendium.seraphon import saurus_warriors, saurus_knights, skinks
+from sigmar.compendium.seraphon import saurus_warriors, saurus_knights, skinks, kroxigors
 from sigmar.compendium.stormcast_eternals import liberators
 
 warscrolls = [
     liberators,
     saurus_warriors,
     saurus_knights,
-    skinks,
+    kroxigors,
 ]
 
 test_armour = Roll(5)
