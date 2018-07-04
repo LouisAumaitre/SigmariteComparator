@@ -3,14 +3,20 @@ from typing import List, Union, Tuple, Callable
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
-from sigmar.basics.string_constants import TOWOUND_MOD_ON_CRIT_HIT, BONUS_REND, CRIT_BONUS_REND
+from sigmar.basics.string_constants import (
+    TOWOUND_MOD_ON_CRIT_HIT,
+    BONUS_REND,
+    CRIT_BONUS_REND,
+    MW_ON_HIT_CRIT,
+    MW_ON_WOUND_CRIT,
+)
 
 
 class Weapon:
     def __init__(
             self,
             name: str,
-            range: int,
+            range_: int,
             attacks: Union[int, str, RandomValue],
             tohit,
             towound,
@@ -19,7 +25,7 @@ class Weapon:
             rules: List[Rule],
     ):
         self.name = name
-        self.range = range
+        self.range = range_
         self.attacks = rv(attacks)
         self.tohit = Roll(tohit)
         self.towound = Roll(towound)
@@ -60,6 +66,8 @@ class Weapon:
         unsaved = wounds * self.unsaved_chances(armour, extra_rend=data.get(BONUS_REND, 0))
         unsaved += critic_wounds * self.unsaved_chances(
             armour, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
+
+        mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
         damage = unsaved * self.wounds.average(data) + mortal_wounds
 
         return damage

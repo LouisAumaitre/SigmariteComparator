@@ -45,10 +45,10 @@ saurus_knights = Warscroll(
     'Saurus knights', [
         [Weapon('Celestite Blade', 1, 1, 3, 3, 0, 1, []),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
-         Weapon('Cold One\'s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
+         Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
         [Weapon('Celestite Lance', 2, 1, 4, 3, 0, 1, [Rule('Blazing Lances', add_mw_on_6_towound_in_charge)]),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
-         Weapon('Cold One\'s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
+         Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
     ], 7, 5, 10, 2, 5, cavalry, [
         Rule('Stardrake Shield', ignore_1_rend),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS KNIGHT'])

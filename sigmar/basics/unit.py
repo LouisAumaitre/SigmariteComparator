@@ -1,5 +1,7 @@
 from typing import Union, List
 
+from copy import copy
+
 from sigmar.basics.base import Base
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
@@ -49,7 +51,9 @@ class Unit:
 
         total = 0
         for row in rows:
-            total += sum([w.average_damage(armour, data, _range) for w in self.weapons if isinstance(w, Weapon)]) * row
+            total += row * sum(
+                [w.average_damage(armour, copy(data), _range) for w in self.weapons if isinstance(w, Weapon)]
+            )
             _range += self.base.depth / 25.6
         return total
 

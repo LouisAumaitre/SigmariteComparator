@@ -9,7 +9,7 @@ warscrolls = [
     saurus_knights,
 ]
 
-test_armour = Roll(4)
+test_armour = Roll(5)
 
 for ws in warscrolls:
     for w_c_n, w_c_s in ws.stats(test_armour, {}, nb=1).items():
@@ -17,4 +17,4 @@ for ws in warscrolls:
         print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
 
 for ws in warscrolls:
-    ws.simplest_stats(test_armour, {CHARGING: True}, _range=1, front_size=180)
+    ws.simplest_stats(test_armour, {CHARGING: False}, _range=1, front_size=180)
