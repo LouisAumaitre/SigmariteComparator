@@ -1,6 +1,7 @@
-from typing import List, Union
+from typing import List, Union, Tuple
 
 from sigmar.basics.random_value import RandomValue, rv
+from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 
 
@@ -19,37 +20,33 @@ class Weapon:
         self.name = name
         self.range = range
         self.attacks = rv(attacks)
-        self.tohit = tohit
-        self.towound = towound
+        self.tohit = Roll(tohit)
+        self.towound = Roll(towound)
         self.rend = rend
         self.wounds = rv(wounds)
         self.rules = rules
-        self.reroll_tohit, self.reroll_towound = 0, 0
 
         self.rules = rules
         for r in rules:
             r.apply(self)
 
-    def chances_to_hit(self):
-        chances = (7 - self.tohit) / 6
-        chances *= 1 + min(self.reroll_tohit, self.tohit - 1) / 6
-        return chances
+    def average_hits(self, dices) -> Tuple[float, float]:
+        return self.tohit.average(dices)
 
-    def chances_to_wound(self):
-        chances = (7 - self.towound) / 6
-        chances *= 1 + min(self.reroll_towound, self.towound - 1) / 6
-        return chances
+    def average_wounds(self, dices) -> Tuple[float, float]:
+        return self.towound.average(dices)
 
-    def chances_to_pierce_armour(self, armour):
-        save = (7 - (armour + self.rend)) / 6
-        return 1 - save
+    def unsaved_chances(self, armour: Roll) -> float:
+        chances, _ = armour.chances(mod=self.rend)
+        return 1 - chances
 
-    def average_damage(self, armour=4, _range=1):
+    def average_damage(self, armour: int, _range=1):
+        armour_roll = Roll(armour)
         if _range > self.range:
             return 0
         attacks = self.attacks.average()
-        hits = attacks * self.chances_to_hit()
-        wounds = hits * self.chances_to_wound()
-        unsaved = wounds * self.chances_to_pierce_armour(armour)
+        hits, critic_hits = self.average_hits(attacks)
+        wounds, critic_wounds = self.average_wounds(hits)
+        unsaved = wounds * self.unsaved_chances(armour_roll)
         damage = unsaved * self.wounds.average()
         return damage
