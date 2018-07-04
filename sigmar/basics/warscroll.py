@@ -45,7 +45,8 @@ class Warscroll:
             unit.average_damage(armour, _range, front_size, nb), unit.average_health(rend)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, armour=4, rend=0, _range=1, front_size=1000, nb=None):
+    def simplest_stats(self, armour=5, rend=0, _range=1, front_size=1000, nb=None):
         for k, v in self.units.items():
-            print(f'{v.name} with {k}: {int(round(v.average_damage(armour, _range, front_size, nb) * 20))}'
-                  f'/{int(round(v.average_health(rend, nb) * 2))}')
+            print(f'{min(v.size, nb if nb is not None else 1000)} {v.name} with {k}: '
+                  f'{int(round(v.average_damage(armour, _range, front_size, nb) * 10))}'
+                  f'/{int(round(v.average_health(rend, nb)))}')
