@@ -1,4 +1,4 @@
-from sigmar.basics.string_constants import WOUNDS, CHARGING, MW_ON_WOUND_CRIT
+from sigmar.basics.string_constants import ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT
 from sigmar.basics.weapon import Weapon
 
 
@@ -12,7 +12,7 @@ def reroll_all_tohit(w: Weapon):
 
 def plus_1_tohit_5_wounds(w: Weapon):
     def buff(data):
-        if data.get(WOUNDS, 0) >= 5:
+        if data.get(ENEMY_WOUNDS, 0) >= 5:
             return 1, 0
         return 0, 0
     w.tohit.extra_bonuses.append(buff)

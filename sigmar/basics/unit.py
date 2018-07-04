@@ -6,7 +6,7 @@ from sigmar.basics.base import Base
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
-from sigmar.basics.string_constants import SELF_NUMBERS
+from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH
 from sigmar.basics.weapon import Weapon
 
 
@@ -55,22 +55,24 @@ class Unit:
         rows = self.formation(data, front_size, nb)
         attacking = 0
         for row in rows:
-            if sum([w.average_damage(Roll(4), copy(data), _range) for w in self.weapons if isinstance(w, Weapon)]):
+            if sum([1 if w.range > _range else 0 for w in self.weapons if isinstance(w, Weapon)]):
                 attacking += row
             else:
                 break
-            _range += self.base.depth / 25.6
+            _range += self.base.depth / INCH
         if len(rows) > 1:
             return f'({rows[0]}x{len(rows)}, {attacking} attacking)'
         return f'({attacking} attacking)'
 
     def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
         total = 0
-        for row in self.formation(data, front_size, nb):
+        unit_data = copy(data)
+        unit_data[SELF_BASE] = self.base
+        for row in self.formation(unit_data, front_size, nb):
             total += row * sum(
-                [w.average_damage(armour, copy(data), _range) for w in self.weapons if isinstance(w, Weapon)]
+                [w.average_damage(armour, copy(unit_data), _range) for w in self.weapons if isinstance(w, Weapon)]
             )
-            _range += self.base.depth / 25.6
+            _range += self.base.depth / INCH
         return total
 
     def average_health(self, rend=0, nb=None):

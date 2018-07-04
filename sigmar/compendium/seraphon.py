@@ -96,7 +96,7 @@ kroxigors = Warscroll(
     'Kroxigors', [
         [Weapon('Drakebite Maul', 2, 4, 4, 3, 0, 2, []),
          Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
-        [Weapon('Moon-hammer', 2, 'range', 4, 3, 1, 2, []),
+        [Weapon('Moon-hammer', 2, 'all_in_range', 4, 3, 1, 2, []),
          Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
     ], 8, 4, 10, 4, 3, large_infantry, [
         Rule('Energy transcendence', lambda x: None),

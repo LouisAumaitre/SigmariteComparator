@@ -1,5 +1,6 @@
+from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import CHARGING
+from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS
 from sigmar.compendium.seraphon import saurus_warriors, saurus_knights, skinks, kroxigors
 from sigmar.compendium.stormcast_eternals import liberators
 
@@ -18,4 +19,8 @@ test_armour = Roll(5)
 #         print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
 
 for ws in warscrolls:
-    ws.simplest_stats(test_armour, {CHARGING: False}, _range=0.1, front_size=145, rend=-1)
+    ws.simplest_stats(test_armour, {
+        CHARGING: False,
+        ENEMY_BASE: infantry,
+        ENEMY_NUMBERS: 10,
+    }, _range=0.1, front_size=145, rend=-1)
