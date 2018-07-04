@@ -44,9 +44,9 @@ class Weapon:
         if _range > self.range:
             return 0
 
-        attacks = self.attacks.average()
+        attacks = self.attacks.average(data)
         hits, critic_hits = self.average_hits(attacks, data)
         wounds, critic_wounds = self.average_wounds(hits, data)
         unsaved = wounds * self.unsaved_chances(armour)
-        damage = unsaved * self.wounds.average()
+        damage = unsaved * self.wounds.average(data)
         return damage

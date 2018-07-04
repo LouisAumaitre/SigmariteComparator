@@ -3,6 +3,7 @@ from typing import Union, List
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
+from sigmar.basics.string_constants import SELF_NUMBERS
 from sigmar.basics.weapon import Weapon
 
 
@@ -38,6 +39,7 @@ class Unit:
     def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
         if nb is None:
             nb = self.size
+        data[SELF_NUMBERS] = nb
         rows = []
         while nb > 0:
             row = max(min(front_size // self.base_size, nb), 1)
