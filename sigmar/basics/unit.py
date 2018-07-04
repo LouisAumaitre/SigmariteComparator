@@ -35,7 +35,7 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def average_damage(self, armour: Roll, _range=0, front_size=1000, nb=None):
+    def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
         if nb is None:
             nb = self.size
         rows = []
@@ -46,14 +46,14 @@ class Unit:
 
         total = 0
         for row in rows:
-            total += sum([w.average_damage(armour, _range) for w in self.weapons if isinstance(w, Weapon)]) * row
+            total += sum([w.average_damage(armour, data, _range) for w in self.weapons if isinstance(w, Weapon)]) * row
             _range += self.base_size / 25.6
         return total
 
     def average_health(self, rend=0, nb=None):
         if nb is None:
             nb = self.size
-        save, _ = self.save.chances(mod=rend)
+        save, _ = self.save.chances({}, mod=rend)
         return nb * self.wounds / (1 - save)
 
 
