@@ -40,13 +40,12 @@ class Weapon:
         chances, _ = armour.chances(mod=self.rend)
         return 1 - chances
 
-    def average_damage(self, armour: int, _range=1):
-        armour_roll = Roll(armour)
+    def average_damage(self, armour: Roll, _range=1):
         if _range > self.range:
             return 0
         attacks = self.attacks.average()
         hits, critic_hits = self.average_hits(attacks)
         wounds, critic_wounds = self.average_wounds(hits)
-        unsaved = wounds * self.unsaved_chances(armour_roll)
+        unsaved = wounds * self.unsaved_chances(armour)
         damage = unsaved * self.wounds.average()
         return damage

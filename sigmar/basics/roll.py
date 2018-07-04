@@ -2,7 +2,7 @@ from typing import Tuple
 
 
 class Roll:
-    def __init__(self, base_value):
+    def __init__(self, base_value: int):
         self.base_value = base_value
         self.rerolls = 0
 

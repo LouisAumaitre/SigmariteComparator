@@ -1,6 +1,7 @@
 from typing import Union, List
 
 from sigmar.basics.random_value import RandomValue
+from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.unit import Unit
 from sigmar.basics.weapon import Weapon
@@ -34,18 +35,18 @@ class Warscroll:
         }
         self.name = name
 
-    def average_damage(self, armour=4, _range=1, front_size=1000, nb=None):
+    def average_damage(self, armour: Roll, _range=1, front_size=1000, nb=None):
         return {key: unit.average_damage(armour, _range, front_size, nb) for key, unit in self.units.items()}
 
     def average_health(self, rend=0):
         return {key: unit.average_health(rend) for key, unit in self.units.items()}
 
-    def stats(self, armour=4, rend=0, _range=1, front_size=1000, nb=None):
+    def stats(self, armour: Roll, rend=0, _range=1, front_size=1000, nb=None):
         return {key: (
             unit.average_damage(armour, _range, front_size, nb), unit.average_health(rend)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, armour=5, rend=0, _range=1, front_size=1000, nb=None):
+    def simplest_stats(self, armour: Roll, rend=0, _range=1, front_size=1000, nb=None):
         for k, v in self.units.items():
             print(f'{min(v.size, nb if nb is not None else 1000)} {v.name} with {k}: '
                   f'{int(round(v.average_damage(armour, _range, front_size, nb) * 10))}'

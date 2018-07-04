@@ -35,7 +35,7 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def average_damage(self, armour=4, _range=0, front_size=1000, nb=None):
+    def average_damage(self, armour: Roll, _range=0, front_size=1000, nb=None):
         if nb is None:
             nb = self.size
         rows = []
