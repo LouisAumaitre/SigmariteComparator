@@ -1,5 +1,6 @@
 from typing import Union, List
 
+from sigmar.basics.base import Base
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -17,7 +18,7 @@ class Unit:
             bravery: int,
             wounds: int,
             min_size: int,
-            base_size: int,  # mm
+            base: Base,
             rules: List[Rule],
             keywords: List[str],
     ):
@@ -29,7 +30,7 @@ class Unit:
         self.wounds = wounds
         self.min_size = min_size
         self.size = min_size
-        self.base_size = base_size
+        self.base = base
         self.keywords = keywords
 
         self.rules = rules
@@ -42,14 +43,14 @@ class Unit:
         data[SELF_NUMBERS] = nb
         rows = []
         while nb > 0:
-            row = max(min(front_size // self.base_size, nb), 1)
+            row = max(min(front_size // self.base.width, nb), 1)
             rows.append(row)
             nb -= row
 
         total = 0
         for row in rows:
             total += sum([w.average_damage(armour, data, _range) for w in self.weapons if isinstance(w, Weapon)]) * row
-            _range += self.base_size / 25.6
+            _range += self.base.depth / 25.6
         return total
 
     def average_health(self, rend=0, nb=None):

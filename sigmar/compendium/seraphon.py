@@ -1,3 +1,4 @@
+from sigmar.basics.base import cavalry, infantry
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import SELF_NUMBERS
 from sigmar.basics.unit import Unit
@@ -34,7 +35,7 @@ saurus_warriors = Warscroll(
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite Spear', 2, 1, 4, 4, 0, 1, []),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
-    ], 5, 5, 10, 1, 10, 25, [
+    ], 5, 5, 10, 1, 10, infantry, [
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS WARRIORS'])
@@ -48,6 +49,6 @@ saurus_knights = Warscroll(
         [Weapon('Celestite Lance', 2, 1, 4, 3, 0, 1, [Rule('Blazing Lances', add_mw_on_6_towound_in_charge)]),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
          Weapon('Cold One\'s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
-    ], 7, 5, 10, 2, 5, 25, [
+    ], 7, 5, 10, 2, 5, cavalry, [
         Rule('Stardrake Shield', ignore_1_rend),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS KNIGHT'])
