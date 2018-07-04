@@ -30,22 +30,23 @@ class Weapon:
         for r in rules:
             r.apply(self)
 
-    def average_hits(self, dices) -> Tuple[float, float]:
-        return self.tohit.average(dices)
+    def average_hits(self, dices, extra_data: dict) -> Tuple[float, float]:
+        return self.tohit.average(dices, extra_data)
 
-    def average_wounds(self, dices) -> Tuple[float, float]:
-        return self.towound.average(dices)
+    def average_wounds(self, dices, extra_data: dict) -> Tuple[float, float]:
+        return self.towound.average(dices, extra_data)
 
     def unsaved_chances(self, armour: Roll) -> float:
-        chances, _ = armour.chances(mod=self.rend)
+        chances, _ = armour.chances({}, mod=self.rend)
         return 1 - chances
 
-    def average_damage(self, armour: Roll, _range=1):
+    def average_damage(self, armour: Roll, data: dict, _range=1):
         if _range > self.range:
             return 0
+
         attacks = self.attacks.average()
-        hits, critic_hits = self.average_hits(attacks)
-        wounds, critic_wounds = self.average_wounds(hits)
+        hits, critic_hits = self.average_hits(attacks, data)
+        wounds, critic_wounds = self.average_wounds(hits, data)
         unsaved = wounds * self.unsaved_chances(armour)
         damage = unsaved * self.wounds.average()
         return damage
