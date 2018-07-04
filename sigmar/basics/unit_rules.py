@@ -6,4 +6,4 @@ def reroll_1_save(u: Unit):
 
 
 def ignore_1_rend(u: Unit):
-    pass
+    u.ignores_1_rend = True

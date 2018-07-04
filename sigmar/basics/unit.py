@@ -34,12 +34,13 @@ class Unit:
         self.size = min_size
         self.base = base
         self.keywords = keywords
+        self.ignores_1_rend = False
 
         self.rules = rules
         for r in self.rules:
             r.apply(self)
 
-    def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
+    def formation(self, data: dict, front_size, nb):
         if nb is None:
             nb = self.size
         data[SELF_NUMBERS] = nb
@@ -48,9 +49,22 @@ class Unit:
             row = max(min(front_size // self.base.width, nb), 1)
             rows.append(row)
             nb -= row
+        return rows
 
-        total = 0
+    def describe_formation(self, data: dict, _range, front_size, nb):
+        rows = self.formation(data, front_size, nb)
+        attacking = 0
         for row in rows:
+            if sum([w.average_damage(Roll(4), copy(data), _range) for w in self.weapons if isinstance(w, Weapon)]):
+                attacking += row
+            else:
+                break
+            _range += self.base.depth / 25.6
+        return f'{rows[0]}x{len(rows)} ({attacking} attacking)'
+
+    def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
+        total = 0
+        for row in self.formation(data, front_size, nb):
             total += row * sum(
                 [w.average_damage(armour, copy(data), _range) for w in self.weapons if isinstance(w, Weapon)]
             )
@@ -60,6 +74,8 @@ class Unit:
     def average_health(self, rend=0, nb=None):
         if nb is None:
             nb = self.size
+        if self.ignores_1_rend and rend == -1:
+            rend = 0
         save, crit = self.save.chances({}, mod=rend)
         save += crit
         return nb * self.wounds / (1 - save)

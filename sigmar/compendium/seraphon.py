@@ -29,6 +29,18 @@ def ordered_cohort(u: Unit):
             w.attacks.extra_bonuses.append(attack)
 
 
+def celestial_cohort(u: Unit):
+    def buff(data):
+        if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 30:
+            return 2, 0
+        if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 20:
+            return 1, 0
+        return 0, 0
+    for w in u.weapons:
+        if w.range > 3:
+            w.tohit.extra_bonuses.append(buff)
+
+
 saurus_warriors = Warscroll(
     'Saurus warriors', [
         [Weapon('Celestite Club', 1, 1, 4, 3, 0, 1, []),
@@ -52,3 +64,21 @@ saurus_knights = Warscroll(
     ], 7, 5, 10, 2, 5, cavalry, [
         Rule('Stardrake Shield', ignore_1_rend),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS KNIGHT'])
+
+
+skinks = Warscroll(
+    'Skinks', [
+        [Weapon('Meteoritic Javelin', 8, 1, 5, 4, 0, 1, []),
+         Weapon('Meteoritic Javelin', 1, 1, 6, 5, 0, 1, []),
+         Rule('Star-buckler', ignore_1_rend)],
+        [Weapon('Boltsplitter', 16, 1, 5, 5, 0, 1, []),
+         Weapon('Boltsplitter', 1, 1, 5, 6, 0, 1, []),
+         Rule('Star-buckler', ignore_1_rend)],
+        [Weapon('Boltsplitter', 16, 1, 5, 5, 0, 1, []),
+         Weapon('Boltsplitter', 1, 1, 5, 6, 0, 1, []),
+         Weapon('Moonstone club', 1, 1, 5, 4, 0, 1, [])],
+        [Weapon('Moonstone club', 1, 1, 5, 4, 0, 1, []),
+         Rule('Star-buckler', ignore_1_rend)],
+    ], 8, 6, 10, 1, 10, infantry, [
+        Rule('Celestial cohort', celestial_cohort)
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, 'SKINKS'])

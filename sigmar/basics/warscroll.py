@@ -10,7 +10,7 @@ from sigmar.basics.weapon import Weapon
 
 
 def weapon_choice_name(weapon_list: List[Union[Weapon, Rule]]) -> str:
-    return str([item.name for item in weapon_list])[1:-1].replace('\'', '')
+    return str(set(item.name for item in weapon_list))[1:-1].replace('\'', '')
 
 
 class Warscroll:
@@ -50,6 +50,6 @@ class Warscroll:
 
     def simplest_stats(self, armour: Roll, data: dict, rend=0, _range=1, front_size=1000, nb=None):
         for k, v in self.units.items():
-            print(f'{min(v.size, nb if nb is not None else 1000)} {v.name} with {k}: '
+            print(f'{v.size if nb is None else nb} {v.name} with {k}: '
                   f'{int(round(v.average_damage(armour, copy(data), _range, front_size, nb) * 10))}'
-                  f'/{int(round(v.average_health(rend, nb)))}')
+                  f'/{int(round(v.average_health(rend, nb)))} {v.describe_formation(data, _range, front_size, nb)}')
