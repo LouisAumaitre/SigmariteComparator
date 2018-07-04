@@ -18,7 +18,7 @@ class Roll:
         rerolls_chance = 1 + min(rerolls, self.base_value - 1) / 6
         chances *= rerolls_chance
         sixes = rerolls_chance * max(0, 1 + mod) / 6
-        return chances, sixes
+        return chances - sixes, sixes
 
     def average(self, dices, extra_data: dict, mod=0) -> Tuple[float, float]:
         chances, sixes = self.chances(extra_data, mod)

@@ -55,7 +55,8 @@ class Unit:
     def average_health(self, rend=0, nb=None):
         if nb is None:
             nb = self.size
-        save, _ = self.save.chances({}, mod=rend)
+        save, crit = self.save.chances({}, mod=rend)
+        save += crit
         return nb * self.wounds / (1 - save)
 
 
