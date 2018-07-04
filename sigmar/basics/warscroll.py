@@ -1,5 +1,7 @@
 from typing import Union, List
 
+from copy import copy
+
 from sigmar.basics.random_value import RandomValue
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -49,5 +51,5 @@ class Warscroll:
     def simplest_stats(self, armour: Roll, data: dict, rend=0, _range=1, front_size=1000, nb=None):
         for k, v in self.units.items():
             print(f'{min(v.size, nb if nb is not None else 1000)} {v.name} with {k}: '
-                  f'{int(round(v.average_damage(armour, data, _range, front_size, nb) * 10))}'
+                  f'{int(round(v.average_damage(armour, copy(data), _range, front_size, nb) * 10))}'
                   f'/{int(round(v.average_health(rend, nb)))}')

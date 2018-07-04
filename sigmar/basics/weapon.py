@@ -26,8 +26,7 @@ class Weapon:
         self.rend = rend
         self.wounds = rv(wounds)
 
-        self.tohit_critical: List[Callable] = []
-        self.towound_critical: List[Callable] = []
+        self.attack_rules: List[Callable] = []
 
         self.rules = rules
         for r in rules:
@@ -40,12 +39,14 @@ class Weapon:
         return self.towound.average(dices, extra_data, mod)
 
     def unsaved_chances(self, armour: Roll, extra_rend=0) -> float:
-        chances, _ = armour.chances({}, mod=self.rend + extra_rend)
-        return 1 - chances
+        chances, crit = armour.chances({}, mod=self.rend + extra_rend)
+        return 1 - chances - crit
 
     def average_damage(self, armour: Roll, data: dict, _range=1):
         if _range > self.range:
             return 0
+        for rule in self.attack_rules:
+            rule(data)
         mortal_wounds = 0
 
         attacks = self.attacks.average(data)
@@ -60,4 +61,5 @@ class Weapon:
         unsaved += critic_wounds * self.unsaved_chances(
             armour, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
         damage = unsaved * self.wounds.average(data) + mortal_wounds
+
         return damage
