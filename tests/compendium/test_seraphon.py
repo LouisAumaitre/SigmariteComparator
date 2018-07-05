@@ -1,7 +1,7 @@
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import ENEMY_BASE, ENEMY_NUMBERS
-from sigmar.compendium.seraphon import saurus_warriors, skinks, kroxigors
+from sigmar.compendium.seraphon import seraphons_by_name
 
 
 def test_saurus_stats():
@@ -10,8 +10,8 @@ def test_saurus_stats():
         ENEMY_BASE: infantry,
         ENEMY_NUMBERS: 10,
     }
-    clubs = saurus_warriors.units['Celestite Club, Powerful Jaws and Stardrake Shield']
-    spears = saurus_warriors.units['Celestite Spear, Powerful Jaws and Stardrake Shield']
+    clubs = seraphons_by_name['Saurus Warriors'].units['Celestite Club, Powerful Jaws and Stardrake Shield']
+    spears = seraphons_by_name['Saurus Warriors'].units['Celestite Spear, Powerful Jaws and Stardrake Shield']
     # assert
     assert round(clubs.average_damage(Roll(4), context, nb=1), 2) == 0.25
     assert round(spears.average_damage(Roll(4), context, nb=1), 2) == 0.21
@@ -29,10 +29,10 @@ def test_skinks_stats():
         ENEMY_BASE: infantry,
         ENEMY_NUMBERS: 10,
     }
-    jav = skinks.units['Meteoritic Javelin, Star-buckler']
-    bolt = skinks.units['Boltsplitter, Star-buckler']
-    bolt_club = skinks.units['Boltsplitter, Moonstone Club']
-    club = skinks.units['Moonstone Club, Star-buckler']
+    jav = seraphons_by_name['Skinks'].units['Meteoritic Javelin, Star-buckler']
+    bolt = seraphons_by_name['Skinks'].units['Boltsplitter, Star-buckler']
+    bolt_club = seraphons_by_name['Skinks'].units['Boltsplitter, Moonstone Club']
+    club = seraphons_by_name['Skinks'].units['Moonstone Club, Star-buckler']
     # assert
     assert round(jav.average_damage(Roll(4), context, nb=1), 2) == 0.11
     assert round(bolt.average_damage(Roll(4), context, nb=1), 2) == 0.08
@@ -50,7 +50,7 @@ def test_kroxigor_stats():
         ENEMY_BASE: infantry,
         ENEMY_NUMBERS: 10,
     }
-    krok = kroxigors.units['Drakebite Maul, Vice-like Jaws']
+    krok = seraphons_by_name['Kroxigors'].units['Drakebite Maul, Vice-like Jaws']
     # assert
     assert round(krok.average_damage(Roll(4), context, nb=1), 2) == 1.51
     assert round(krok.average_damage(Roll(4), context, nb=1, _range=1.5), 2) == 1.33

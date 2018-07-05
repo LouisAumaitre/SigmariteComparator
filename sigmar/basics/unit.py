@@ -5,7 +5,7 @@ from copy import copy
 from sigmar.basics.base import Base
 from sigmar.basics.random_value import RandomValue, rv
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule
+from sigmar.basics.rules import Rule, CommandAbility, Spell
 from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH
 from sigmar.basics.weapon import Weapon
 
@@ -23,6 +23,8 @@ class Unit:
             base: Base,
             rules: List[Rule],
             keywords: List[str],
+            cast=0,
+            unbind=0,
     ):
         self.name = name
         self.weapons = weapons
@@ -34,6 +36,12 @@ class Unit:
         self.size = min_size
         self.base = base
         self.keywords = keywords
+
+        self.spells_per_turn = 0
+        self.unbind_per_turn = 0
+        self.spells: List[Spell] = []
+        self.command_abilities: List[CommandAbility] = []
+
         self.ignores_1_rend = False
 
         self.rules = rules
