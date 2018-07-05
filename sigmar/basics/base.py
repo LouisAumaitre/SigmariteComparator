@@ -15,3 +15,4 @@ class Base:
 infantry = Base(25)
 large_infantry = Base(40)
 cavalry = Base(50, 25)
+monster = Base(60, 10)

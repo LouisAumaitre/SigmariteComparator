@@ -1,4 +1,4 @@
-from sigmar.basics.base import cavalry, infantry, large_infantry
+from sigmar.basics.base import cavalry, infantry, large_infantry, monster
 from sigmar.basics.random_value import RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
@@ -7,14 +7,14 @@ from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit
-from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO
-
+from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER
 
 SERAPHONS = []
 
 SERAPHON = 'SERAPHON'
 SLAAN = 'SLAAN'
 SAURUS = 'SAURUS'
+CARNOSAUR = 'CARNOSAUR'
 
 
 def ordered_cohort(u: Unit):
@@ -102,6 +102,21 @@ SERAPHONS.append(Warscroll(
         WeaponRule('Ferocious Rage', d3_hits_on_crit),
         CommandAbility('Scent of Weakness', None),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Oldblood on Carnosaur', [
+        [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, []),
+         Weapon('Sunstone Spear', 2, 3, 3, 3, -1, 'D3', []),
+         Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, 3, 3, 0, 2, []),
+         Weapon('Carnosaur`s Massive Jaws', 2, 5, 4, 3, -1, 3, [])],
+    ], 10, 4, 10, 12, 1, monster, [
+        WeaponRule('Pinned Down', lambda x: None),
+        Rule('Blood Frenzy', lambda x: None),
+        Rule('Bloodroar', lambda x: None),
+        WeaponRule('Blazing Sunbolts', lambda x: None),
+        CommandAbility('Ancient Warlord', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR, 'SAURUS OLBLOOD']))
 
 
 SERAPHONS.append(Warscroll(
