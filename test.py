@@ -1,15 +1,9 @@
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS
-from sigmar.compendium.seraphon import saurus_warriors, saurus_knights, skinks, kroxigors
-from sigmar.compendium.stormcast_eternals import liberators
+from sigmar.compendium.seraphon import SERAPHONS
 
-warscrolls = [
-    skinks,
-    saurus_warriors,
-    saurus_knights,
-    kroxigors,
-]
+warscrolls = SERAPHONS
 context = {
     CHARGING: False,
     ENEMY_BASE: infantry,

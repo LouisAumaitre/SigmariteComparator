@@ -25,6 +25,7 @@ class Unit:
             keywords: List[str],
             cast=0,
             unbind=0,
+            named=False
     ):
         self.name = name
         self.weapons = weapons
@@ -36,9 +37,11 @@ class Unit:
         self.size = min_size
         self.base = base
         self.keywords = keywords
+        keywords.append(self.name.upper())
+        self.named = named
 
-        self.spells_per_turn = 0
-        self.unbind_per_turn = 0
+        self.spells_per_turn = cast
+        self.unbind_per_turn = unbind
         self.spells: List[Spell] = []
         self.command_abilities: List[CommandAbility] = []
 

@@ -54,8 +54,21 @@ SERAPHONS.append(Warscroll(
         Rule('Arcane Vassal', lambda x: None),
         Spell('Light of the Heavens', 6, None),
         CommandAbility('Gift from the Heavens', None),
-    ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO, 'SLAAN STARMASTER'],
+    ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
     cast=3, unbind=3))
+
+
+SERAPHONS.append(Warscroll(
+    'Lord Kroak', [
+        [Weapon('Azure Lightning', 3, "2D6", 3, 3, 1, 1, [])],
+    ], 5, 4, 10, 666, 1, large_infantry, [
+        Rule('Fly', fly),
+        Rule('Dead for Innumerable Ages', lambda x: None),
+        Spell('Celestial Deliverance', 7, None),
+        Spell('Comet`s Call', 7, None),
+        CommandAbility('Impeccable Foresight', None),
+    ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
+    cast=4, unbind=4, named=True))
 
 
 SERAPHONS.append(Warscroll(
@@ -67,7 +80,7 @@ SERAPHONS.append(Warscroll(
     ], 5, 5, 10, 1, 10, infantry, [
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS WARRIORS']))
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
 SERAPHONS.append(Warscroll(
@@ -80,7 +93,7 @@ SERAPHONS.append(Warscroll(
          Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
     ], 7, 5, 10, 2, 5, cavalry, [
         Rule('Stardrake Shield', ignore_1_rend),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, 'SAURUS KNIGHT']))
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
 SERAPHONS.append(Warscroll(
@@ -99,7 +112,7 @@ SERAPHONS.append(Warscroll(
     ], 8, 6, 10, 1, 10, infantry, [
         Rule('Celestial cohort', celestial_cohort),
         Rule('Wary Fighters', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, 'SKINKS']))
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 
 def steel_trap_jaws(w: Weapon):
@@ -117,6 +130,6 @@ SERAPHONS.append(Warscroll(
          Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
     ], 8, 4, 10, 4, 3, large_infantry, [
         Rule('Energy transcendence', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, 'KROXIGORS']))
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

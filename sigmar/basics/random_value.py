@@ -15,34 +15,45 @@ class RandomValue:
             add_mod, extra_ignore = bonus(context)
             mod += add_mod
 
+        return self._average(context) + mod
+
+    def _average(self, context: dict):
         if isinstance(self.defined_value, int):
-            return self.defined_value + mod
+            return self.defined_value
         elif self.defined_value == 'D6':
-            return 3.5 + mod
+            return 3.5
+        elif self.defined_value == '2D6':
+            return 7
         elif self.defined_value == 'all_in_range':
             swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
             hits = swing * 2 / context[ENEMY_BASE].width + 1
             hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
             return max(1, min(hits, context[ENEMY_NUMBERS]))
         else:
-            return 0 + mod
+            return 0
 
     def max(self, context: dict, mod=0):
         for bonus in self.extra_bonuses:
             add_mod, extra_ignore = bonus(context)
             mod += add_mod
 
+        return self._max(context) + mod
+
+    def _max(self, context: dict):
+
         if isinstance(self.defined_value, int):
-            return self.defined_value + mod
+            return self.defined_value
         elif self.defined_value == 'D6':
-            return 6 + mod
+            return 6
+        elif self.defined_value == '2D6':
+            return 12
         elif self.defined_value == 'all_in_range':
             swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
             hits = swing * 2 / context[ENEMY_BASE].width + 1
             hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
             return max(1, min(hits, context[ENEMY_NUMBERS]))
         else:
-            return 0 + mod
+            return 0
 
 
 def rv(defined_value: Union[str, int, RandomValue]):

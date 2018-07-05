@@ -20,4 +20,4 @@ liberators = Warscroll(
         [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
     ], 5, 4, 6, 2, 5, large_infantry, [
         WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
-    ], [ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER, 'LIBERATORS'])
+    ], [ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER])
