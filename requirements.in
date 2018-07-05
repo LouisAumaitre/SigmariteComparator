@@ -1,1 +1,5 @@
 pytest
+pyflakes==1.6.0
+pytest-sugar
+pytest-cov
+mypy==0.521

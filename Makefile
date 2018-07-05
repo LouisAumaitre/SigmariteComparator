@@ -4,3 +4,5 @@ requirements.txt:
 
 clean:
 	rm .coverage junit.xml
+
+.PHONY: clean requirements.txt
