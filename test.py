@@ -18,10 +18,10 @@ context = {
 
 test_armour = Roll(4)
 
-for ws in warscrolls:
-    for w_c_n, w_c_s in ws.stats(test_armour, context, nb=5).items():
-        damage, health = w_c_s
-        print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
-
 # for ws in warscrolls:
-#     ws.simplest_stats(test_armour, context, _range=0.1, front_size=145, rend=-1)
+#     for w_c_n, w_c_s in ws.stats(test_armour, context, nb=5).items():
+#         damage, health = w_c_s
+#         print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
+
+for ws in warscrolls:
+    ws.simplest_stats(test_armour, context, _range=0.1, front_size=145, rend=-1)

@@ -1,7 +1,5 @@
 from typing import Union, List, Callable
 
-import math
-
 from sigmar.basics.string_constants import WEAPON_RANGE, SELF_BASE, ENEMY_BASE, ENEMY_NUMBERS, INCH
 
 
@@ -23,12 +21,9 @@ class RandomValue:
             return 3.5 + mod
         elif self.defined_value == 'all_in_range':
             swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
-            hit_area = (swing * swing * math.pi - context[SELF_BASE].surface()) / 2
-            hit_target = hit_area / context[ENEMY_BASE].surface()
-            v = max(1, min(hit_target, context[ENEMY_NUMBERS]))
-            print(f'swing_surface={swing * swing * 3.14}, base_surface={context[SELF_BASE].surface()},'
-                  f'target_surface={context[ENEMY_BASE].surface()}, hit_target={hit_target}, total={v}')
-            return v
+            hits = swing * 2 / context[ENEMY_BASE].width + 1
+            hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
+            return max(1, min(hits, context[ENEMY_NUMBERS]))
         else:
             return 0 + mod
 
@@ -42,9 +37,10 @@ class RandomValue:
         elif self.defined_value == 'D6':
             return 6 + mod
         elif self.defined_value == 'all_in_range':
-            hit_area = context[WEAPON_RANGE] * context[WEAPON_RANGE] * 3.14 - context[SELF_BASE].surface()
-            hit_target = hit_area / context[ENEMY_BASE].surface()
-            return max(1, min(hit_target, context[ENEMY_NUMBERS]))
+            swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
+            hits = swing * 2 / context[ENEMY_BASE].width + 1
+            hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
+            return max(1, min(hits, context[ENEMY_NUMBERS]))
         else:
             return 0 + mod
 
