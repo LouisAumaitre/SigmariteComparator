@@ -26,8 +26,8 @@ class RandomValue:
             hit_area = (swing * swing * math.pi - context[SELF_BASE].surface()) / 2
             hit_target = hit_area / context[ENEMY_BASE].surface()
             v = max(1, min(hit_target, context[ENEMY_NUMBERS]))
-            print(f'swing_surface={swing * swing * 3.14}, base_surface={data[SELF_BASE].surface()},'
-                  f'target_surface={data[ENEMY_BASE].surface()}, hit_target={hit_target}, total={v}')
+            print(f'swing_surface={swing * swing * 3.14}, base_surface={context[SELF_BASE].surface()},'
+                  f'target_surface={context[ENEMY_BASE].surface()}, hit_target={hit_target}, total={v}')
             return v
         else:
             return 0 + mod
@@ -42,7 +42,7 @@ class RandomValue:
         elif self.defined_value == 'D6':
             return 6 + mod
         elif self.defined_value == 'all_in_range':
-            hit_area = context[WEAPON_RANGE] * context[WEAPON_RANGE] * 3.14 - data[SELF_BASE].surface()
+            hit_area = context[WEAPON_RANGE] * context[WEAPON_RANGE] * 3.14 - context[SELF_BASE].surface()
             hit_target = hit_area / context[ENEMY_BASE].surface()
             return max(1, min(hit_target, context[ENEMY_NUMBERS]))
         else:

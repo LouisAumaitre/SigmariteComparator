@@ -10,7 +10,11 @@ from sigmar.basics.weapon import Weapon
 
 
 def weapon_choice_name(weapon_list: List[Union[Weapon, Rule]]) -> str:
-    return str(set(item.name for item in weapon_list))[1:-1].replace('\'', '')
+    new_list = []
+    for item in weapon_list:
+        if item.name not in new_list:
+            new_list.append(item.name)
+    return str(new_list)[1:-1].replace('\'', '')
 
 
 class Warscroll:
