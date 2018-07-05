@@ -44,6 +44,8 @@ class Warscroll:
 
     def simplest_stats(self, armour: Roll, data: dict, rend=0, _range=1, front_size=1000, nb=None):
         for k, v in self.units.items():
-            print(f'{v.size if nb is None else nb} {v.name} with {k}: '
+            numbers = v.size if nb is None else nb
+            numbers = f'{numbers} ' if numbers > 1 else ''
+            print(f'{numbers}{v.name} with {k}: '
                   f'{int(round(v.average_damage(armour, copy(data), _range, front_size, nb) * 10))}'
                   f'/{int(round(v.average_health(rend, nb)))} {v.describe_formation(data, _range, front_size, nb)}')

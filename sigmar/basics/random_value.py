@@ -24,6 +24,8 @@ class RandomValue:
             return 3.5
         elif self.defined_value == '2D6':
             return 7
+        elif self.defined_value == 'D3':
+            return 2
         elif self.defined_value == 'all_in_range':
             swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
             hits = swing * 2 / context[ENEMY_BASE].width + 1
@@ -47,6 +49,8 @@ class RandomValue:
             return 6
         elif self.defined_value == '2D6':
             return 12
+        elif self.defined_value == 'D3':
+            return 3
         elif self.defined_value == 'all_in_range':
             swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
             hits = swing * 2 / context[ENEMY_BASE].width + 1

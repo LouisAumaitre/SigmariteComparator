@@ -64,6 +64,8 @@ class Unit:
 
     def describe_formation(self, data: dict, _range, front_size, nb):
         rows = self.formation(data, front_size, nb)
+        if len(rows) == 1 and rows[0] <= 1:
+            return ''
         attacking = 0
         for row in rows:
             if sum([1 if w.range > _range else 0 for w in self.weapons if isinstance(w, Weapon)]):

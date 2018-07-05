@@ -14,11 +14,12 @@ class Roll:
             mod += add_mod
             rerolls = max(rerolls, add_reroll)
 
-        chances = (7 - self.base_value + mod) / 6
-        rerolls_chance = 1 + min(rerolls, self.base_value - 1) / 6
+        base_value = self.base_value - mod
+        chances = (7 - base_value) / 6
+        rerolls_chance = 1 + min(rerolls, base_value - 1) / 6
         chances *= rerolls_chance
-        sixes = rerolls_chance * max(0, 1 + mod) / 6
-        return chances - sixes, sixes
+        sixes = rerolls_chance * max(0, 1 + mod) / 6 if base_value <= 6 else 0
+        return max(0, chances - sixes), sixes
 
     def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:
         chances, sixes = self.chances(context, mod)

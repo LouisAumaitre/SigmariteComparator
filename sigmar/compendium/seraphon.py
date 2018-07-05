@@ -1,4 +1,5 @@
 from sigmar.basics.base import cavalry, infantry, large_infantry
+from sigmar.basics.random_value import RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.unit import Unit
@@ -58,17 +59,38 @@ SERAPHONS.append(Warscroll(
     cast=3, unbind=3))
 
 
+def dead_for_innumerable_ages(u: Unit):
+    u.wounds = u.bravery - RandomValue('D6').average({})
+
+
 SERAPHONS.append(Warscroll(
     'Lord Kroak', [
         [Weapon('Azure Lightning', 3, "2D6", 3, 3, 1, 1, [])],
-    ], 5, 4, 10, 666, 1, large_infantry, [
+    ], 5, 4, 10, 0, 1, large_infantry, [
         Rule('Fly', fly),
-        Rule('Dead for Innumerable Ages', lambda x: None),
+        Rule('Dead for Innumerable Ages', dead_for_innumerable_ages),
         Spell('Celestial Deliverance', 7, None),
         Spell('Comet`s Call', 7, None),
         CommandAbility('Impeccable Foresight', None),
     ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
     cast=4, unbind=4, named=True))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Oldblood', [
+        [Weapon('Suntooth Maul', 1, 2, 3, 4, -1, 'D3', []),
+         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+        [Weapon('Celestite Warblade', 1, 4, 3, 3, 0, 1, []),
+         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+        [Weapon('Celestite War-spear', 2, 4, 4, 3, -1, 1, []),
+         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+        [Weapon('Celestite Greatblade', 1, 2, 4, 3, -1, 2, []),
+         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+    ], 5, 4, 10, 7, 1, infantry, [
+        Rule('Stardrake Shield', ignore_1_rend),
+        Rule('Wrath of the Seraphon', lambda x: None),
+        CommandAbility('Paragon of Order', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
