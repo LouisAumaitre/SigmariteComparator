@@ -76,8 +76,8 @@ skinks = Warscroll(
          Rule('Star-buckler', ignore_1_rend)],
         [Weapon('Boltsplitter', 16, 1, 5, 5, 0, 1, []),
          Weapon('Boltsplitter', 1, 1, 5, 6, 0, 1, []),
-         Weapon('Moonstone club', 1, 1, 5, 4, 0, 1, [])],
-        [Weapon('Moonstone club', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, [])],
+        [Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
     ], 8, 6, 10, 1, 10, infantry, [
         Rule('Celestial cohort', celestial_cohort),
