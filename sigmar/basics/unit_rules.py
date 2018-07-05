@@ -11,3 +11,8 @@ def reroll_1_save(u: Unit):
 
 def ignore_1_rend(u: Unit):
     u.ignores_1_rend = True
+
+
+def ignore_2_rend(u: Unit):
+    u.ignores_1_rend = True
+    # TODO

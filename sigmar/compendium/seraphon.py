@@ -2,11 +2,11 @@ from sigmar.basics.base import cavalry, infantry, large_infantry
 from sigmar.basics.random_value import RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
-from sigmar.basics.unit import Unit
-from sigmar.basics.unit_rules import ignore_1_rend, fly
+from sigmar.basics.unit import Unit, WeaponRule
+from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge
+from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO
 
 
@@ -90,6 +90,17 @@ SERAPHONS.append(Warscroll(
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wrath of the Seraphon', lambda x: None),
         CommandAbility('Paragon of Order', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Sunblood', [
+        [Weapon('Celestite War-mace', 1, 5, 3, 3, -1, 1, []),
+         Weapon('Fearsome Jaw and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
+    ], 5, 4, 10, 7, 1, infantry, [
+        Rule('Aeon Shield', ignore_2_rend),
+        WeaponRule('Ferocious Rage', d3_hits_on_crit),
+        CommandAbility('Scent of Weakness', None),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
