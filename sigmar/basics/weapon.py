@@ -9,7 +9,10 @@ from sigmar.basics.string_constants import (
     CRIT_BONUS_REND,
     MW_ON_HIT_CRIT,
     MW_ON_WOUND_CRIT,
-    EXTRA_HIT_ON_CRIT, EXTRA_WOUND_ON_CRIT, WEAPON_RANGE)
+    EXTRA_HIT_ON_CRIT,
+    EXTRA_WOUND_ON_CRIT,
+    WEAPON_RANGE,
+)
 
 
 class Weapon:

@@ -7,10 +7,10 @@ class Roll:
         self.rerolls = 0
         self.extra_bonuses: List[Callable] = []  # function take dict, return mod and reroll
 
-    def chances(self, extra_data: dict, mod=0) -> Tuple[float, float]:
+    def chances(self, context: dict, mod=0) -> Tuple[float, float]:
         rerolls = self.rerolls
         for bonus in self.extra_bonuses:
-            add_mod, add_reroll = bonus(extra_data)
+            add_mod, add_reroll = bonus(context)
             mod += add_mod
             rerolls = max(rerolls, add_reroll)
 
@@ -20,6 +20,6 @@ class Roll:
         sixes = rerolls_chance * max(0, 1 + mod) / 6
         return chances - sixes, sixes
 
-    def average(self, dices, extra_data: dict, mod=0) -> Tuple[float, float]:
-        chances, sixes = self.chances(extra_data, mod)
+    def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:
+        chances, sixes = self.chances(context, mod)
         return chances * dices, sixes * dices
