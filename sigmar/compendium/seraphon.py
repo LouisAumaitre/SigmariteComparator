@@ -14,6 +14,7 @@ SERAPHONS = []
 SERAPHON = 'SERAPHON'
 SLAAN = 'SLAAN'
 SAURUS = 'SAURUS'
+SKINK = 'SKINK'
 CARNOSAUR = 'CARNOSAUR'
 
 
@@ -142,15 +143,15 @@ SERAPHONS.append(Warscroll(
 SERAPHONS.append(Warscroll(
     'Saurus Scar-veteran on Carnosaur', [
         [Weapon('Celestite Warblade', 1, 6, 3, 3, 0, 1, []),
-         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
         [Weapon('Celestite War-spear', 2, 6, 4, 3, -1, 1, []),
-         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
         [Weapon('Celestite Greatblade', 1, 3, 4, 3, -1, 2, []),
-         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
     ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, [
@@ -169,7 +170,7 @@ def fury_of_the_seraphon(w: Weapon):
 SERAPHONS.append(Warscroll(
     'Saurus Scar-veteran on Cold-One', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, [Rule('Fury of the Seraphon', fury_of_the_seraphon)]),
-         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
     ], 10, 4, 10, 7, 1, cavalry, [
         Rule('Stardrake Shield', ignore_1_rend),
@@ -192,10 +193,10 @@ SERAPHONS.append(Warscroll(
 SERAPHONS.append(Warscroll(
     'Saurus Astrolith Bearer', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, []),
-         Weapon('Fearsome Jaws', 1, 1, 5, 4, 0, 1, [])],
+         Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
     ], 10, 4, 10, 7, 1, cavalry, [
-        Rule('Stardrake Shield', ignore_1_rend),
-        CommandAbility('Savage Charge', None),
+        Rule('Celestial Conduit', lambda x: None),
+        Rule('Proud Defiance', lambda x: None),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
@@ -211,17 +212,35 @@ SERAPHONS.append(Warscroll(
         Rule('Stardrake Shield', ignore_1_rend),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
+SERAPHONS.append(Warscroll(
+    'Skink Starseer', [
+        [Weapon('Astromancer`s Staff', 2, 1, 4, 4, -1, 'D3', [])],
+    ], 8, 4, 10, 5, 1, infantry, [
+        fly,
+        Rule('Cosmic Herald', lambda x: None),
+        Spell('Curse of Fate', 4, None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
+    cast=1, unbind=1))
+
+SERAPHONS.append(Warscroll(
+    'Skink Starpriest', [
+        [Weapon('Star-stone Dagger', 1, 3, 3, 4, -1, 1, [])],
+    ], 8, 5, 10, 4, 1, infantry, [
+        Rule('Serpent Staff', lambda x: None),
+        Spell('Summon  Starlight', 6, None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
+    cast=1, unbind=1))
 
 SERAPHONS.append(Warscroll(
     'Skinks', [
         [Weapon('Meteoritic Javelin', 8, 1, 5, 4, 0, 1, []),
          Weapon('Meteoritic Javelin', 1, 1, 6, 5, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
-        [Weapon('Boltsplitter', 16, 1, 5, 5, 0, 1, []),
-         Weapon('Boltsplitter', 1, 1, 5, 6, 0, 1, []),
+        [Weapon('Boltspitter', 16, 1, 5, 5, 0, 1, []),
+         Weapon('Boltspitter', 1, 1, 5, 6, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
-        [Weapon('Boltsplitter', 16, 1, 5, 5, 0, 1, []),
-         Weapon('Boltsplitter', 1, 1, 5, 6, 0, 1, []),
+        [Weapon('Boltspitter', 16, 1, 5, 5, 0, 1, []),
+         Weapon('Boltspitter', 1, 1, 5, 6, 0, 1, []),
          Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
