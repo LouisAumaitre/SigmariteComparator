@@ -93,7 +93,7 @@ class MonsterValue(Value):
 
     def __init__(self, values: Dict[int, Union[str, int, Value]]):
         Value.__init__(self)
-        self.defined_value = {key: _value(value) for key, value in values}
+        self.defined_value = {k: _value(v) for k, v in values.items()}
 
     def _average(self, context: dict):
         if SELF_WOUNDS in context:

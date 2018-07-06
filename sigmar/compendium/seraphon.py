@@ -109,8 +109,8 @@ SERAPHONS.append(Warscroll(
         [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, []),
          Weapon('Sunstone Spear', 2, 3, 3, 3, -1, 'D3', []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, 3, 3, 0, 2, []),
-         Weapon('Carnosaur`s Massive Jaws', 2, 5, 4, 3, -1, 3, [])],
-    ], 10, 4, 10, 12, 1, monster, [
+         Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, [
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),

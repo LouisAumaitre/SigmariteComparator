@@ -1,4 +1,4 @@
-from typing import List, Union, Tuple, Callable
+from typing import List, Union, Tuple, Callable, Dict
 
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
@@ -20,11 +20,11 @@ class Weapon:
             self,
             name: str,
             range_: int,
-            attacks: Union[int, str, Value, list],
+            attacks: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             tohit,
             towound,
             rend,
-            wounds: Union[int, str, Value],
+            wounds: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             rules: List[Rule],
     ):
         self.name = name
