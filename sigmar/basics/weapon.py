@@ -75,7 +75,7 @@ class Weapon:
 
         mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
         if wounds == 0:
-            print(f'{self.name}: no wounds')
+            print(f'{self.name} (range={self.range.average({})}): no wounds')
             damage_per_hit = self.wounds.average(data)
         else:
             damage_per_hit = self.wounds.average(data)\
