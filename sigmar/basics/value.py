@@ -28,9 +28,35 @@ class Value:
         raise NotImplementedError
 
 
-class FixedValue(Value):
-    defined_value: Any = 0
+class RandomMultValue(Value):
+    def __init__(self, average_mult, max_mult, base_value: Value):
+        Value.__init__(self)
+        self.average_mult = average_mult
+        self.max_mult = max_mult
+        self.base_value = base_value
 
+    def average(self, context: dict, mod=0):
+        for bonus in self.extra_bonuses:
+            add_mod = bonus(context)
+            mod += add_mod
+
+        return self._average(context, mod)
+
+    def _average(self, context: dict, mod=0):
+        return self.average_mult * self.base_value.average(context, mod)
+
+    def max(self, context: dict, mod=0):
+        for bonus in self.extra_bonuses:
+            add_mod = bonus(context)
+            mod += add_mod
+
+        return self._max(context, mod)
+
+    def _max(self, context: dict, mod=0):
+        return self.max_mult * self.base_value.max(context, mod)
+
+
+class FixedValue(Value):
     def __init__(self, defined_value):
         Value.__init__(self)
         self.defined_value = defined_value
@@ -42,9 +68,7 @@ class FixedValue(Value):
         return self.defined_value
 
 
-class RandomValue(Value):
-    defined_value: str = 0
-
+class DiceValue(Value):
     def __init__(self, defined_value: str):
         Value.__init__(self)
         self.defined_value = defined_value
@@ -85,12 +109,10 @@ def _value(defined_value: Union[str, int, Value]):
         return defined_value
     if isinstance(defined_value, int):
         return FixedValue(defined_value)
-    return RandomValue(defined_value)
+    return DiceValue(defined_value)
 
 
 class MonsterValue(Value):
-    defined_value: Dict[int, Value]
-
     def __init__(self, values: Dict[int, Union[str, int, Value]]):
         Value.__init__(self)
         self.defined_value = {k: _value(v) for k, v in values.items()}
@@ -115,4 +137,4 @@ def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]
         return FixedValue(defined_value)
     if isinstance(defined_value, dict):
         return MonsterValue(defined_value)
-    return RandomValue(defined_value)
+    return DiceValue(defined_value)

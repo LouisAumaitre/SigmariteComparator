@@ -1,5 +1,5 @@
 from sigmar.basics.base import cavalry, infantry, large_infantry, monster
-from sigmar.basics.value import RandomValue
+from sigmar.basics.value import DiceValue, RandomMultValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.unit import Unit, WeaponRule
@@ -60,7 +60,7 @@ SERAPHONS.append(Warscroll(
 
 
 def dead_for_innumerable_ages(u: Unit):
-    u.wounds = u.bravery - RandomValue('D6').average({})
+    u.wounds = u.bravery - DiceValue('D6').average({})
 
 
 SERAPHONS.append(Warscroll(
@@ -79,13 +79,13 @@ SERAPHONS.append(Warscroll(
 SERAPHONS.append(Warscroll(
     'Saurus Oldblood', [
         [Weapon('Suntooth Maul', 1, 2, 3, 4, -1, 'D3', []),
-         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite Warblade', 1, 4, 3, 3, 0, 1, []),
-         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite War-spear', 2, 4, 4, 3, -1, 1, []),
-         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite Greatblade', 1, 2, 4, 3, -1, 2, []),
-         Weapon('Fearsome Jaw and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
     ], 5, 4, 10, 7, 1, infantry, [
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wrath of the Seraphon', lambda x: None),
@@ -96,7 +96,7 @@ SERAPHONS.append(Warscroll(
 SERAPHONS.append(Warscroll(
     'Saurus Sunblood', [
         [Weapon('Celestite War-mace', 1, 5, 3, 3, -1, 1, []),
-         Weapon('Fearsome Jaw and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
+         Weapon('Fearsome Jaws and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
     ], 5, 4, 10, 7, 1, infantry, [
         Rule('Aeon Shield', ignore_2_rend),
         WeaponRule('Ferocious Rage', d3_hits_on_crit),
@@ -140,6 +140,44 @@ SERAPHONS.append(Warscroll(
 
 
 SERAPHONS.append(Warscroll(
+    'Saurus Scar-veteran on Carnosaur', [
+        [Weapon('Celestite Warblade', 1, 6, 3, 3, 0, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
+         Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
+        [Weapon('Celestite War-spear', 2, 6, 4, 3, -1, 1, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
+         Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
+        [Weapon('Celestite Greatblade', 1, 3, 4, 3, -1, 2, []),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
+         Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, [
+        WeaponRule('Pinned Down', lambda x: None),
+        Rule('Blood Frenzy', lambda x: None),
+        Rule('Bloodroar', lambda x: None),
+        Rule('Stardrake Shield', ignore_1_rend),
+        CommandAbility('Saurian Savagery', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR]))
+
+
+def fury_of_the_seraphon(w: Weapon):
+    w.attacks = RandomMultValue((1.5+1/12), 3, w.attacks)
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Scar-veteran on Cold-One', [
+        [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, [Rule('Fury of the Seraphon', fury_of_the_seraphon)]),
+         Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+         Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
+    ], 10, 4, 10, 7, 1, cavalry, [
+        Rule('Stardrake Shield', ignore_1_rend),
+        CommandAbility('Savage Charge', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+
+
+SERAPHONS.append(Warscroll(
     'Saurus Warriors', [
         [Weapon('Celestite Club', 1, 1, 4, 3, 0, 1, []),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
@@ -149,6 +187,16 @@ SERAPHONS.append(Warscroll(
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Astrolith Bearer', [
+        [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, []),
+         Weapon('Fearsome Jaws', 1, 1, 5, 4, 0, 1, [])],
+    ], 10, 4, 10, 7, 1, cavalry, [
+        Rule('Stardrake Shield', ignore_1_rend),
+        CommandAbility('Savage Charge', None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(

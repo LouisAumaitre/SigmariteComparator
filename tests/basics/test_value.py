@@ -1,4 +1,4 @@
-from sigmar.basics.value import RandomValue, value
+from sigmar.basics.value import DiceValue, value
 
 
 def test_average_1_is_1():
@@ -35,7 +35,7 @@ def test_max_apply_extras_on_context():
     def bonus(context):
         return context.get('bonus', 0)
 
-    random_value = RandomValue('D6')
+    random_value = DiceValue('D6')
     random_value.extra_bonuses.append(bonus)
     # assert
     assert random_value.max({'bonus': 37}, mod=-1) == 42
@@ -57,6 +57,6 @@ def test_rv_create_rv():
     # given
     a = value(6)
     b = value('D6')
-    c = value(RandomValue('D6'))
+    c = value(DiceValue('D6'))
     # assert
     assert a.max({}) == b.max({}) == c.max({})
