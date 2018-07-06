@@ -1,9 +1,11 @@
 from typing import Tuple, List, Callable
 
+from sigmar.basics.value import value
+
 
 class Roll:
-    def __init__(self, base_value: int):
-        self.base_value = base_value
+    def __init__(self, base_value):
+        self.base_value = value(base_value)
         self.rerolls = 0
         self.extra_bonuses: List[Callable] = []  # function take dict, return mod and reroll
 
@@ -14,7 +16,7 @@ class Roll:
             mod += add_mod
             rerolls = max(rerolls, add_reroll)
 
-        base_value = self.base_value - mod
+        base_value = self.base_value.average(context) - mod
         chances = (7 - base_value) / 6
         rerolls_chance = 1 + min(rerolls, base_value - 1) / 6
         chances *= rerolls_chance
