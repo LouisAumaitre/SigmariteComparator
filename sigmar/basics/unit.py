@@ -6,7 +6,7 @@ from sigmar.basics.base import Base
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell
-from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH
+from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND
 from sigmar.basics.weapon import Weapon
 
 
@@ -88,14 +88,16 @@ class Unit:
             _range += self.base.depth / INCH
         return total
 
-    def average_health(self, rend=0, nb=None):
+    def average_health(self, context: dict, nb=None):
         if nb is None:
             nb = self.size
+        rend = context.get(REND, 0)
         if self.ignores_1_rend and rend == -1:
             rend = 0
         save, crit = self.save.chances({}, mod=rend)
         save += crit
-        return nb * self.wounds / (1 - save)
+        wounds = min(self.wounds, context.get(SELF_WOUNDS, self.wounds))
+        return nb * wounds / (1 - save)
 
 
 class WeaponRule(Rule):

@@ -8,6 +8,7 @@ ENEMY_WOUNDS = 'enemy wounds'
 CHARGING = 'charging'
 
 WEAPON_RANGE = 'weapon range'
+REND = 'rend'
 
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 BONUS_REND = 'bonus rend'
