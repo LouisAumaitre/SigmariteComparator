@@ -2,7 +2,7 @@ from sigmar.basics.unit import Unit
 
 
 def fly(u: Unit):
-    u
+    u.can_fly = True
 
 
 def reroll_1_save(u: Unit):

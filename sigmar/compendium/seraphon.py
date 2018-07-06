@@ -1,5 +1,6 @@
 from sigmar.basics.base import cavalry, infantry, large_infantry, monster
-from sigmar.basics.value import DiceValue, RandomMultValue
+from sigmar.basics.roll import Roll
+from sigmar.basics.value import DiceValue, RandomMultValue, value
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.unit import Unit, WeaponRule
@@ -43,20 +44,20 @@ def celestial_cohort(u: Unit):
             return 1, 0
         return 0, 0
     for w in u.weapons:
-        if w.range > 3:
+        if w.range.average({}) > 3:
             w.tohit.extra_bonuses.append(buff)
 
 
 SERAPHONS.append(Warscroll(
     'Slann Starmaster', [
         [Weapon('Azure Lightning', 3, 6, 4, 3, 1, 1, [])],
-    ], 5, 4, 10, 7, 1, large_infantry, [
+    ], 5, 4, 10, 7, 1, large_infantry, rules=[
         Rule('Fly', fly),
         Rule('Celestial Configuration', lambda x: None),
         Rule('Arcane Vassal', lambda x: None),
         Spell('Light of the Heavens', 6, None),
         CommandAbility('Gift from the Heavens', None),
-    ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
+    ], keywords=[ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
     cast=3, unbind=3))
 
 
@@ -67,13 +68,13 @@ def dead_for_innumerable_ages(u: Unit):
 SERAPHONS.append(Warscroll(
     'Lord Kroak', [
         [Weapon('Spectral Claws', 3, "2D6", 3, 3, 1, 1, [])],
-    ], 5, 4, 10, 0, 1, large_infantry, [
+    ], 5, 4, 10, 0, 1, large_infantry, rules=[
         Rule('Fly', fly),
         Rule('Dead for Innumerable Ages', dead_for_innumerable_ages),
         Spell('Celestial Deliverance', 7, None),
         Spell('Comet`s Call', 7, None),
         CommandAbility('Impeccable Foresight', None),
-    ], [ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
+    ], keywords=[ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
     cast=4, unbind=4, named=True))
 
 
@@ -87,22 +88,22 @@ SERAPHONS.append(Warscroll(
          Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite Greatblade', 1, 2, 4, 3, -1, 2, []),
          Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
-    ], 5, 4, 10, 7, 1, infantry, [
+    ], 5, 4, 10, 7, 1, infantry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wrath of the Seraphon', lambda x: None),
         CommandAbility('Paragon of Order', None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
     'Saurus Sunblood', [
         [Weapon('Celestite War-mace', 1, 5, 3, 3, -1, 1, []),
          Weapon('Fearsome Jaws and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
-    ], 5, 4, 10, 7, 1, infantry, [
+    ], 5, 4, 10, 7, 1, infantry, rules=[
         Rule('Aeon Shield', ignore_2_rend),
         WeaponRule('Ferocious Rage', d3_hits_on_crit),
         CommandAbility('Scent of Weakness', None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
@@ -111,33 +112,33 @@ SERAPHONS.append(Warscroll(
          Weapon('Sunstone Spear', 2, 3, 3, 3, -1, 'D3', []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
-    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, [
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, rules=[
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),
         WeaponRule('Blazing Sunbolts', lambda x: None),
         CommandAbility('Ancient Warlord', None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR, 'SAURUS OLBLOOD']))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR, 'SAURUS OLBLOOD']))
 
 
 SERAPHONS.append(Warscroll(
     'Saurus Eternity Warden', [
         [Weapon('Star-stone Mace', 1, 3, 3, 3, -1, 2, []),
          Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
-    ], 5, 4, 10, 7, 1, infantry, [
+    ], 5, 4, 10, 7, 1, infantry, rules=[
         Rule('Selfless Protector', lambda x: None),
         Rule('Alpha Warden', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
     'Saurus Guard', [
         [Weapon('Celestite Polearm', 1, 2, 3, 3, -1, 1, []),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
-    ], 5, 4, 10, 1, 5, infantry, [
+    ], 5, 4, 10, 1, 5, infantry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Sworn Guardians', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
 SERAPHONS.append(Warscroll(
@@ -154,13 +155,13 @@ SERAPHONS.append(Warscroll(
          Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
-    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, [
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, rules=[
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),
         Rule('Stardrake Shield', ignore_1_rend),
         CommandAbility('Saurian Savagery', None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR]))
 
 
 def fury_of_the_seraphon(w: Weapon):
@@ -172,10 +173,10 @@ SERAPHONS.append(Warscroll(
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, [Rule('Fury of the Seraphon', fury_of_the_seraphon)]),
          Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, []),
          Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
-    ], 10, 4, 10, 7, 1, cavalry, [
+    ], 10, 4, 10, 7, 1, cavalry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         CommandAbility('Savage Charge', None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
@@ -184,20 +185,20 @@ SERAPHONS.append(Warscroll(
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Celestite Spear', 2, 1, 4, 4, 0, 1, []),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
-    ], 5, 5, 10, 1, 10, infantry, [
+    ], 5, 5, 10, 1, 10, infantry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
 SERAPHONS.append(Warscroll(
     'Saurus Astrolith Bearer', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, []),
          Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
-    ], 10, 4, 10, 7, 1, cavalry, [
+    ], 10, 4, 10, 7, 1, cavalry, rules=[
         Rule('Celestial Conduit', lambda x: None),
         Rule('Proud Defiance', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
 
 SERAPHONS.append(Warscroll(
@@ -208,28 +209,60 @@ SERAPHONS.append(Warscroll(
         [Weapon('Celestite Lance', 2, 1, 4, 3, 0, 1, [Rule('Blazing Lances', add_mw_on_6_towound_in_charge)]),
          Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
          Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
-    ], 7, 5, 10, 2, 5, cavalry, [
+    ], 7, 5, 10, 2, 5, cavalry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 SERAPHONS.append(Warscroll(
     'Skink Starseer', [
         [Weapon('Astromancer`s Staff', 2, 1, 4, 4, -1, 'D3', [])],
-    ], 8, 4, 10, 5, 1, infantry, [
-        fly,
+    ], 8, 4, 10, 5, 1, infantry, rules=[
+        Rule('Fly', fly),
         Rule('Cosmic Herald', lambda x: None),
         Spell('Curse of Fate', 4, None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
     cast=1, unbind=1))
 
 SERAPHONS.append(Warscroll(
     'Skink Starpriest', [
         [Weapon('Star-stone Dagger', 1, 3, 3, 4, -1, 1, [])],
-    ], 8, 5, 10, 4, 1, infantry, [
+    ], 8, 5, 10, 4, 1, infantry, rules=[
         Rule('Serpent Staff', lambda x: None),
         Spell('Summon  Starlight', 6, None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
     cast=1, unbind=1))
+
+SERAPHONS.append(Warscroll(
+    'Troglodon', [
+        [Weapon('Noxious Spittle', {10: 18, 8: 15, 5: 12, 3: 9, 0: 6}, 'D3', 3, 3, 0, 2, []),
+         Weapon('Venomous Bite', 2, 6, 4, {10: 2, 5: 3, 3: 4, 0: 5}, 0, 2, []),
+         Weapon('Troglodon`s Clawed Forelimbs', 2, 2, 4, 3, 0, 2, []),
+         Weapon('Skink Oracle`s Divining Rod', 1, 1, 4, 5, 0, 1, [])],
+    ], {10: 10, 8: 9, 5: 8, 3: 7, 0: 6}, 4, 10, 12, 1, monster, rules=[
+        Rule('Divining Rod', lambda x: None),
+        Rule('Primeval Roar', lambda x: None),
+        Rule('Drawn to the Screams', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, MONSTER], unbind=1))
+
+
+def cloak_of_feathers(u: Unit):
+    print('FEATHERS')
+    fly(u)
+    u.move = value(14)
+    u.save = Roll(4)
+
+
+SERAPHONS.append(Warscroll(
+    'Skink Priest', [
+        [Weapon('Starbolt', 18, 'D3', 3, 3, -1, 1, []),
+         Weapon('Star-stone Staff', 1, 3, 4, 3, -1, 1, []),
+         Rule('Cloak of Feathers', cloak_of_feathers)],
+        [Weapon('Starbolt', 18, 'D3', 3, 3, -1, 1, []),
+         Weapon('Star-stone Staff', 1, 3, 4, 3, -1, 1, []),
+         Rule('Priestly Trappings', lambda x: None)],
+    ], 8, 5, 10, 4, 1, infantry, rules=[
+        Rule('Celestial Rites', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO]))
 
 SERAPHONS.append(Warscroll(
     'Skinks', [
@@ -244,10 +277,10 @@ SERAPHONS.append(Warscroll(
          Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, []),
          Rule('Star-buckler', ignore_1_rend)],
-    ], 8, 6, 10, 1, 10, infantry, [
+    ], 8, 6, 10, 1, 10, infantry, rules=[
         Rule('Celestial cohort', celestial_cohort),
         Rule('Wary Fighters', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 
 def steel_trap_jaws(w: Weapon):
@@ -263,8 +296,8 @@ SERAPHONS.append(Warscroll(
          Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
         [Weapon('Moon-hammer', 2, 'all_in_range', 4, 3, 1, 2, []),
          Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
-    ], 8, 4, 10, 4, 3, large_infantry, [
+    ], 8, 4, 10, 4, 3, large_infantry, rules=[
         Rule('Energy transcendence', lambda x: None),
-    ], [ORDER, CELESTIAL, DAEMON, SERAPHON]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

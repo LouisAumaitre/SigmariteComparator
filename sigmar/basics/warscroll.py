@@ -37,11 +37,16 @@ class Warscroll:
             name: str,
             weapon_options: List[List[Union[Weapon, Rule]]],
             *args,
+            rules: List[Rule],
             **kwargs
     ):
         self.units = {
             selective_weapon_choice_name(weapons_and_rules, weapon_options): Unit(
-                name, [w for w in weapons_and_rules if isinstance(w, Weapon)], *args, **kwargs
+                name,
+                [w for w in weapons_and_rules if isinstance(w, Weapon)],
+                *args,
+                rules=[*rules, *[r for r in weapons_and_rules if isinstance(r, Rule)]],
+                **kwargs
             ) for weapons_and_rules in weapon_options
         }
         self.name = name

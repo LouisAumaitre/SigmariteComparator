@@ -39,6 +39,7 @@ class Unit:
         self.keywords = keywords
         keywords.append(self.name.upper())
         self.named = named
+        self.can_fly = False
 
         self.spells_per_turn = cast
         self.unbind_per_turn = unbind
@@ -68,7 +69,7 @@ class Unit:
             return ''
         attacking = 0
         for row in rows:
-            if sum([1 if w.range > _range else 0 for w in self.weapons if isinstance(w, Weapon)]):
+            if sum([1 if w.range.average(data) > _range else 0 for w in self.weapons if isinstance(w, Weapon)]):
                 attacking += row
             else:
                 break

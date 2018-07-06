@@ -19,7 +19,7 @@ class Weapon:
     def __init__(
             self,
             name: str,
-            range_: int,
+            range_: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             attacks: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             tohit,
             towound,
@@ -28,7 +28,7 @@ class Weapon:
             rules: List[Rule],
     ):
         self.name = name
-        self.range = range_
+        self.range = value(range_)
         self.attacks = value(attacks)
         self.tohit = Roll(tohit)
         self.towound = Roll(towound)
@@ -52,9 +52,9 @@ class Weapon:
         return 1 - chances - crit
 
     def average_damage(self, armour: Roll, data: dict, _range=1):
-        if _range > self.range or self.range > 3 >= _range:
+        if _range > self.range.average(data) or self.range.average(data) > 3 >= _range:
             return 0
-        data[WEAPON_RANGE] = self.range
+        data[WEAPON_RANGE] = self.range.average(data)
         for rule in self.attack_rules:
             rule(data)
         mortal_wounds = 0
