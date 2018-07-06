@@ -1,4 +1,4 @@
-from sigmar.basics.random_value import RandomValue, rv
+from sigmar.basics.value import RandomValue, rv
 
 
 def test_average_1_is_1():

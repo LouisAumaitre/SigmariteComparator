@@ -1,5 +1,7 @@
 SELF_NUMBERS = 'self_numbers'
 SELF_BASE = 'self_base'
+SELF_WOUNDS = 'self wounds'
+
 ENEMY_NUMBERS = 'enemy numbers'
 ENEMY_BASE = 'enemy base'
 ENEMY_WOUNDS = 'enemy wounds'

@@ -1,9 +1,9 @@
-from typing import Union, List
+from typing import Union, List, Dict
 
 from copy import copy
 
 from sigmar.basics.base import Base
-from sigmar.basics.random_value import RandomValue, rv
+from sigmar.basics.value import Value, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell
 from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH
@@ -15,7 +15,7 @@ class Unit:
             self,
             name: str,
             weapons: Union[List[Weapon]],
-            move: Union[int, str, RandomValue],
+            move: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             save: int,
             bravery: int,
             wounds: int,

@@ -1,5 +1,5 @@
 from sigmar.basics.base import cavalry, infantry, large_infantry, monster
-from sigmar.basics.random_value import RandomValue
+from sigmar.basics.value import RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.unit import Unit, WeaponRule

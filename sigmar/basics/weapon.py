@@ -1,6 +1,6 @@
 from typing import List, Union, Tuple, Callable
 
-from sigmar.basics.random_value import RandomValue, rv
+from sigmar.basics.value import Value, rv
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
@@ -20,11 +20,11 @@ class Weapon:
             self,
             name: str,
             range_: int,
-            attacks: Union[int, str, RandomValue],
+            attacks: Union[int, str, Value, list],
             tohit,
             towound,
             rend,
-            wounds: Union[int, str, RandomValue],
+            wounds: Union[int, str, Value],
             rules: List[Rule],
     ):
         self.name = name
