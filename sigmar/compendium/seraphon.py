@@ -65,7 +65,7 @@ def dead_for_innumerable_ages(u: Unit):
 
 SERAPHONS.append(Warscroll(
     'Lord Kroak', [
-        [Weapon('Azure Lightning', 3, "2D6", 3, 3, 1, 1, [])],
+        [Weapon('Spectral Claws', 3, "2D6", 3, 3, 1, 1, [])],
     ], 5, 4, 10, 0, 1, large_infantry, [
         Rule('Fly', fly),
         Rule('Dead for Innumerable Ages', dead_for_innumerable_ages),
@@ -117,6 +117,26 @@ SERAPHONS.append(Warscroll(
         WeaponRule('Blazing Sunbolts', lambda x: None),
         CommandAbility('Ancient Warlord', None),
     ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR, 'SAURUS OLBLOOD']))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Eternity Warden', [
+        [Weapon('Star-stone Mace', 1, 3, 3, 3, -1, 2, []),
+         Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
+    ], 5, 4, 10, 7, 1, infantry, [
+        Rule('Selfless Protector', lambda x: None),
+        Rule('Alpha Warden', lambda x: None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
+
+
+SERAPHONS.append(Warscroll(
+    'Saurus Guard', [
+        [Weapon('Celestite Polearm', 1, 2, 3, 3, -1, 1, []),
+         Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+    ], 5, 4, 10, 1, 5, infantry, [
+        Rule('Stardrake Shield', ignore_1_rend),
+        Rule('Sworn Guardians', lambda x: None),
+    ], [ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
 SERAPHONS.append(Warscroll(

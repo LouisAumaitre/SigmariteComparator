@@ -52,7 +52,7 @@ class Weapon:
         return 1 - chances - crit
 
     def average_damage(self, armour: Roll, data: dict, _range=1):
-        if _range > self.range:
+        if _range > self.range or self.range > 3 >= _range:
             return 0
         data[WEAPON_RANGE] = self.range
         for rule in self.attack_rules:

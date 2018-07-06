@@ -17,6 +17,20 @@ def weapon_choice_name(weapon_list: List[Union[Weapon, Rule]]) -> str:
     return str(new_list)[1:-1].replace('\'', '')
 
 
+def selective_weapon_choice_name(
+        weapon_list: List[Union[Weapon, Rule]],
+        all_choices: List[List[Union[Weapon, Rule]]]
+) -> str:
+    new_list = []
+    for item in weapon_list:
+        if all([item.name in [i.name for i in choice] for choice in all_choices]):
+            continue
+
+        if item.name not in new_list:
+            new_list.append(item.name)
+    return str(new_list)[1:-1].replace('\'', '')
+
+
 class Warscroll:
     def __init__(
             self,
@@ -26,7 +40,7 @@ class Warscroll:
             **kwargs
     ):
         self.units = {
-            weapon_choice_name(weapons_and_rules): Unit(
+            selective_weapon_choice_name(weapons_and_rules, weapon_options): Unit(
                 name, [w for w in weapons_and_rules if isinstance(w, Weapon)], *args, **kwargs
             ) for weapons_and_rules in weapon_options
         }
@@ -49,8 +63,12 @@ class Warscroll:
             numbers = f'{numbers} ' if numbers > 1 else ''
             health = context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''
+            equip = f' with {k}' if len(self.units) > 1 else ''
+            ranged = f'{int(round(v.average_damage(armour, copy(context), max(3.01, _range), front_size, nb) * 10))}/'
+            ranged = '' if ranged == '0/' else ranged
             print(
-                f'{numbers}{v.name}{health} with {k}: '
+                f'{numbers}{v.name}{health}{equip}: '
+                f'{ranged}'
                 f'{int(round(v.average_damage(armour, copy(context), _range, front_size, nb) * 10))}'
                 f'/{int(round(v.average_health(context, nb)))} '
                 f'{v.describe_formation(context, _range, front_size, nb)}')
