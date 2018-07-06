@@ -3,7 +3,7 @@ from typing import Union, List, Dict
 from copy import copy
 
 from sigmar.basics.base import Base
-from sigmar.basics.value import Value, rv
+from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell
 from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH
@@ -29,7 +29,7 @@ class Unit:
     ):
         self.name = name
         self.weapons = weapons
-        self.move = rv(move)
+        self.move = value(move)
         self.save = Roll(save)
         self.bravery = bravery
         self.wounds = wounds

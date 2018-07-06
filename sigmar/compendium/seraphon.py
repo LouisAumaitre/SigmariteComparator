@@ -27,8 +27,8 @@ def ordered_cohort(u: Unit):
 
     def attack(data):
         if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 30:
-            return 1, 0
-        return 0, 0
+            return 1
+        return 0
     for w in u.weapons:
         if 'Celestite' in w.name:
             w.attacks.extra_bonuses.append(attack)

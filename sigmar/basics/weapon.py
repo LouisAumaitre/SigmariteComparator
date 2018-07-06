@@ -1,6 +1,6 @@
 from typing import List, Union, Tuple, Callable
 
-from sigmar.basics.value import Value, rv
+from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
@@ -29,11 +29,11 @@ class Weapon:
     ):
         self.name = name
         self.range = range_
-        self.attacks = rv(attacks)
+        self.attacks = value(attacks)
         self.tohit = Roll(tohit)
         self.towound = Roll(towound)
         self.rend = rend
-        self.wounds = rv(wounds)
+        self.wounds = value(wounds)
 
         self.attack_rules: List[Callable] = []
 

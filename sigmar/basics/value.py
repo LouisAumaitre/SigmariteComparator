@@ -80,23 +80,39 @@ class RandomValue(Value):
             return 0
 
 
-class MonsterValue(Value):
-    defined_value: Dict[int, RandomValue]
-
-    def _average(self, context: dict):
-        if SELF_WOUNDS in context:
-            pass
-        return self.defined_value[max(self.defined_value.keys())]
-
-    def _max(self, context: dict):
-        if SELF_WOUNDS in context:
-            pass
-        return self.defined_value[max(self.defined_value.keys())]
-
-
-def rv(defined_value: Union[str, int, Value]):
+def _value(defined_value: Union[str, int, Value]):
     if isinstance(defined_value, Value):
         return defined_value
     if isinstance(defined_value, int):
         return FixedValue(defined_value)
+    return RandomValue(defined_value)
+
+
+class MonsterValue(Value):
+    defined_value: Dict[int, Value]
+
+    def __init__(self, values: Dict[int, Union[str, int, Value]]):
+        Value.__init__(self)
+        self.defined_value = {key: _value(value) for key, value in values}
+
+    def _average(self, context: dict):
+        if SELF_WOUNDS in context:
+            possible = [key for key in self.defined_value.keys() if key <= context[SELF_WOUNDS]]
+            return self.defined_value[max(possible)].average(context, 0)
+        return self.defined_value[max(self.defined_value.keys())].average(context, 0)
+
+    def _max(self, context: dict):
+        if SELF_WOUNDS in context:
+            possible = [key for key in self.defined_value.keys() if key <= context[SELF_WOUNDS]]
+            return self.defined_value[max(possible)].max(context, 0)
+        return self.defined_value[max(self.defined_value.keys())].max(context, 0)
+
+
+def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]]]):
+    if isinstance(defined_value, Value):
+        return defined_value
+    if isinstance(defined_value, int):
+        return FixedValue(defined_value)
+    if isinstance(defined_value, dict):
+        return MonsterValue(defined_value)
     return RandomValue(defined_value)
