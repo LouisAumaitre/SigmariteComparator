@@ -2,13 +2,14 @@ from sigmar.basics.base import cavalry, infantry, large_infantry, monster
 from sigmar.basics.roll import Roll
 from sigmar.basics.value import DiceValue, RandomMultValue, value
 from sigmar.basics.rules import Rule, Spell, CommandAbility
-from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT
+from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT, \
+    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS
 from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit
-from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER
+from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS
 
 SERAPHONS = []
 
@@ -281,6 +282,27 @@ SERAPHONS.append(Warscroll(
         Rule('Celestial cohort', celestial_cohort),
         Rule('Wary Fighters', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
+
+
+def star_venom(w: Weapon):
+    def buff(data):
+        if CHAOS in data.get(ENEMY_KEYWORDS, []) and DAEMON in data.get(ENEMY_KEYWORDS, []):
+            data[EXTRA_DAMAGE_ON_CRIT_WOUND] = 2
+        else:
+            data[EXTRA_DAMAGE_ON_CRIT_WOUND] = 1
+
+    w.attack_rules.append(buff)
+
+
+SERAPHONS.append(Warscroll(
+    'Chameleon Skinks', [
+        [Weapon('Dartpipe', 16, 2, 3, 4, 0, 1, [Rule('Star-venom', star_venom)]),
+         Weapon('Envenomed Dart', 1, 1, 5, 5, 0, 1, [])]
+    ], 8, 6, 10, 1, 5, infantry, rules=[
+        Rule('Chameleon Ambush', lambda x: None),
+        Rule('Disappear from Sight', lambda x: None),
+        Rule('Perfect Mimicry', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
 
 
 def steel_trap_jaws(w: Weapon):

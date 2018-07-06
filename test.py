@@ -1,6 +1,7 @@
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS, SELF_WOUNDS, REND
+from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS, SELF_WOUNDS, REND, ENEMY_KEYWORDS
+from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import SERAPHONS, seraphons_by_name
 
 warscrolls = SERAPHONS
@@ -9,6 +10,7 @@ context = {
     ENEMY_BASE: infantry,
     ENEMY_NUMBERS: 10,
     REND: -1,
+    ENEMY_KEYWORDS: [CHAOS, DAEMON]
 }
 
 test_armour = Roll(4)

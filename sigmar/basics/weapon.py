@@ -12,7 +12,7 @@ from sigmar.basics.string_constants import (
     EXTRA_HIT_ON_CRIT,
     EXTRA_WOUND_ON_CRIT,
     WEAPON_RANGE,
-)
+    EXTRA_DAMAGE_ON_CRIT_WOUND)
 
 
 class Weapon:
@@ -74,6 +74,12 @@ class Weapon:
             armour, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
 
         mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
-        damage = unsaved * self.wounds.average(data) + mortal_wounds
+        if wounds == 0:
+            print(f'{self.name}: no wounds')
+            damage_per_hit = self.wounds.average(data)
+        else:
+            damage_per_hit = self.wounds.average(data)\
+                             + data.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0) * critic_wounds / wounds
+        damage = unsaved * damage_per_hit + mortal_wounds
 
         return damage
