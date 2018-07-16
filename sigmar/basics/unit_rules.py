@@ -10,9 +10,9 @@ def reroll_1_save(u: Unit):
 
 
 def ignore_1_rend(u: Unit):
-    u.ignores_1_rend = True
+    u.save.mod_ignored.append(-1)
 
 
 def ignore_2_rend(u: Unit):
-    u.ignores_1_rend = True
-    # TODO
+    u.save.mod_ignored.append(-1)
+    u.save.mod_ignored.append(-2)

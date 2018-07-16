@@ -40,13 +40,12 @@ class Unit:
         keywords.append(self.name.upper())
         self.named = named
         self.can_fly = False
+        self.charge_range = value('2D6')
 
         self.spells_per_turn = cast
         self.unbind_per_turn = unbind
         self.spells: List[Spell] = []
         self.command_abilities: List[CommandAbility] = []
-
-        self.ignores_1_rend = False
 
         self.rules = rules
         for r in self.rules:
@@ -93,8 +92,6 @@ class Unit:
         if nb is None:
             nb = self.size
         rend = context.get(REND, 0)
-        if self.ignores_1_rend and rend == -1:
-            rend = 0
         save, crit = self.save.chances({}, mod=rend)
         save += crit
         wounds = min(self.wounds, context.get(SELF_WOUNDS, self.wounds))
