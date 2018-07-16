@@ -54,8 +54,8 @@ class Warscroll:
     def average_damage(self, armour: Roll, data: dict, front_size=1000, nb=None):
         return {key: unit.average_damage(armour, data, front_size, nb) for key, unit in self.units.items()}
 
-    def average_health(self, context):
-        return {key: unit.average_health(context) for key, unit in self.units.items()}
+    def average_health(self, context, nb=None):
+        return {key: unit.average_health(context, nb) for key, unit in self.units.items()}
 
     def stats(self, armour: Roll, context: dict, front_size=1000, nb=None):
         return {key: (

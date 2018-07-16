@@ -9,7 +9,7 @@ from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_do
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded, \
-    auto_wound_on_crit_hit
+    auto_wound_on_crit_hit, d6_hit_on_crit, reroll_all_tohit
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS
 
 SERAPHONS = []
@@ -371,5 +371,38 @@ SERAPHONS.append(Warscroll(
     ], 5, 3, 10, 8, 1, monster, rules=[
         Rule('Impervious Defense', impervious_defense),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
+
+
+SERAPHONS.append(Warscroll(
+    'Terradon Riders', [
+        [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []),
+         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+        [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]),
+         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+    ], 14, 5, 10, 3, 3, large_infantry, rules=[
+        Rule('Deadly Cargo', lambda x: None),
+        Rule('Swooping Dive', lambda x: None),
+        Rule('Fly', fly),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
+
+
+SERAPHONS.append(Warscroll(
+    'Terradon Skymaster', [
+        [Weapon('Starstrike Javelin', 10, 2, 3, 3, 0, 1, []),
+         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+        [Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]),
+         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+        [Weapon('Skyblade', 1, 3, 3, 4, 0, 1, [Rule('Skyblade', reroll_all_tohit)]),
+         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+    ], 14, 5, 10, 3, 1, large_infantry, rules=[
+        Rule('Deadly Cargo', lambda x: None),
+        Rule('Swooping Dive', lambda x: None),
+        Rule('Fly', fly),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

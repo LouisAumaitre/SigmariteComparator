@@ -34,6 +34,12 @@ def extra_hit_on_crit(w: Weapon):
     w.attack_rules.append(buff)
 
 
+def d6_hit_on_crit(w: Weapon):
+    def buff(data):
+        data[EXTRA_HIT_ON_CRIT] = value('D6').average(data) - 1
+    w.attack_rules.append(buff)
+
+
 def d3_hits_on_crit(w: Weapon):
     def buff(data):
         data[EXTRA_HIT_ON_CRIT] = 1  # TODO: D3 - 1
