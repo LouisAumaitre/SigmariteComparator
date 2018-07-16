@@ -1,5 +1,7 @@
 from typing import List, Union, Tuple, Callable, Dict
 
+from math import factorial
+
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -34,6 +36,7 @@ class Weapon:
         self.towound = Roll(towound)
         self.rend = rend
         self.wounds = value(wounds)
+        self.extra_wounds_after_everything_else = []
 
         self.attack_rules: List[Callable] = []
 
@@ -82,3 +85,71 @@ class Weapon:
         damage = unsaved * damage_per_hit + mortal_wounds
 
         return damage
+
+    def probability_of_damage(self, armour: Roll, data: dict, _range=1, users=1):
+        if _range > self.range.average(data) or self.range.average(data) > 3 >= _range:
+            return 0
+        data[WEAPON_RANGE] = self.range.average(data)
+        for rule in self.attack_rules:
+            rule(data)
+
+        potential_attacks = {}
+        potential_hits = {}
+        potential_wounds = {}
+        potential_unsaved = {}
+        try:
+            potential_attacks = [(nb * users, proba) for (nb, proba) in self.attacks.potential_values(data)]
+            assert abs(sum([proba for (val, proba) in potential_attacks]) - 1) <= pow(0.1, 5)
+
+            potential_hits = [
+                (
+                    nb, atk_proba * binomial(atk_value, nb) * (pow(self.tohit.success(data), nb) * pow(
+                        self.tohit.fail(data), atk_value - nb))
+                ) for (atk_value, atk_proba) in potential_attacks for nb in range(atk_value+1)
+            ]
+            # hits = hits + critic_hits * data.get(EXTRA_HIT_ON_CRIT, 0)
+            assert abs(sum([proba for (val, proba) in potential_hits]) - 1) <= pow(0.1, 5)
+
+            potential_wounds = [
+                (
+                    nb, hit_proba * binomial(hit_value, nb) * (pow(self.towound.success(data), nb) * pow(
+                        self.towound.fail(data), hit_value - nb))
+                ) for (hit_value, hit_proba) in potential_hits for nb in range(hit_value+1)
+            ]
+            # _wounds, _critic_wounds = self.average_wounds(critic_hits, data, mod=data.get(TOWOUND_MOD_ON_CRIT_HIT, 0))
+            # wounds += critic_wounds * data.get(EXTRA_WOUND_ON_CRIT, 0)
+            assert abs(sum([proba for (val, proba) in potential_wounds]) - 1) <= pow(0.1, 5)
+
+            potential_unsaved = [
+                (
+                    nb, wnd_proba * binomial(wnd_value, nb) * (pow(armour.fail(data), nb) * pow(
+                        armour.success(data), wnd_value - nb))
+                ) for (wnd_value, wnd_proba) in potential_wounds for nb in range(wnd_value+1)
+            ]
+            # unsaved += critic_wounds * self.unsaved_chances(
+            #     armour, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
+            assert abs(sum([proba for (val, proba) in potential_unsaved]) - 1) <= pow(0.1, 5)
+
+            # mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
+        except AssertionError:
+            info = {
+                'potential_attacks': potential_attacks,
+                'potential_hits': potential_hits,
+                'potential_wounds': potential_wounds,
+                'potential_unsaved': potential_unsaved,
+            }
+            for k, potent in info.items():
+                cleaned = [(
+                    pick, round(sum([proba for (val, proba) in potent if val == pick]), 2)
+                ) for pick in set([a for (a, b) in potent])]
+                print(f' - {k}: {[(val, round(prob, 2))for (val, prob) in potent]}={cleaned}='
+                      f'{sum([proba for (val, proba) in potent])} ({sum([proba for (val, proba) in potent]) - 1})')
+            print(f'{int(100 * round(sum([proba for (damage, proba) in potential_unsaved if damage > 0]), 2))}% '
+                  f'chances of damage')
+
+        return sum([proba for (damage, proba) in potential_unsaved if damage > 0])
+
+
+def binomial(n, k):
+    # combinations of k in n
+    return factorial(n) / (factorial(k) * factorial(n - k))

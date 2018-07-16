@@ -27,6 +27,16 @@ class Value:
     def _max(self, context: dict):
         raise NotImplementedError
 
+    def potential_values(self, context: dict, mod=0):
+        for bonus in self.extra_bonuses:
+            add_mod = bonus(context)
+            mod += add_mod
+
+        return [(potential + mod, proba) for (potential, proba) in self._potential_values(context)]
+
+    def _potential_values(self, context: dict):
+        raise NotImplementedError
+
 
 class RandomMultValue(Value):
     def __init__(self, average_mult, max_mult, base_value: Value):
@@ -36,24 +46,39 @@ class RandomMultValue(Value):
         self.base_value = base_value
 
     def average(self, context: dict, mod=0):
+        mod2 = 0
         for bonus in self.extra_bonuses:
             add_mod = bonus(context)
-            mod += add_mod
+            mod2 += add_mod
 
-        return self._average(context, mod)
+        return self._average(context, mod) + mod2
 
     def _average(self, context: dict, mod=0):
         return self.average_mult * self.base_value.average(context, mod)
 
     def max(self, context: dict, mod=0):
+        mod2 = 0
         for bonus in self.extra_bonuses:
             add_mod = bonus(context)
-            mod += add_mod
+            mod2 += add_mod
 
-        return self._max(context, mod)
+        return self._max(context, mod) + mod2
 
     def _max(self, context: dict, mod=0):
         return self.max_mult * self.base_value.max(context, mod)
+
+    def potential_values(self, context: dict, mod=0):
+        mod2 = 0
+        for bonus in self.extra_bonuses:
+            add_mod = bonus(context)
+            mod2 += add_mod
+
+        return [(potential + mod2, proba) for (potential, proba) in self._potential_values(context)]
+
+    def _potential_values(self, context: dict, mod=0):
+        return [(
+            potential * self.average_mult, proba
+        ) for (potential, proba) in self.base_value.potential_values(context, mod)]
 
 
 class FixedValue(Value):
@@ -66,6 +91,9 @@ class FixedValue(Value):
 
     def _max(self, context: dict):
         return self.defined_value
+
+    def _potential_values(self, context: dict):
+        return [(self.defined_value, 1)]
 
 
 class DiceValue(Value):
@@ -103,6 +131,19 @@ class DiceValue(Value):
         else:
             return 0
 
+    def _potential_values(self, context: dict):
+        if self.defined_value == 'D6':
+            return [(i, 1/6) for i in range(6)]
+        elif self.defined_value == '2D6':
+            values = [a + b for a in range(6) for b in range(6)]
+            return [(a, values.count(a)/36) for a in set(values)]
+        elif self.defined_value == 'D3':
+            return [(i, 1/6) for i in range(3)]
+        elif self.defined_value == 'all_in_range':
+            return [(self.average(context), 1)]
+        else:
+            return 0
+
 
 def _value(defined_value: Union[str, int, Value]):
     if isinstance(defined_value, Value):
@@ -128,6 +169,12 @@ class MonsterValue(Value):
             possible = [key for key in self.defined_value.keys() if key <= context[SELF_WOUNDS]]
             return self.defined_value[max(possible)].max(context, 0)
         return self.defined_value[max(self.defined_value.keys())].max(context, 0)
+
+    def _potential_values(self, context: dict):
+        if SELF_WOUNDS in context:
+            possible = [key for key in self.defined_value.keys() if key <= context[SELF_WOUNDS]]
+            return self.defined_value[max(possible)].max(context, 0)
+        return self.defined_value[max(self.defined_value.keys())].potential_values(context, 0)
 
 
 def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]]]):

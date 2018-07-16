@@ -82,11 +82,19 @@ class Unit:
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
+        users = {}
         for row in self.formation(unit_data, front_size, nb):
             total += row * sum(
                 [w.average_damage(armour, copy(unit_data), _range) for w in self.weapons if isinstance(w, Weapon)]
             )
+            for w in [w for w in self.weapons if w.range.average(data) >= _range]:
+                users[w] = users.get(w, 0) + row
             _range += self.base.depth / INCH
+
+        for w in self.weapons:
+            for extra_func in w.extra_wounds_after_everything_else:
+                total += extra_func(data, armour, _range, users=users.get(w, 0))
+
         return total
 
     def average_health(self, context: dict, nb=None):

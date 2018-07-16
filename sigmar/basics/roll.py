@@ -27,6 +27,14 @@ class Roll:
         sixes = rerolls_chance * max(0, 1 + mod) / 6 if base_value <= 6 else 0
         return max(0, chances - sixes), sixes
 
+    def success(self, context: dict, mod=0):
+        hit, crit = self.chances(context, mod)
+        return hit + crit
+
+    def fail(self, context: dict, mod=0):
+        hit, crit = self.chances(context, mod)
+        return 1 - hit - crit
+
     def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:
         chances, sixes = self.chances(context, mod)
         return chances * dices, sixes * dices

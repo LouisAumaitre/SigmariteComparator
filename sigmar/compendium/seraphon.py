@@ -8,7 +8,7 @@ from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit
+from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS
 
 SERAPHONS = []
@@ -317,11 +317,20 @@ def steel_trap_jaws(w: Weapon):
 SERAPHONS.append(Warscroll(
     'Kroxigors', [
         [Weapon('Drakebite Maul', 2, 4, 4, 3, 0, 2, []),
-         Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
-        [Weapon('Moon-hammer', 2, 'all_in_range', 4, 3, 1, 2, []),
-         Weapon('Vice-like Jaws', 1, 1, 4, 3, 1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
+         Weapon('Vice-like Jaws', 1, 1, 4, 3, -1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
+        [Weapon('Moon-hammer', 2, 'all_in_range', 4, 3, -1, 2, []),
+         Weapon('Vice-like Jaws', 1, 1, 4, 3, -1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
     ], 8, 4, 10, 4, 3, large_infantry, rules=[
         Rule('Energy transcendence', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
+
+
+SERAPHONS.append(Warscroll(
+    'Salamanders', [
+        [Weapon('Stream of Fire', 8, 1, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)]),
+         Weapon('Corrosive Bite', 1, 3, 3, 3, -1, 1, [])],
+    ], 8, 4, 10, 4, 3, large_infantry, rules=[
+        Rule('Goaded to Fury', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}
