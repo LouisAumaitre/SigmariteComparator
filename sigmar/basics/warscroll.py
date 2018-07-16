@@ -62,7 +62,7 @@ class Warscroll:
             unit.average_damage(armour, context, front_size, nb), unit.average_health(context)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, armour: Roll, context: dict, front_size=1000, nb=None):
+    def simplest_stats(self, context: dict, front_size=1000, nb=None):
         for k, v in self.units.items():
             numbers = v.size if nb is None else nb
             numbers = f'{numbers} ' if numbers > 1 else ''
@@ -71,13 +71,13 @@ class Warscroll:
             equip = f' with {k}' if len(self.units) > 1 else ''
             ranged_context = copy(context)
             ranged_context[RANGE] = max(3.01, context.get(RANGE, 0))
-            ranged = f'{int(round(v.average_damage(armour, ranged_context, front_size, nb) * 10))}/'
+            ranged = f'{int(round(v.average_damage(ranged_context, front_size, nb) * 10))}/'
             ranged = '' if ranged == '0/' else ranged
             flight = 'F' if v.can_fly else ''
             print(
                 f'{numbers}{v.name}{health}{equip}: '
                 f'{ranged}'
-                f'{int(round(v.average_damage(armour, copy(context), front_size, nb) * 10))}'
+                f'{int(round(v.average_damage(copy(context), front_size, nb) * 10))}'
                 f'/{int(round(v.average_health(context, nb)))} '
                 f'{v.describe_formation(context, front_size, nb)} '
                 f'M{v.speed_grade(context)}{flight}')

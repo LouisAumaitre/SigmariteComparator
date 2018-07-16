@@ -80,7 +80,7 @@ class Unit:
             return f'({rows[0]}x{len(rows)}, {attacking} attacking)'
         return f'({attacking} attacking)'
 
-    def average_damage(self, armour: Roll, data: dict, front_size=1000, nb=None):
+    def average_damage(self, data: dict, front_size=1000, nb=None):
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
@@ -88,7 +88,7 @@ class Unit:
         _range = data.get(RANGE, 0)
         for row in self.formation(unit_data, front_size, nb):
             total += row * sum(
-                [w.average_damage(armour, copy(unit_data)) for w in self.weapons if isinstance(w, Weapon)]
+                [w.average_damage(copy(unit_data)) for w in self.weapons if isinstance(w, Weapon)]
             )
             for w in [w for w in self.weapons if w.range.average(data) >= _range]:
                 users[w] = users.get(w, 0) + row
@@ -96,7 +96,7 @@ class Unit:
 
         for w in self.weapons:
             for extra_func in w.extra_wounds_after_everything_else:
-                total += extra_func(data, armour, users=users.get(w, 0))
+                total += extra_func(data, users=users.get(w, 0))
 
         return total
 

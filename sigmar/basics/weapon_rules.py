@@ -47,8 +47,8 @@ def d3_hits_on_crit(w: Weapon):
 
 
 def d3_mw_on_4_if_wounded(w: Weapon):
-    def hellfire(data, armour, users=1):
-        proba = w.probability_of_damage(armour, data, users=users)
+    def hellfire(data, users=1):
+        proba = w.probability_of_damage(data, users=users)
         proba *= Roll(4).success(data)
         return proba * value('D3').average(data)
     w.extra_wounds_after_everything_else.append(hellfire)

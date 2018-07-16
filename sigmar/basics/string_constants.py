@@ -6,6 +6,7 @@ ENEMY_NUMBERS = 'enemy numbers'
 ENEMY_BASE = 'enemy base'
 ENEMY_WOUNDS = 'enemy wounds'
 ENEMY_KEYWORDS = 'enemy keywords'
+ENEMY_SAVE = 'enemy_save'
 
 CHARGING = 'charging'
 

@@ -14,7 +14,7 @@ from sigmar.basics.string_constants import (
     EXTRA_HIT_ON_CRIT,
     EXTRA_WOUND_ON_CRIT,
     WEAPON_RANGE,
-    EXTRA_DAMAGE_ON_CRIT_WOUND, RANGE, AUTO_WOUND_ON_CRIT)
+    EXTRA_DAMAGE_ON_CRIT_WOUND, RANGE, AUTO_WOUND_ON_CRIT, ENEMY_SAVE)
 
 
 class Weapon:
@@ -54,7 +54,7 @@ class Weapon:
         chances, crit = armour.chances({}, mod=self.rend + extra_rend)
         return 1 - chances - crit
 
-    def average_damage(self, armour: Roll, data: dict):
+    def average_damage(self, data: dict):
         if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
             return 0
         data[WEAPON_RANGE] = self.range.average(data)
@@ -75,9 +75,9 @@ class Weapon:
         critic_wounds += _critic_wounds
         wounds += critic_wounds * data.get(EXTRA_WOUND_ON_CRIT, 0)
 
-        unsaved = wounds * self.unsaved_chances(armour, extra_rend=data.get(BONUS_REND, 0))
+        unsaved = wounds * self.unsaved_chances(data[ENEMY_SAVE], extra_rend=data.get(BONUS_REND, 0))
         unsaved += critic_wounds * self.unsaved_chances(
-            armour, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
+            data[ENEMY_SAVE], extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
 
         mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
         if wounds == 0:
@@ -89,7 +89,7 @@ class Weapon:
 
         return damage
 
-    def probability_of_damage(self, armour: Roll, data: dict, users=1):
+    def probability_of_damage(self, data: dict, users=1):
         if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
             return 0
         data[WEAPON_RANGE] = self.range.average(data)
@@ -125,8 +125,8 @@ class Weapon:
 
             potential_unsaved = [
                 (
-                    nb, wnd_proba * binomial(wnd_value, nb) * (pow(armour.fail(data), nb) * pow(
-                        armour.success(data), wnd_value - nb))
+                    nb, wnd_proba * binomial(wnd_value, nb) * (pow(data[ENEMY_SAVE].fail(data), nb) * pow(
+                        data[ENEMY_SAVE].success(data), wnd_value - nb))
                 ) for (wnd_value, wnd_proba) in potential_wounds for nb in range(wnd_value+1)
             ]
             # unsaved += critic_wounds * self.unsaved_chances(
