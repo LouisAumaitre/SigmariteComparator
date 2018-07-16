@@ -8,7 +8,8 @@ from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded
+from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded, \
+    auto_wound_on_crit_hit
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS
 
 SERAPHONS = []
@@ -349,5 +350,10 @@ SERAPHONS.append(Warscroll(
         Rule('Goaded to Anger', lambda x: None),
         Rule('Instinctive Defense', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
+
+SERAPHONS.append(Warscroll(
+    'Skink Handlers', [
+        [Weapon('Goad-spears', 2, 1, 5, 5, 0, 1, [Rule('Aim for Their Eyes', auto_wound_on_crit_hit)])],
+    ], 8, 6, 10, 1, 1, infantry, rules=[], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}
