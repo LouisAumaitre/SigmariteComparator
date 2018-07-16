@@ -16,3 +16,7 @@ def ignore_1_rend(u: Unit):
 def ignore_2_rend(u: Unit):
     u.save.mod_ignored.append(-1)
     u.save.mod_ignored.append(-2)
+
+
+def march_double(u: Unit):
+    u.run_distance = u.move

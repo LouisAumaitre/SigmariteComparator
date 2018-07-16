@@ -76,4 +76,5 @@ class Warscroll:
                 f'{ranged}'
                 f'{int(round(v.average_damage(armour, copy(context), _range, front_size, nb) * 10))}'
                 f'/{int(round(v.average_health(context, nb)))} '
-                f'{v.describe_formation(context, _range, front_size, nb)}')
+                f'{v.describe_formation(context, _range, front_size, nb)} '
+                f'M{v.speed_description(context)}')

@@ -40,6 +40,7 @@ class Unit:
         keywords.append(self.name.upper())
         self.named = named
         self.can_fly = False
+        self.run_distance = value('D6')
         self.charge_range = value('2D6')
 
         self.spells_per_turn = cast
@@ -96,6 +97,17 @@ class Unit:
         save += crit
         wounds = min(self.wounds, context.get(SELF_WOUNDS, self.wounds))
         return nb * wounds / (1 - save)
+
+    def average_speed(self, context: dict):
+        average_move = self.move.average(context)
+        average_sprint = self.run_distance.average(context) + average_move
+        average_charge = self.charge_range.average(context) + average_move
+        return average_move, average_sprint, average_charge
+
+    def speed_description(self, context: dict):
+        flight = 'F' if self.can_fly else ''
+        m, s, c = self.average_speed(context)
+        return f'{int(round(m))}-{int(round(s))}-{int(round(c))}{flight}'
 
 
 class WeaponRule(Rule):

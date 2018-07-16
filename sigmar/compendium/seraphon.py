@@ -5,7 +5,7 @@ from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT, \
     EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS
 from sigmar.basics.unit import Unit, WeaponRule
-from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend
+from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import add_mw_on_6_towound_in_charge, d3_hits_on_crit
@@ -189,6 +189,7 @@ SERAPHONS.append(Warscroll(
     ], 5, 5, 10, 1, 10, infantry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
+        Rule('Wardrum', march_double),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 
@@ -212,6 +213,7 @@ SERAPHONS.append(Warscroll(
          Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
     ], 7, 5, 10, 2, 5, cavalry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
+        Rule('Wardrum', march_double),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
 
 SERAPHONS.append(Warscroll(
