@@ -21,4 +21,6 @@ EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
 EXTRA_HIT_ON_CRIT = 'extra hit on crit'
 EXTRA_DAMAGE_ON_CRIT_WOUND = 'extra damage on crit wound'
 
+RANGE = 'range'
+
 INCH = 25.6

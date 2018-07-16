@@ -6,7 +6,7 @@ from sigmar.basics.base import Base
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell
-from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND
+from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND, RANGE
 from sigmar.basics.weapon import Weapon
 
 
@@ -63,11 +63,12 @@ class Unit:
             nb -= row
         return rows
 
-    def describe_formation(self, data: dict, _range, front_size, nb):
+    def describe_formation(self, data: dict, front_size, nb):
         rows = self.formation(data, front_size, nb)
         if len(rows) == 1 and rows[0] <= 1:
             return ''
         attacking = 0
+        _range = data.get(RANGE, 0)
         for row in rows:
             if sum([1 if w.range.average(data) > _range else 0 for w in self.weapons if isinstance(w, Weapon)]):
                 attacking += row
@@ -78,14 +79,15 @@ class Unit:
             return f'({rows[0]}x{len(rows)}, {attacking} attacking)'
         return f'({attacking} attacking)'
 
-    def average_damage(self, armour: Roll, data: dict, _range=0, front_size=1000, nb=None):
+    def average_damage(self, armour: Roll, data: dict, front_size=1000, nb=None):
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
         users = {}
+        _range = data.get(RANGE, 0)
         for row in self.formation(unit_data, front_size, nb):
             total += row * sum(
-                [w.average_damage(armour, copy(unit_data), _range) for w in self.weapons if isinstance(w, Weapon)]
+                [w.average_damage(armour, copy(unit_data)) for w in self.weapons if isinstance(w, Weapon)]
             )
             for w in [w for w in self.weapons if w.range.average(data) >= _range]:
                 users[w] = users.get(w, 0) + row
@@ -93,7 +95,7 @@ class Unit:
 
         for w in self.weapons:
             for extra_func in w.extra_wounds_after_everything_else:
-                total += extra_func(data, armour, _range, users=users.get(w, 0))
+                total += extra_func(data, armour, users=users.get(w, 0))
 
         return total
 

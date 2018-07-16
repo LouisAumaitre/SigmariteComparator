@@ -1,6 +1,8 @@
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS, SELF_WOUNDS, REND, ENEMY_KEYWORDS
+from sigmar.basics.string_constants import (
+    CHARGING, ENEMY_BASE, ENEMY_NUMBERS, SELF_WOUNDS, REND, ENEMY_KEYWORDS, RANGE
+)
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import SERAPHONS, seraphons_by_name
 
@@ -10,7 +12,8 @@ context = {
     ENEMY_BASE: infantry,
     ENEMY_NUMBERS: 10,
     REND: -1,
-    ENEMY_KEYWORDS: [CHAOS, DAEMON]
+    ENEMY_KEYWORDS: [CHAOS, DAEMON],
+    RANGE: 0.1,
 }
 
 test_armour = Roll(4)
@@ -21,7 +24,7 @@ test_armour = Roll(4)
 #         print(f'{ws.name} with {w_c_n}: {round(damage, 2)} dpt / {round(health, 2)} hp')
 
 for ws in warscrolls:
-    ws.simplest_stats(test_armour, context, _range=0.1, front_size=145)
+    ws.simplest_stats(test_armour, context, front_size=145)
 
 # carn = seraphons_by_name['Saurus Oldblood on Carnosaur']
 # for u in carn.units.values():

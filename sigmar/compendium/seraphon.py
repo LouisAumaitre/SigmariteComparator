@@ -3,7 +3,7 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.value import DiceValue, RandomMultValue, value
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT, \
-    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS
+    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE
 from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
@@ -329,8 +329,25 @@ SERAPHONS.append(Warscroll(
     'Salamanders', [
         [Weapon('Stream of Fire', 8, 1, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)]),
          Weapon('Corrosive Bite', 1, 3, 3, 3, -1, 1, [])],
-    ], 8, 4, 10, 4, 3, large_infantry, rules=[
+    ], 8, 5, 10, 3, 1, large_infantry, rules=[
         Rule('Goaded to Fury', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
+
+
+def piercing_barbs(w: Weapon):
+    def buff(data):
+        if data[RANGE] <= 6:
+            data[BONUS_REND] = data.get(BONUS_REND, 0) - 1
+    w.attack_rules.append(buff)
+
+
+SERAPHONS.append(Warscroll(
+    'Razordons', [
+        [Weapon('Volley of Spikes', 12, '2D6', 3, 4, 0, 1, [Rule('Piercing Barbs', piercing_barbs)]),
+         Weapon('Fierce Bite and Spiked Tail', 1, 3, 4, 3, 0, 1, [])],
+    ], 8, 4, 10, 3, 1, large_infantry, rules=[
+        Rule('Goaded to Anger', lambda x: None),
+        Rule('Instinctive Defense', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

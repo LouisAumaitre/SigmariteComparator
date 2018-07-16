@@ -14,7 +14,7 @@ from sigmar.basics.string_constants import (
     EXTRA_HIT_ON_CRIT,
     EXTRA_WOUND_ON_CRIT,
     WEAPON_RANGE,
-    EXTRA_DAMAGE_ON_CRIT_WOUND)
+    EXTRA_DAMAGE_ON_CRIT_WOUND, RANGE)
 
 
 class Weapon:
@@ -54,8 +54,8 @@ class Weapon:
         chances, crit = armour.chances({}, mod=self.rend + extra_rend)
         return 1 - chances - crit
 
-    def average_damage(self, armour: Roll, data: dict, _range=1):
-        if _range > self.range.average(data) or self.range.average(data) > 3 >= _range:
+    def average_damage(self, armour: Roll, data: dict):
+        if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
             return 0
         data[WEAPON_RANGE] = self.range.average(data)
         for rule in self.attack_rules:
@@ -86,8 +86,8 @@ class Weapon:
 
         return damage
 
-    def probability_of_damage(self, armour: Roll, data: dict, _range=1, users=1):
-        if _range > self.range.average(data) or self.range.average(data) > 3 >= _range:
+    def probability_of_damage(self, armour: Roll, data: dict, users=1):
+        if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
             return 0
         data[WEAPON_RANGE] = self.range.average(data)
         for rule in self.attack_rules:
