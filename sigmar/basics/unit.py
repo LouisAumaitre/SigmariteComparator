@@ -114,6 +114,10 @@ class Unit:
         average_charge = self.charge_range.average(context) + average_move
         return average_move, average_sprint, average_charge
 
+    def speed_grade(self, context: dict):
+        m, s, c = self.average_speed(context)
+        return round((m + s + c) / 3)
+
     def speed_description(self, context: dict):
         flight = 'F' if self.can_fly else ''
         m, s, c = self.average_speed(context)
