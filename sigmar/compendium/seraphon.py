@@ -110,7 +110,7 @@ SERAPHONS.append(Warscroll(
 
 SERAPHONS.append(Warscroll(
     'Saurus Oldblood on Carnosaur', [
-        [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, []),
+        [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, [Rule('Blazing Sunbolts', lambda x: None)]),
          Weapon('Sunstone Spear', 2, 3, 3, 3, -1, 'D3', []),
          Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, []),
          Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])],
@@ -118,7 +118,6 @@ SERAPHONS.append(Warscroll(
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),
-        WeaponRule('Blazing Sunbolts', lambda x: None),
         CommandAbility('Ancient Warlord', None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO, MONSTER, CARNOSAUR, 'SAURUS OLBLOOD']))
 
@@ -355,5 +354,22 @@ SERAPHONS.append(Warscroll(
     'Skink Handlers', [
         [Weapon('Goad-spears', 2, 1, 5, 5, 0, 1, [Rule('Aim for Their Eyes', auto_wound_on_crit_hit)])],
     ], 8, 6, 10, 1, 1, infantry, rules=[], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
+
+
+def impervious_defense(u: Unit):
+    u.save.mod_ignored = [-1, -2, -3, -4, -5, -6]
+
+
+SERAPHONS.append(Warscroll(
+    'Bastiladon', [
+        [Weapon('Searing Beam', 20, '2D6', 4, 3, -1, 2, [Rule('Light of the Heavens', lambda x: None)]),
+         Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+        [Weapon('Ark of Sotek', 8, 'D6', 1, 1, -6, 1, []),
+         Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+    ], 5, 3, 10, 8, 1, monster, rules=[
+        Rule('Impervious Defense', impervious_defense),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

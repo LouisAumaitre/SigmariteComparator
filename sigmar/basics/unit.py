@@ -31,6 +31,7 @@ class Unit:
         self.weapons = weapons
         self.move = value(move)
         self.save = Roll(save)
+        self.extra_save = Roll(7)
         self.bravery = bravery
         self.wounds = wounds
         self.min_size = min_size
@@ -106,7 +107,9 @@ class Unit:
         save, crit = self.save.chances({}, mod=rend)
         save += crit
         wounds = min(self.wounds, context.get(SELF_WOUNDS, self.wounds))
-        return nb * wounds / (1 - save)
+        life = nb * wounds / (1 - save)
+        life /= self.extra_save.fail(context)
+        return life
 
     def average_speed(self, context: dict):
         average_move = self.move.average(context)
