@@ -130,8 +130,7 @@ SERAPHONS.append(Warscroll(
 
 SERAPHONS.append(Warscroll(
     'Saurus Eternity Warden', [
-        [Weapon('Star-stone Mace', 1, 3, 3, 3, -1, 2, []),
-         Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
+        [Weapon('Star-stone Mace', 1, 3, 3, 3, -1, 2, []), Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
     ], 5, 4, 10, 7, 1, infantry, rules=[
         Rule('Selfless Protector', lambda x: None),
         Rule('Alpha Warden', lambda x: None),
@@ -274,7 +273,6 @@ SERAPHONS.append(Warscroll(
 
 
 def cloak_of_feathers(u: Unit):
-    print('FEATHERS')
     fly(u)
     u.move = value(14)
     u.save = Roll(4)

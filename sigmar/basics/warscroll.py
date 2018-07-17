@@ -50,13 +50,6 @@ def option_combinations(all_options: List[dict], all_variants, variant_id) -> Li
             for sub_combo in option_combinations(
                     [o for o in all_options if o.get('type', 'leader') != current_type], all_variants, variant_id):
                 combinations.append([version, *sub_combo])
-        else:
-            print({
-                'version_short_id': version_short_id,
-                'all_variant_ids': all_variant_ids,
-                'variant_id': variant_id,
-                'current_type': current_type,
-            })
     return combinations
 
 
