@@ -23,6 +23,7 @@ EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
 EXTRA_HIT_ON_CRIT = 'extra hit on crit'
 EXTRA_DAMAGE_ON_CRIT_WOUND = 'extra damage on crit wound'
+MW_ON_DAMAGE = 'mortal wound on damage'
 
 RANGE = 'range'
 
