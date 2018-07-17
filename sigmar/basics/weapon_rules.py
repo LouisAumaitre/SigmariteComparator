@@ -30,6 +30,14 @@ def add_mw_on_6_towound_in_charge(w: Weapon):
     w.attack_rules.append(buff)
 
 
+def plus_1_towound_in_charge(w: Weapon):
+    def buff(data):
+        if data.get(CHARGING, False):
+            return 1, 0
+        return 0, 0
+    w.towound.extra_bonuses.append(buff)
+
+
 def extra_hit_on_crit(w: Weapon):
     def buff(data):
         data[EXTRA_HIT_ON_CRIT] = 1

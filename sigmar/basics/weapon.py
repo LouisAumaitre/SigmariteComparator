@@ -39,7 +39,7 @@ class Weapon:
         self.attacks = value(attacks)
         self.tohit = Roll(tohit)
         self.towound = Roll(towound)
-        self.rend = rend
+        self.rend = value(rend)
         self.wounds = value(wounds)
         self.extra_wounds_after_everything_else = []
 
@@ -55,8 +55,8 @@ class Weapon:
     def average_wounds(self, dices, extra_data: dict, mod=0) -> Tuple[float, float]:
         return self.towound.average(dices, extra_data, mod)
 
-    def unsaved_chances(self, armour: Roll, extra_rend=0) -> float:
-        chances, crit = armour.chances({}, mod=self.rend + extra_rend)
+    def unsaved_chances(self, extra_data: dict, extra_rend=0) -> float:
+        chances, crit = extra_data[ENEMY_SAVE].chances({}, mod=self.rend.average(extra_data, extra_rend))
         return 1 - chances - crit
 
     def average_damage(self, data: dict):
@@ -83,9 +83,9 @@ class Weapon:
         critic_wounds += _critic_wounds
         wounds += critic_wounds * data.get(EXTRA_WOUND_ON_CRIT, 0)
 
-        unsaved = wounds * self.unsaved_chances(data[ENEMY_SAVE], extra_rend=data.get(BONUS_REND, 0))
+        unsaved = wounds * self.unsaved_chances(data, extra_rend=data.get(BONUS_REND, 0))
         unsaved += critic_wounds * self.unsaved_chances(
-            data[ENEMY_SAVE], extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
+            data, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
 
         mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
         if wounds == 0:

@@ -12,9 +12,9 @@ from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import (
     add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded,
-    auto_wound_on_crit_hit, d6_hit_on_crit, reroll_all_tohit
-)
-from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS
+    auto_wound_on_crit_hit, d6_hit_on_crit, reroll_all_tohit,
+    plus_1_towound_in_charge)
+from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS, PRIEST
 
 SERAPHONS = []
 
@@ -290,7 +290,7 @@ SERAPHONS.append(Warscroll(
          Rule('Priestly Trappings', lambda x: None)],
     ], 8, 5, 10, 4, 1, infantry, rules=[
         Rule('Celestial Rites', lambda x: None),
-    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, PRIEST]))
 
 
 meteoritic_javelin = Weapon('Meteoritic Javelin', 8, 1, 5, 4, 0, 1, [])
@@ -465,6 +465,42 @@ SERAPHONS.append(Warscroll(
             Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
             Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
     }]))
+
+stegadon_stomps = Weapon('Crushing Stomps', 1, {8: '3D6', 4: '2D6', 0: 'D6'}, 4, 3, 0, 1, [
+    Rule('Unstoppable Stampede', plus_1_towound_in_charge)])
+
+SERAPHONS.append(Warscroll(
+    'Stegadon', [
+        [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Skystreak Bow', 25, 3, 4, 3, -1, 'D3', []),
+         Weapon('Massive Horns', 2, 3, 3, 3, {8: -3, 4: -2, 0: -1}, 2, []),
+         stegadon_stomps],
+        [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Skystreak Bow', 25, 3, 4, 3, -1, 'D3', []),
+         Weapon('Massive Horns', 2, 3, 3, 3, {8: -3, 4: -2, 0: -1}, 2, []),
+         stegadon_stomps, Rule('Skink Alpha', lambda x: None)],
+        [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Sunfire Throwers', 8, 'all_in_range', 3, 3, 0, 1, []),
+         Weapon('Massive Horns', 2, 3, 3, 3, {8: -3, 4: -2, 0: -1}, 2, []),
+         stegadon_stomps],
+        [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Sunfire Throwers', 8, 'all_in_range', 3, 3, 0, 1, []),
+         Weapon('Massive Horns', 2, 3, 3, 3, {8: -3, 4: -2, 0: -1}, 2, []),
+         stegadon_stomps, Rule('Skink Alpha', lambda x: None)],
+    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster, rules=[
+        Rule('Steadfast Majesty', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
+
+SERAPHONS.append(Warscroll(
+    'Engine of the Gods', [
+        [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
+         Weapon('Sharpened Horns', 2, 4, 3, 3, -1, 2, []),
+         Weapon('Crushing Stomps', 1, {8: '3D6', 4: '2D6', 0: 'D6'}, 4, 4, 0, 1, [
+             Rule('Unstoppable Stampede', plus_1_towound_in_charge)])],
+    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster, rules=[
+        Rule('Steadfast Majesty', lambda x: None),
+        Rule('Cosmic Engine', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, MONSTER, PRIEST, 'SKINK PRIEST']))
 
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}
