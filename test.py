@@ -26,6 +26,7 @@ context = {
 
 for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
+# warscrolls[-2].simplest_stats(context, front_size=145)
 
 # carn = seraphons_by_name['Saurus Oldblood on Carnosaur']
 # for u in carn.units.values():

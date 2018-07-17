@@ -44,23 +44,46 @@ def option_combinations(all_options: List[dict], all_variants, variant_id) -> Li
     )
     # combinations with this option
     for version in [opt for opt in all_options if opt.get('type', 'leader') == current_type]:
-        version_id = option_version_id(version, all_options, all_variants)
-        if version_id not in all_variant_ids or version_id == variant_id or current_type != 'leader':
+        version_short_id = option_version_short_id(version, all_options, all_variants)
+        if version_short_id not in all_variant_ids or version_short_id == variant_id or current_type != 'leader':
+            # leader doesn't pick a different variant than his unit, but can have special weapons
             for sub_combo in option_combinations(
                     [o for o in all_options if o.get('type', 'leader') != current_type], all_variants, variant_id):
                 combinations.append([version, *sub_combo])
+        else:
+            print({
+                'version_short_id': version_short_id,
+                'all_variant_ids': all_variant_ids,
+                'variant_id': variant_id,
+                'current_type': current_type,
+            })
     return combinations
 
 
-def option_version_id(option, all_options, all_variants):
+def option_version_short_id(option, all_options, all_variants):
         special_variant = [*option.get('weapons', []), *option.get('rules', [])]
         special_all_variants = [[
             *_option.get('weapons', []), *_option.get('rules', [])
         ] for _option in all_options if _option.get('type', '') == option.get('type', '')]
         version_id = selective_weapon_choice_id(special_variant, special_all_variants)
+
         if version_id == '':  # option doesn't have variants
             return selective_weapon_choice_id(special_variant, all_variants)
         return version_id
+
+
+def option_version_id(option, all_options, all_variants, current_id) -> str:
+        version_id = option_version_short_id(option, all_options, all_variants)
+
+        # if option doesn't have variants
+        if len([o for o in all_options if o.get('name', '') == option.get('name', '')]) == 1:
+            return option.get('name', version_id)
+        option_name = option.get('name', '')
+        if option_name == '':
+            return version_id
+        if version_id == current_id:
+            return option_name
+        return f'{option_name} /w {version_id}'
 
 
 class Warscroll:
@@ -87,12 +110,12 @@ class Warscroll:
         self.units = {}
         for combo in combinations:
             u = Unit(name, combo['weapons'], *args, rules=combo['rules'], **kwargs)
-            id = combo['id']
+            complete_id = combo['id']
             for o in combo['options']:
                 if not len(o):
                     continue
                 option_name = o.get('name', '')
-                option_id = option_version_id(o, special_options, weapon_options)
+                option_id = option_version_id(o, special_options, weapon_options, combo['id'])
                 u.special_users.append(SpecialUser(
                     u, option_name,
                     o.get('weapons', []),
@@ -100,15 +123,10 @@ class Warscroll:
                     o.get('max_amount', 1),
                     **{k: v for k, v in kwargs.items() if k not in ['name', 'weapons', 'rules', 'max_amount']}
                 ))
-                id += ', ' if id != '' else ''
-                if option_name == '':
-                    id += option_id
-                else:
-                    id += option_name
-                    if option_id != combo['id']:
-                        id += ' /w ' + option_id
+                complete_id += ', ' if complete_id != '' else ''
+                complete_id += option_id
 
-            self.units[id] = u
+            self.units[complete_id] = u
 
         self.name = name
 
