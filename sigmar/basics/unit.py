@@ -25,7 +25,7 @@ class Unit:
             keywords: List[str],
             cast=0,
             unbind=0,
-            named=False
+            named=False,
     ):
         self.name = name
         self.weapons = weapons
@@ -43,6 +43,7 @@ class Unit:
         self.can_fly = False
         self.run_distance = value('D6')
         self.charge_range = value('2D6')
+        self.special_users = []
 
         self.spells_per_turn = cast
         self.unbind_per_turn = unbind
@@ -136,3 +137,21 @@ class WeaponRule(Rule):
         elif isinstance(item, list):
             for i in item:
                 self.apply(i)
+
+
+class SpecialUser(Unit):
+    def __init__(self, parent: Unit, name, weapons, rules, max_amount, **kwargs):
+        defaults = {
+            'move': parent.move,
+            'save': parent.save,
+            'bravery': parent.bravery,
+            'wounds': parent.wounds,
+            'min_size': 1,
+            'base': parent.base,
+            'rules': [*parent.rules, *rules],
+            'keywords': parent.keywords,
+        }
+        for k, v in kwargs.items():
+            defaults[k] = v
+        Unit.__init__(self, name, weapons, **defaults)
+        self.max_amount = max_amount

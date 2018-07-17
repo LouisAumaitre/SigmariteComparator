@@ -5,7 +5,7 @@ from copy import copy
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import SELF_WOUNDS, RANGE
-from sigmar.basics.unit import Unit
+from sigmar.basics.unit import Unit, SpecialUser
 from sigmar.basics.weapon import Weapon
 
 
@@ -31,6 +31,17 @@ def selective_weapon_choice_name(
     return str(new_list)[1:-1].replace('\'', '')
 
 
+def option_combinations(options):
+    if options is None or not len(options):
+        return [{}]
+    option_names = set(option.get('name', '') for option in options)
+    name = list(option_names)[0]
+    combis = [option_combinations([o for o in options if o.get('name', '') != name])]
+    for version in [opt for opt in options if opt.get('name', '') == name]:
+        combis.append([version, *option_combinations([o for o in options if o.get('name', '') != name])])
+    return combis
+
+
 class Warscroll:
     def __init__(
             self,
@@ -38,17 +49,49 @@ class Warscroll:
             weapon_options: List[List[Union[Weapon, Rule]]],
             *args,
             rules: List[Rule],
+            special_options=None,
             **kwargs
     ):
-        self.units = {
-            selective_weapon_choice_name(weapons_and_rules, weapon_options): Unit(
-                name,
-                [w for w in weapons_and_rules if isinstance(w, Weapon)],
-                *args,
-                rules=[*rules, *[r for r in weapons_and_rules if isinstance(r, Rule)]],
-                **kwargs
-            ) for weapons_and_rules in weapon_options
-        }
+        combinations = [
+            {
+                'weapons': [w for w in variant if isinstance(w, Weapon)],
+                'rules': [*rules, *[r for r in variant if isinstance(r, Rule)]],
+                'id': selective_weapon_choice_name(variant, weapon_options),
+                'options': option_combo
+            } for variant in weapon_options for option_combo in option_combinations(special_options)
+        ]
+        self.units = {}
+        for combo in combinations:
+            u = Unit(name, combo['weapons'], *args, rules=combo['rules'], **kwargs)
+            id = combo['id']
+            for o in combo['options']:
+                if not len(o):
+                    continue
+                u.special_users.append(SpecialUser(
+                    u,
+                    o.get('name', ''),
+                    o.get('weapons', []),
+                    o.get('rules', []),
+                    o.get('max_amount', 1),
+                    **{k: v for k, v in kwargs.items() if k not in ['name', 'weapons', 'rules', 'max_amount']}
+                ))
+                special_variant = [*o.get('weapons', []), *o.get('rules', [])]
+                special_all_variants = [[
+                    *s.get('weapons', []), *s.get('rules', [])
+                ] for s in special_options if s.get('name', '') == o.get('name', '')]
+                id += ', ' + o.get('name', '') + ' /w ' + selective_weapon_choice_name(
+                    special_variant, special_all_variants)
+            self.units[id] = u
+
+        # self.units = {
+        #     selective_weapon_choice_name(weapons_and_rules, weapon_options): Unit(
+        #         name,
+        #         [w for w in weapons_and_rules if isinstance(w, Weapon)],
+        #         *args,
+        #         rules=[*rules, *[r for r in weapons_and_rules if isinstance(r, Rule)]],
+        #         **kwargs
+        #     ) for weapons_and_rules in weapon_options
+        # }
         self.name = name
 
     def average_damage(self, armour: Roll, data: dict, front_size=1000, nb=None):
@@ -69,6 +112,7 @@ class Warscroll:
             health = context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''
             equip = f' with {k}' if len(self.units) > 1 else ''
+
             ranged_context = copy(context)
             ranged_context[RANGE] = max(3.01, context.get(RANGE, 0))
             ranged = f'{int(round(v.average_damage(ranged_context, front_size, nb) * 10))}/'
