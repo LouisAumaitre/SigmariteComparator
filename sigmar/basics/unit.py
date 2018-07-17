@@ -54,9 +54,8 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def formation(self, data: dict, front_size, nb):
-        if nb is None:
-            nb = self.size
+    def formation(self, data: dict, front_size):
+        nb = data.get(SELF_NUMBERS, self.size)
         data[SELF_NUMBERS] = nb
         rows = []
         while nb > 0:
@@ -65,8 +64,8 @@ class Unit:
             nb -= row
         return rows
 
-    def describe_formation(self, data: dict, front_size, nb):
-        rows = self.formation(data, front_size, nb)
+    def describe_formation(self, data: dict, front_size):
+        rows = self.formation(data, front_size)
         if len(rows) == 1 and rows[0] <= 1:
             return ''
         attacking = 0
@@ -81,13 +80,13 @@ class Unit:
             return f'({rows[0]}x{len(rows)}, {attacking} attacking)'
         return f'({attacking} attacking)'
 
-    def average_damage(self, data: dict, front_size=1000, nb=None):
+    def average_damage(self, data: dict, front_size=1000):
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
         users = {}
         _range = data.get(RANGE, 0)
-        for row in self.formation(unit_data, front_size, nb):
+        for row in self.formation(unit_data, front_size):
             # specials
             specials = 0
             if total == 0:
@@ -108,11 +107,10 @@ class Unit:
 
         return total
 
-    def average_health(self, context: dict, nb=None):
-        if nb is None:
-            nb = self.size
+    def average_health(self, context: dict):
+        nb = context.get(SELF_NUMBERS, self.size)
         rend = context.get(REND, 0)
-        save, crit = self.save.chances({}, mod=rend)
+        save, crit = self.save.chances(context, mod=rend)
         save += crit
         wounds = min(self.wounds, context.get(SELF_WOUNDS, self.wounds))
         life = nb * wounds / (1 - save)

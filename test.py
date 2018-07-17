@@ -3,7 +3,7 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE,
-    ENEMY_WOUNDS)
+    ENEMY_WOUNDS, SELF_NUMBERS)
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.sylvaneth import SYLVANETH_WS
 

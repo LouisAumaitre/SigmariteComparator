@@ -1,6 +1,7 @@
-from sigmar.basics.base import monster
+from sigmar.basics.base import monster, infantry
 from sigmar.basics.rules import Rule, Spell
-from sigmar.basics.string_constants import ENEMY_WOUNDS, MW_ON_DAMAGE
+from sigmar.basics.string_constants import ENEMY_WOUNDS, MW_ON_DAMAGE, SELF_NUMBERS
+from sigmar.basics.unit import Unit
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import ORDER, WIZARD, HERO, MONSTER
@@ -40,6 +41,37 @@ SYLVANETH_WS.append(Warscroll(
         Rule('Groundshaking Stomp', lambda x: None),
         Rule('Spirit Path', lambda x: None),
     ], keywords=[ORDER, SYLVANETH, MONSTER]))
+
+
+SYLVANETH_WS.append(Warscroll(
+    'Branchwraith', [
+        [Weapon('Piercing Talons', 2, 3, 4, 4, -1, 1, [])],
+    ], 7, 5, 8, 5, 1, infantry, rules=[
+        Rule('Blessings from the Forest', lambda x: None),
+        Spell('Roused to Wrath', 7, None),
+    ], keywords=[ORDER, SYLVANETH, HERO, WIZARD], cast=1, unbind=1))
+
+
+def impenetrable_thicket(u: Unit):
+    def buff(data):
+        if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 12:
+            return 1, 0
+        return 0, 0
+    u.save.extra_bonuses.append(buff)
+
+
+SYLVANETH_WS.append(Warscroll(
+    'Dryads', [
+        [Weapon('Wracking Talons', 2, 2, 4, 4, 0, 1, [])],
+    ], 7, 5, 6, 1, 5, infantry, rules=[
+        Rule('Blessings from the Forest', lambda x: None),
+        Rule('Enrapturing Song', lambda x: None),
+        Rule('Impenetrable Thicket', impenetrable_thicket),
+    ], keywords=[ORDER, SYLVANETH],
+    special_options=[{
+        'name': 'Branch Nymph',
+        'weapons': [Weapon('Wracking Talons', 2, 3, 4, 4, 0, 1, [])]
+    }]))
 
 
 sylvaneth_by_name = {unit.name: unit for unit in SYLVANETH_WS}

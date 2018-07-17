@@ -4,7 +4,7 @@ from copy import copy
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
-from sigmar.basics.string_constants import SELF_WOUNDS, RANGE
+from sigmar.basics.string_constants import SELF_WOUNDS, RANGE, SELF_NUMBERS
 from sigmar.basics.unit import Unit, SpecialUser
 from sigmar.basics.weapon import Weapon
 
@@ -134,23 +134,25 @@ class Warscroll:
             unit.average_damage(armour, context, front_size, nb), unit.average_health(context)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, context: dict, front_size=1000, nb=None):
+    def simplest_stats(self, context: dict, front_size=1000):
         for k, v in self.units.items():
-            numbers = v.size if nb is None else nb
+            unit_context = copy(context)
+            numbers = context.get(SELF_NUMBERS, v.size)
+            unit_context[SELF_NUMBERS] = numbers
             numbers = f'{numbers} ' if numbers > 1 else ''
-            health = context.get(SELF_WOUNDS, v.wounds)
+            health = unit_context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''
             equip = f' with {k}' if k not in [v.name, ''] else ''
 
-            ranged_context = copy(context)
-            ranged_context[RANGE] = max(3.01, context.get(RANGE, 0))
-            ranged = f'{int(round(v.average_damage(ranged_context, front_size, nb) * 10))}/'
+            ranged_context = copy(unit_context)
+            ranged_context[RANGE] = max(3.01, unit_context.get(RANGE, 0))
+            ranged = f'{int(round(v.average_damage(ranged_context, front_size) * 10))}/'
             ranged = '' if ranged == '0/' else ranged
             flight = 'F' if v.can_fly else ''
             print(
                 f'{numbers}{v.name}{health}{equip}: '
                 f'{ranged}'
-                f'{int(round(v.average_damage(copy(context), front_size, nb) * 10))}'
-                f'/{int(round(v.average_health(context, nb)))} '
-                f'{v.describe_formation(context, front_size, nb)} '
-                f'M{v.speed_grade(context)}{flight}')
+                f'{int(round(v.average_damage(unit_context, front_size) * 10))}'
+                f'/{int(round(v.average_health(unit_context)))} '
+                f'{v.describe_formation(unit_context, front_size)} '
+                f'M{v.speed_grade(unit_context)}{flight}')
