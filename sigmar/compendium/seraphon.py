@@ -139,7 +139,14 @@ SERAPHONS.append(Warscroll(
     ], 5, 4, 10, 1, 5, infantry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Sworn Guardians', lambda x: None),
-    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+        Rule('Wardrum', march_double),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS],
+    special_options=[{
+        'name': 'Alpha Guardian',
+        'weapons': [
+            Weapon('Celestite Polearm', 1, 3, 3, 3, -1, 1, []),
+            Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+    }]))
 
 
 SERAPHONS.append(Warscroll(
@@ -190,7 +197,18 @@ SERAPHONS.append(Warscroll(
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
         Rule('Wardrum', march_double),
-    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS],
+    special_options=[{
+        'name': 'Alpha Talon',
+        'weapons': [
+            Weapon('Celestite Club', 1, 2, 4, 3, 0, 1, []),
+            Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+    }, {
+        'name': 'Alpha Talon',
+        'weapons': [
+            Weapon('Celestite Spear', 2, 2, 4, 4, 0, 1, []),
+            Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])],
+    }]))
 
 
 SERAPHONS.append(Warscroll(
@@ -214,7 +232,20 @@ SERAPHONS.append(Warscroll(
     ], 7, 5, 10, 2, 5, cavalry, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wardrum', march_double),
-    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS],
+    special_options=[{
+        'name': 'Alpha Knight',
+        'weapons': [
+            Weapon('Celestite Blade', 1, 2, 3, 3, 0, 1, []),
+            Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+            Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
+    }, {
+        'name': 'Alpha Knight',
+        'weapons': [
+            Weapon('Celestite Lance', 2, 2, 4, 3, 0, 1, [Rule('Blazing Lances', add_mw_on_6_towound_in_charge)]),
+            Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, []),
+            Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])],
+    }]))
 
 SERAPHONS.append(Warscroll(
     'Skink Starseer', [
@@ -283,7 +314,30 @@ SERAPHONS.append(Warscroll(
     ], 8, 6, 10, 1, 10, infantry, rules=[
         Rule('Celestial cohort', celestial_cohort),
         Rule('Wary Fighters', lambda x: None),
-    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON],
+    special_options=[{
+        'name': 'Alpha',
+        'weapons': [
+            Weapon('Meteoritic Javelin', 8, 1, 5, 4, 0, 1, []),
+            Weapon('Meteoritic Javelin', 1, 2, 6, 5, 0, 1, [])],
+        'rules': [Rule('Star-buckler', ignore_1_rend)],
+    }, {
+        'name': 'Alpha',
+        'weapons': [
+            Weapon('Boltspitter', 16, 1, 5, 5, 0, 1, []),
+            Weapon('Boltspitter', 1, 2, 5, 6, 0, 1, [])],
+        'rules': [Rule('Star-buckler', ignore_1_rend)],
+    }, {
+        'name': 'Alpha',
+        'weapons': [
+            Weapon('Boltspitter', 16, 1, 5, 5, 0, 1, []),
+            Weapon('Boltspitter', 1, 2, 5, 6, 0, 1, []),
+            Weapon('Moonstone Club', 1, 2, 5, 4, 0, 1, [])],
+    }, {
+        'name': 'Alpha',
+        'weapons': [Weapon('Moonstone Club', 1, 2, 5, 4, 0, 1, [])],
+        'rules': [Rule('Star-buckler', ignore_1_rend)],
+    }]))
 
 
 def star_venom(w: Weapon):
