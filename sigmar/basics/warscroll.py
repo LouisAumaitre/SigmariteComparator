@@ -31,28 +31,33 @@ def selective_weapon_choice_name(
     return str(new_list)[1:-1].replace('\'', '')
 
 
-def option_combinations(options, all_variant_ids, variant_id):
-    if options is None or not len(options):
+def option_combinations(all_options, all_variants, variant_id):
+    if all_options is None or not len(all_options):
         return [{}]
-    option_names = set(option.get('name', '') for option in options)
+    all_variant_ids = [selective_weapon_choice_name(variant, all_variants) for variant in all_variants]
+    option_names = set(option.get('name', '') for option in all_options)
     name = list(option_names)[0]
-    combis = [option_combinations([o for o in options if o.get('name', '') != name], all_variant_ids, variant_id)]
-    for version in [opt for opt in options if opt.get('name', '') == name]:
-        version_name = option_version_name(version, options)
+
+    combis = [option_combinations([o for o in all_options if o.get('name', '') != name], all_variants, variant_id)]
+    for version in [opt for opt in all_options if opt.get('name', '') == name]:
+        version_name = option_version_name(version, all_options, all_variants)
         if version_name not in all_variant_ids or version_name == variant_id:
             combis.append([
                 version,
-                *option_combinations([o for o in options if o.get('name', '') != name], all_variant_ids, variant_id)
+                *option_combinations([o for o in all_options if o.get('name', '') != name], all_variants, variant_id)
             ])
     return combis
 
 
-def option_version_name(option, all_options):
+def option_version_name(option, all_options, all_variants):
         special_variant = [*option.get('weapons', []), *option.get('rules', [])]
         special_all_variants = [[
             *s.get('weapons', []), *s.get('rules', [])
         ] for s in all_options if s.get('name', '') == option.get('name', '')]
-        return selective_weapon_choice_name(special_variant, special_all_variants)
+        name = selective_weapon_choice_name(special_variant, special_all_variants)
+        if name == '':
+            return selective_weapon_choice_name(special_variant, all_variants)
+        return name
 
 
 class Warscroll:
@@ -73,7 +78,7 @@ class Warscroll:
                 'id': selective_weapon_choice_name(variant, weapon_options),
                 'options': option_combo
             } for variant in weapon_options for option_combo in option_combinations(
-                special_options, variant_ids, selective_weapon_choice_name(variant, weapon_options)
+                special_options, weapon_options, selective_weapon_choice_name(variant, weapon_options)
             )
         ]
 
@@ -84,17 +89,22 @@ class Warscroll:
             for o in combo['options']:
                 if not len(o):
                     continue
+                name = o.get('name', '')
+                option_id = option_version_name(o, special_options, weapon_options)
                 u.special_users.append(SpecialUser(
-                    u,
-                    o.get('name', ''),
+                    u, name,
                     o.get('weapons', []),
                     o.get('rules', []),
                     o.get('max_amount', 1),
                     **{k: v for k, v in kwargs.items() if k not in ['name', 'weapons', 'rules', 'max_amount']}
                 ))
-                id += ', ' + o.get('name', '')
-                if option_version_name(o, special_options) != combo['id']:
-                    id += ' /w ' + option_version_name(o, special_options)
+                id += ', ' if id != '' else ''
+                if name == '':
+                    id += option_id
+                else:
+                    id += name
+                    if option_id != combo['id']:
+                        id += ' /w ' + option_id
 
             self.units[id] = u
 
@@ -126,7 +136,7 @@ class Warscroll:
             numbers = f'{numbers} ' if numbers > 1 else ''
             health = context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''
-            equip = f' with {k}' if len(self.units) > 1 else ''
+            equip = f' with {k}' if k not in [v.name, ''] else ''
 
             ranged_context = copy(context)
             ranged_context[RANGE] = max(3.01, context.get(RANGE, 0))

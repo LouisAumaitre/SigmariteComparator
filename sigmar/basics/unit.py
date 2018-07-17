@@ -92,7 +92,8 @@ class Unit:
             specials = 0
             if total == 0:
                 for sp_usr in self.special_users:
-                    total += sum([w.average_damage(copy(unit_data)) for w in sp_usr.weapons])
+                    total += sp_usr.size * sum([w.average_damage(copy(unit_data)) for w in sp_usr.weapons])
+                    specials += sp_usr.size
 
             total += (row - specials) * sum(
                 [w.average_damage(copy(unit_data)) for w in self.weapons]
