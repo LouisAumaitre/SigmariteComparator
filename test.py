@@ -2,12 +2,12 @@ from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
-    ENEMY_SAVE,
-    ENEMY_WOUNDS, SELF_NUMBERS)
+    ENEMY_SAVE, ENEMY_WOUNDS,
+)
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.sylvaneth import SYLVANETH_WS
+from sigmar.compendium.stormcast_eternals import STORMCAST_WS
 
-warscrolls = SYLVANETH_WS
+warscrolls = STORMCAST_WS
 
 test_armour = Roll(4)
 context = {

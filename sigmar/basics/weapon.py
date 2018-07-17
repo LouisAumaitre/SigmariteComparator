@@ -19,7 +19,8 @@ from sigmar.basics.string_constants import (
     AUTO_WOUND_ON_CRIT,
     ENEMY_SAVE,
     EXTRA_ATTACK_ON_HIT,
-    MW_ON_DAMAGE)
+    MW_ON_DAMAGE,
+)
 
 
 class Weapon:
