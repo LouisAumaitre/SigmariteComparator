@@ -1,6 +1,8 @@
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT, \
+from sigmar.basics.string_constants import (
+    ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
     AUTO_WOUND_ON_CRIT
+)
 from sigmar.basics.value import value
 from sigmar.basics.weapon import Weapon
 

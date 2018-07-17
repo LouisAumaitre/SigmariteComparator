@@ -2,7 +2,8 @@ from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, SELF_WOUNDS, REND, ENEMY_KEYWORDS, RANGE,
-    ENEMY_SAVE)
+    ENEMY_SAVE,
+)
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import SERAPHONS, seraphons_by_name
 
