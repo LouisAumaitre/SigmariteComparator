@@ -443,11 +443,11 @@ SERAPHONS.append(Warscroll(
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK],
     special_options=[
         {
-            'name': 'Skymaster',
+            'name': 'Alpha',
             'weapons': [Weapon('Starstrike Javelin', 10, 2, 3, 3, 0, 1, []), terradon_beak],
         },
         {
-            'name': 'Skymaster',
+            'name': 'Alpha',
             'weapons': [
                 Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]), terradon_beak],
         },
@@ -478,7 +478,7 @@ SERAPHONS.append(Warscroll(
     special_options=[{
         'name': 'Alpha',
         'weapons': [
-            Weapon('Moonstone War-spear', 2, 1, 4, 4, 0, 1, []),
+            Weapon('Moonstone War-spear', 2, 2, 4, 4, 0, 1, []),
             Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
             Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
     }]))
