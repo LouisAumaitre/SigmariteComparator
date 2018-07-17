@@ -31,15 +31,28 @@ def selective_weapon_choice_name(
     return str(new_list)[1:-1].replace('\'', '')
 
 
-def option_combinations(options):
+def option_combinations(options, all_variant_ids, variant_id):
     if options is None or not len(options):
         return [{}]
     option_names = set(option.get('name', '') for option in options)
     name = list(option_names)[0]
-    combis = [option_combinations([o for o in options if o.get('name', '') != name])]
+    combis = [option_combinations([o for o in options if o.get('name', '') != name], all_variant_ids, variant_id)]
     for version in [opt for opt in options if opt.get('name', '') == name]:
-        combis.append([version, *option_combinations([o for o in options if o.get('name', '') != name])])
+        version_name = option_version_name(version, options)
+        if version_name not in all_variant_ids or version_name == variant_id:
+            combis.append([
+                version,
+                *option_combinations([o for o in options if o.get('name', '') != name], all_variant_ids, variant_id)
+            ])
     return combis
+
+
+def option_version_name(option, all_options):
+        special_variant = [*option.get('weapons', []), *option.get('rules', [])]
+        special_all_variants = [[
+            *s.get('weapons', []), *s.get('rules', [])
+        ] for s in all_options if s.get('name', '') == option.get('name', '')]
+        return selective_weapon_choice_name(special_variant, special_all_variants)
 
 
 class Warscroll:
@@ -52,14 +65,18 @@ class Warscroll:
             special_options=None,
             **kwargs
     ):
+        variant_ids = [selective_weapon_choice_name(variant, weapon_options) for variant in weapon_options]
         combinations = [
             {
                 'weapons': [w for w in variant if isinstance(w, Weapon)],
                 'rules': [*rules, *[r for r in variant if isinstance(r, Rule)]],
                 'id': selective_weapon_choice_name(variant, weapon_options),
                 'options': option_combo
-            } for variant in weapon_options for option_combo in option_combinations(special_options)
+            } for variant in weapon_options for option_combo in option_combinations(
+                special_options, variant_ids, selective_weapon_choice_name(variant, weapon_options)
+            )
         ]
+
         self.units = {}
         for combo in combinations:
             u = Unit(name, combo['weapons'], *args, rules=combo['rules'], **kwargs)
@@ -75,12 +92,10 @@ class Warscroll:
                     o.get('max_amount', 1),
                     **{k: v for k, v in kwargs.items() if k not in ['name', 'weapons', 'rules', 'max_amount']}
                 ))
-                special_variant = [*o.get('weapons', []), *o.get('rules', [])]
-                special_all_variants = [[
-                    *s.get('weapons', []), *s.get('rules', [])
-                ] for s in special_options if s.get('name', '') == o.get('name', '')]
-                id += ', ' + o.get('name', '') + ' /w ' + selective_weapon_choice_name(
-                    special_variant, special_all_variants)
+                id += ', ' + o.get('name', '')
+                if option_version_name(o, special_options) != combo['id']:
+                    id += ' /w ' + option_version_name(o, special_options)
+
             self.units[id] = u
 
         # self.units = {
