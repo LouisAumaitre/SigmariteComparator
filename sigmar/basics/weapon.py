@@ -14,7 +14,7 @@ from sigmar.basics.string_constants import (
     EXTRA_HIT_ON_CRIT,
     EXTRA_WOUND_ON_CRIT,
     WEAPON_RANGE,
-    EXTRA_DAMAGE_ON_CRIT_WOUND, RANGE, AUTO_WOUND_ON_CRIT, ENEMY_SAVE)
+    EXTRA_DAMAGE_ON_CRIT_WOUND, RANGE, AUTO_WOUND_ON_CRIT, ENEMY_SAVE, EXTRA_ATTACK_ON_HIT)
 
 
 class Weapon:
@@ -64,6 +64,9 @@ class Weapon:
 
         attacks = self.attacks.average(data)
         hits, critic_hits = self.average_hits(attacks, data)
+        _hits, _critic_hits = self.average_hits(data.get(EXTRA_ATTACK_ON_HIT, 0) * (hits + critic_hits), data)
+        hits += _hits
+        critic_hits += _critic_hits
         hits += critic_hits * data.get(EXTRA_HIT_ON_CRIT, 0)
 
         wounds, critic_wounds = self.average_wounds(hits, data)

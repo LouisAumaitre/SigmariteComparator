@@ -3,7 +3,7 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.value import DiceValue, RandomMultValue, value
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT, \
-    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE
+    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE, EXTRA_ATTACK_ON_HIT
 from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
@@ -429,14 +429,13 @@ SERAPHONS.append(Warscroll(
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
 
 
+terradon_beak = Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, [])
+
+
 SERAPHONS.append(Warscroll(
     'Terradon Riders', [
-        [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []),
-         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
-         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
-        [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]),
-         Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
-         Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+        [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []), terradon_beak],
+        [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]), terradon_beak],
     ], 14, 5, 10, 3, 3, large_infantry, rules=[
         Rule('Deadly Cargo', lambda x: None),
         Rule('Swooping Dive', lambda x: None),
@@ -444,24 +443,45 @@ SERAPHONS.append(Warscroll(
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK],
     special_options=[
         {
-            'name': 'Terradon Skymaster',
-            'weapons': [Weapon('Starstrike Javelin', 10, 2, 3, 3, 0, 1, []),
-                        Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
-                        Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+            'name': 'Skymaster',
+            'weapons': [Weapon('Starstrike Javelin', 10, 2, 3, 3, 0, 1, []), terradon_beak],
         },
         {
-            'name': 'Terradon Skymaster',
-            'weapons': [Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]),
-                        Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
-                        Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+            'name': 'Skymaster',
+            'weapons': [
+                Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]), terradon_beak],
         },
         {
-            'name': 'Terradon Skymaster',
-            'weapons': [Weapon('Skyblade', 1, 3, 3, 4, 0, 1, [Rule('Skyblade', reroll_all_tohit)]),
-                        Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, []),
-                        Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
+            'name': 'Skymaster',
+            'weapons': [Weapon('Skyblade', 1, 3, 3, 4, 0, 1, [Rule('Skyblade', reroll_all_tohit)]), terradon_beak],
         },
     ]))
+
+
+def voracious_appetite(w: Weapon):
+    def buff(data):
+        data[EXTRA_ATTACK_ON_HIT] = 1
+    w.attack_rules.append(buff)
+
+
+SERAPHONS.append(Warscroll(
+    'Ripperdactyl Riders', [
+        [Weapon('Moonstone War-spear', 2, 1, 4, 4, 0, 1, []),
+         Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
+         Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
+    ], 14, 5, 10, 3, 3, large_infantry, rules=[
+        Rule('Star-buckler', ignore_1_rend),
+        Rule('Swooping Dive', lambda x: None),
+        Rule('Toad Rage', lambda x: None),
+        Rule('Fly', fly),
+    ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK],
+    special_options=[{
+        'name': 'Alpha',
+        'weapons': [
+            Weapon('Moonstone War-spear', 2, 1, 4, 4, 0, 1, []),
+            Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
+            Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
+    }]))
 
 
 seraphons_by_name = {unit.name: unit for unit in SERAPHONS}

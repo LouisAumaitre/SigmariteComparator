@@ -14,6 +14,7 @@ WEAPON_RANGE = 'weapon range'
 REND = 'rend'
 
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
+EXTRA_ATTACK_ON_HIT = 'extra attack on _hit'
 BONUS_REND = 'bonus rend'
 CRIT_BONUS_REND = 'crit bonus rend'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
