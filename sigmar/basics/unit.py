@@ -88,8 +88,14 @@ class Unit:
         users = {}
         _range = data.get(RANGE, 0)
         for row in self.formation(unit_data, front_size, nb):
-            total += row * sum(
-                [w.average_damage(copy(unit_data)) for w in self.weapons if isinstance(w, Weapon)]
+            # specials
+            specials = 0
+            if total == 0:
+                for sp_usr in self.special_users:
+                    total += sum([w.average_damage(copy(unit_data)) for w in sp_usr.weapons])
+
+            total += (row - specials) * sum(
+                [w.average_damage(copy(unit_data)) for w in self.weapons]
             )
             for w in [w for w in self.weapons if w.range.average(data) >= _range]:
                 users[w] = users.get(w, 0) + row
