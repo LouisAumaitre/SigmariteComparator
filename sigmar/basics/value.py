@@ -154,6 +154,25 @@ class DiceValue(Value):
             return 0
 
 
+class AllInRangeValue(Value):
+
+    def _average(self, context: dict):
+        swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
+        hits = swing * 2 / context[ENEMY_BASE].width + 1
+        hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
+        return max(1, min(hits, context[ENEMY_NUMBERS]))
+
+    def _max(self, context: dict):
+        swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
+        hits = swing * 2 / context[ENEMY_BASE].width + 1
+        hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
+        return max(1, min(hits, context[ENEMY_NUMBERS]))
+
+    def _potential_values(self, context: dict):
+        m = int(self.max(context))
+        return [(i + 1, 1/m) for i in range(m)]
+
+
 def _value(defined_value: Union[str, int, Value]):
     if isinstance(defined_value, Value):
         return defined_value
@@ -165,6 +184,8 @@ def _value(defined_value: Union[str, int, Value]):
         return SumValue(_value('2D6'), DiceValue('D6'))
     if defined_value == '2D3':
         return SumValue(DiceValue('D3'), DiceValue('D3'))
+    if defined_value == 'all_in_range':
+        return AllInRangeValue()
     return DiceValue(defined_value)
 
 
