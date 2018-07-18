@@ -43,6 +43,9 @@ class Value:
     def __mul__(self, other):
         return MultValue(self, value(other))
 
+    def __sub__(self, other):
+        return SumValue(self, MultValue(FixedValue(-1), value(other)))
+
 
 class SumValue(Value):
     def __init__(self, val_1: Value, val_2: Value):
