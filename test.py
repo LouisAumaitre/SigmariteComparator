@@ -18,7 +18,7 @@ context = {
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
     REND: -1,
-    ENEMY_KEYWORDS: [CHAOS, DAEMON],
+    ENEMY_KEYWORDS: [CHAOS],
     RANGE: 0.1,
     ENEMY_SAVE: test_armour,
 }

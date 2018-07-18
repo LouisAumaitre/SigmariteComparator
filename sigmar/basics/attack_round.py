@@ -3,7 +3,7 @@ from copy import copy
 from math import factorial
 
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import ENEMY_SAVE
+from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND
 from sigmar.basics.value import Value
 
 
@@ -58,7 +58,7 @@ def attack_round(
     try:
         potential_attacks = [{
             'attacks': nb * users, 'proba': proba
-        } for (nb, proba) in attacks.potential_values(context)]
+        } for (nb, proba) in attacks.potential_values(my_context)]
         assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
         potential_attacks = [{
             'attacks': pick,
@@ -69,9 +69,9 @@ def attack_round(
             potential_hits = [
                 {
                     **att,
-                    'hits': nb,
+                    'hits': nb + nb_crit * my_context.get(EXTRA_HIT_ON_CRIT, 0),
                     'crit_hits': nb_crit,
-                    'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, context)
+                    'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, my_context)
                 } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
             ]
         except TypeError as e:
@@ -84,7 +84,7 @@ def attack_round(
                 **hit,
                 'wounds': nb,
                 'crit_wounds': nb_crit,
-                'proba': hit['proba'] * probability_of_wound_and_crit(hit['hits'], nb, nb_crit, towound, context)
+                'proba': hit['proba'] * probability_of_wound_and_crit(hit['hits'], nb, nb_crit, towound, my_context)
             } for hit in potential_hits for nb in range(hit['hits'] + 1) for nb_crit in range(nb + 1)
         ]
         assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)
@@ -94,7 +94,7 @@ def attack_round(
                 **wnd,
                 'unsaved': nb,
                 'proba': wnd['proba'] * probability_of_save_fail(
-                    wnd['wounds'], nb, context[ENEMY_SAVE], context, rend=rend.average(context))
+                    wnd['wounds'], nb, my_context[ENEMY_SAVE], my_context, rend=rend.average(my_context))
             } for wnd in potential_wounds for nb in range(wnd['wounds'] + 1)
         ]
         assert abs(sum([unsvd['proba'] for unsvd in potential_unsaved]) - 1) <= pow(0.1, 5)
@@ -104,7 +104,7 @@ def attack_round(
             potential_results = {0: 1}
             for att in range(unsvd['unsaved']):
                 new_results = {}
-                for (val, val_proba) in damage.potential_values(context):
+                for (val, val_proba) in damage.potential_values(my_context):
                     for total, total_proba in potential_results.items():
                         new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
                 potential_results = new_results
@@ -113,7 +113,7 @@ def attack_round(
             potential_damage.extend([
                 {
                     **unsvd,
-                    'damage': nb,
+                    'damage': nb + unsvd['crit_wounds'] * my_context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
                     'proba': unsvd['proba'] * proba
                 } for (nb, proba) in potential_results
             ])
