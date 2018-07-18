@@ -1,4 +1,4 @@
-from sigmar.basics.attack_round import attack_round, average_damage
+from sigmar.basics.attack_round import attack_round
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (

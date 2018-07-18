@@ -1,6 +1,6 @@
 from sigmar.basics.base import cavalry, infantry, large_infantry, monster
 from sigmar.basics.roll import Roll
-from sigmar.basics.value import DiceValue, RandomMultValue, value
+from sigmar.basics.value import DiceValue, value, MultValue, RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import (
     SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT,
@@ -175,7 +175,7 @@ SERAPHONS_WS.append(Warscroll(
 
 
 def fury_of_the_seraphon(w: Weapon):
-    w.attacks = RandomMultValue((1.5+1/12), 3, w.attacks)
+    w.attacks = MultValue(w.attacks, RandomValue({1: 0.5, 2: 0.5 - 1/12, 3: 1/12}))
 
 
 cold_one_bite = Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])

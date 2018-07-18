@@ -1,11 +1,15 @@
 from typing import List, Callable
-
 from copy import copy
+from math import factorial
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import ENEMY_SAVE
 from sigmar.basics.value import Value
-from sigmar.basics.weapon import binomial
+
+
+def binomial(n, k):
+    # combinations of k in n
+    return factorial(n) / (factorial(k) * factorial(n - k))
 
 
 def probability_of_hit_and_crit(dices, success, crit, roll: Roll, context) -> float:
@@ -50,6 +54,7 @@ def attack_round(
     potential_hits = {}
     potential_wounds = {}
     potential_unsaved = {}
+    cleaned_damage = []
     try:
         potential_attacks = [{
             'attacks': nb * users, 'proba': proba
@@ -60,14 +65,18 @@ def attack_round(
             'proba': sum([att['proba'] for att in potential_attacks if att['attacks'] == pick])
         } for pick in set(att['attacks'] for att in potential_attacks)]
 
-        potential_hits = [
-            {
-                **att,
-                'hits': nb,
-                'crit_hits': nb_crit,
-                'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, context)
-            } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
-        ]
+        try:
+            potential_hits = [
+                {
+                    **att,
+                    'hits': nb,
+                    'crit_hits': nb_crit,
+                    'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, context)
+                } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
+            ]
+        except TypeError as e:
+            print(f'{attacks}=>{potential_attacks}')
+            raise e
         assert abs(sum([hit['proba'] for hit in potential_hits]) - 1) <= pow(0.1, 5)
 
         potential_wounds = [
@@ -130,7 +139,7 @@ def attack_round(
     return cleaned_damage
 
 
-def average_damage(
+def average_damage_computer(
             attacks: Value,
             tohit: Roll,
             towound: Roll,
@@ -139,6 +148,6 @@ def average_damage(
             rules: List[Callable],
             context: dict,
             users=1,
-):
+) -> float:
     dmg = attack_round(attacks, tohit, towound, rend, damage, rules, context, users)
     return sum([e['damage'] * e['proba'] for e in dmg])

@@ -82,47 +82,19 @@ class MultValue(Value):
         return [(a, sum([p_b for b, p_b in values if b == a])) for a in set(a for a, _ in values)]
 
 
-class RandomMultValue(Value):
-    def __init__(self, average_mult, max_mult, base_value: Value):
+class RandomValue(Value):
+    def __init__(self, probas: Dict[int, float]):
         Value.__init__(self)
-        self.average_mult = average_mult
-        self.max_mult = max_mult
-        self.base_value = base_value
-
-    def average(self, context: dict, mod=0):
-        mod2 = 0
-        for bonus in self.rules:
-            add_mod = bonus(context)
-            mod2 += add_mod
-
-        return self._average(context, mod) + mod2
+        self.probas = probas
 
     def _average(self, context: dict, mod=0):
-        return self.average_mult * self.base_value.average(context, mod)
-
-    def max(self, context: dict, mod=0):
-        mod2 = 0
-        for bonus in self.rules:
-            add_mod = bonus(context)
-            mod2 += add_mod
-
-        return self._max(context, mod) + mod2
+        return sum([k * v for k, v in self.probas.items()])
 
     def _max(self, context: dict, mod=0):
-        return self.max_mult * self.base_value.max(context, mod)
-
-    def potential_values(self, context: dict, mod=0):
-        mod2 = 0
-        for bonus in self.rules:
-            add_mod = bonus(context)
-            mod2 += add_mod
-
-        return [(potential + mod2, proba) for (potential, proba) in self._potential_values(context)]
+        return max(self.probas.keys())
 
     def _potential_values(self, context: dict, mod=0):
-        return [(
-            potential * self.average_mult, proba
-        ) for (potential, proba) in self.base_value.potential_values(context, mod)]
+        return [(k, v) for k, v in self.probas.items()]
 
 
 class FixedValue(Value):

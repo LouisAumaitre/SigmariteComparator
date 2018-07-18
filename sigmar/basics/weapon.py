@@ -2,6 +2,7 @@ from typing import List, Union, Tuple, Callable, Dict
 
 from math import factorial
 
+from sigmar.basics.attack_round import average_damage_computer
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -60,7 +61,7 @@ class Weapon:
         chances, crit = extra_data[ENEMY_SAVE].chances({}, mod=self.rend.average(extra_data, extra_rend))
         return 1 - chances - crit
 
-    def average_damage(self, data: dict):
+    def _average_damage(self, data: dict):
         if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
             return 0
         data[WEAPON_RANGE] = self.range.average(data)
@@ -98,6 +99,14 @@ class Weapon:
         damage = unsaved * damage_per_hit + mortal_wounds
 
         return damage
+
+    def average_damage(self, context: dict):
+        if context.get(RANGE, 0) > self.range.average(context)\
+                or self.range.average(context) > 3 >= context.get(RANGE, 0):
+            return 0
+        context[WEAPON_RANGE] = self.range.average(context)
+        return average_damage_computer(
+            self.attacks, self.tohit, self.towound, self.rend, self.wounds, self.attack_rules, context)
 
     def probability_of_damage(self, data: dict, users=1):
         if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
