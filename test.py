@@ -23,8 +23,11 @@ context = {
     ENEMY_SAVE: test_armour,
 }
 
-for ws in warscrolls:
-    ws.simplest_stats(context, front_size=145)
+# for ws in warscrolls:
+#     ws.simplest_stats(context, front_size=145)
 # for o in attack_round(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context):
 #     print(o)
 # print(average_damage(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context))
+print(value(4).average({}))
+print((value('3D6') * value(2)).average({}))
+print((value('3D6') * value('D3')).max({}))
