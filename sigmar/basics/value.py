@@ -5,10 +5,10 @@ from sigmar.basics.string_constants import WEAPON_RANGE, SELF_BASE, ENEMY_BASE, 
 
 class Value:
     def __init__(self):
-        self.extra_bonuses: List[Callable] = []  # function take dict, return mod
+        self.rules: List[Callable] = []  # function take dict, return mod
 
     def average(self, context: dict, mod=0):
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
@@ -18,7 +18,7 @@ class Value:
         raise NotImplementedError
 
     def max(self, context: dict, mod=0):
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
@@ -28,7 +28,7 @@ class Value:
         raise NotImplementedError
 
     def potential_values(self, context: dict, mod=0):
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
@@ -47,7 +47,7 @@ class RandomMultValue(Value):
 
     def average(self, context: dict, mod=0):
         mod2 = 0
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod2 += add_mod
 
@@ -58,7 +58,7 @@ class RandomMultValue(Value):
 
     def max(self, context: dict, mod=0):
         mod2 = 0
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod2 += add_mod
 
@@ -69,7 +69,7 @@ class RandomMultValue(Value):
 
     def potential_values(self, context: dict, mod=0):
         mod2 = 0
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod = bonus(context)
             mod2 += add_mod
 
@@ -138,7 +138,7 @@ class DiceValue(Value):
             values = [a + b for a in range(6) for b in range(6)]
             return [(a, values.count(a)/36) for a in set(values)]
         elif self.defined_value == 'D3':
-            return [(i, 1/6) for i in range(3)]
+            return [(i, 1/3) for i in range(3)]
         elif self.defined_value == 'all_in_range':
             return [(self.average(context), 1)]
         else:

@@ -1,5 +1,5 @@
 from sigmar.basics.base import large_infantry, monster
-from sigmar.basics.rules import Rule
+from sigmar.basics.rules import Rule, CommandAbility
 from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING
 from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
@@ -45,8 +45,8 @@ def stormstrike_glaive(w: Weapon):
         if data.get(CHARGING, False):
             return -1
         return 0
-    w.wounds.extra_bonuses.append(extra_damage)
-    w.rend.extra_bonuses.append(extra_rend)
+    w.wounds.rules.append(extra_damage)
+    w.rend.rules.append(extra_rend)
 
 
 STORMCAST_WS.append(Warscroll(
@@ -56,10 +56,9 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Thunderaxe', 2, 3, 3, 3, -1, 2, [Rule('', lambda x: None)]), dracoth_claws_and_fangs],
         [Weapon('Tempestos Hammer', 2, 3, 3, 2, -1, 'D3', [Rule('', d3_extra_attacks_in_charge)]),
          dracoth_claws_and_fangs],
-    ], 12, 3, 10, 8, 1, monster, rules=[
-        Rule('Fly', fly),
+    ], 10, 3, 9, 7, 1, monster, rules=[
         Rule('Retribution from on High', lambda x: None),
-        Rule('Orrery of Celestial Fates', lambda x: None),
+        CommandAbility('Lord of the Host', None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
 STORMCAST_WS.append(Warscroll(

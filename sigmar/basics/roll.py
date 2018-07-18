@@ -7,7 +7,7 @@ class Roll:
     def __init__(self, base_value):
         self.base_value = value(base_value)
         self.rerolls = 0
-        self.extra_bonuses: List[Callable] = []  # function take dict, return mod and reroll
+        self.rules: List[Callable] = []  # function take dict, return mod and reroll
         self.mod_ignored = []
 
     def chances(self, context: dict, mod=0) -> Tuple[float, float]:
@@ -15,7 +15,7 @@ class Roll:
         if mod in self.mod_ignored or 'all' in self.mod_ignored:
             mod = 0
 
-        for bonus in self.extra_bonuses:
+        for bonus in self.rules:
             add_mod, add_reroll = bonus(context)
             mod += add_mod
             rerolls = max(rerolls, add_reroll)

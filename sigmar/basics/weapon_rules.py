@@ -20,7 +20,7 @@ def plus_1_tohit_5_wounds(w: Weapon):
         if data.get(ENEMY_WOUNDS, 0) >= 5:
             return 1, 0
         return 0, 0
-    w.tohit.extra_bonuses.append(buff)
+    w.tohit.rules.append(buff)
 
 
 def add_mw_on_6_towound_in_charge(w: Weapon):
@@ -35,7 +35,7 @@ def d3_extra_attacks_in_charge(w: Weapon):
         if data.get(CHARGING, False):
             return value('D3').average(data)
         return 0
-    w.attacks.extra_bonuses.append(buff)
+    w.attacks.rules.append(buff)
 
 
 def plus_1_towound_in_charge(w: Weapon):
@@ -43,7 +43,7 @@ def plus_1_towound_in_charge(w: Weapon):
         if data.get(CHARGING, False):
             return 1, 0
         return 0, 0
-    w.towound.extra_bonuses.append(buff)
+    w.towound.rules.append(buff)
 
 
 def extra_hit_on_crit(w: Weapon):

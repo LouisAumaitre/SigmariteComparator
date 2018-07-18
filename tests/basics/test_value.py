@@ -36,7 +36,7 @@ def test_max_apply_extras_on_context():
         return context.get('bonus', 0)
 
     random_value = DiceValue('D6')
-    random_value.extra_bonuses.append(bonus)
+    random_value.rules.append(bonus)
     # assert
     assert random_value.max({'bonus': 37}, mod=-1) == 42
 
