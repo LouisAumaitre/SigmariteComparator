@@ -1,4 +1,4 @@
-from sigmar.basics.attack_round import attack_round
+from sigmar.basics.attack_round import attack_round, average_damage
 from sigmar.basics.base import infantry
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
@@ -7,9 +7,9 @@ from sigmar.basics.string_constants import (
 )
 from sigmar.basics.value import value
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.stormcast_eternals import STORMCAST_WS
+from sigmar.compendium.seraphon import SERAPHONS_WS
 
-warscrolls = STORMCAST_WS
+warscrolls = SERAPHONS_WS
 
 test_armour = Roll(4)
 context = {
@@ -23,7 +23,8 @@ context = {
     ENEMY_SAVE: test_armour,
 }
 
-# for ws in warscrolls:
-#     ws.simplest_stats(context, front_size=145)
-
-print(attack_round(value(2), Roll(4), Roll(4), value(-1), value(1), [], context))
+for ws in warscrolls:
+    ws.simplest_stats(context, front_size=145)
+# for o in attack_round(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context):
+#     print(o)
+# print(average_damage(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context))

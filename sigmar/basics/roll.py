@@ -1,6 +1,6 @@
 from typing import Tuple, List, Callable
 
-from sigmar.basics.value import value
+from sigmar.basics.value import value, FixedValue
 
 
 class Roll:
@@ -11,6 +11,8 @@ class Roll:
         self.mod_ignored = []
 
     def chances(self, context: dict, mod=0) -> Tuple[float, float]:
+        if isinstance(self.base_value, FixedValue) and self.base_value.defined_value == 1:
+            return 1, 0
         rerolls = self.rerolls
         if mod in self.mod_ignored or 'all' in self.mod_ignored:
             mod = 0
@@ -34,6 +36,14 @@ class Roll:
     def fail(self, context: dict, mod=0):
         hit, crit = self.chances(context, mod)
         return 1 - hit - crit
+
+    def critic_given_success(self, context: dict, mod=0):
+        hit, crit = self.chances(context, mod)
+        return crit / (hit + crit)
+
+    def no_critic_given_success(self, context: dict, mod=0):
+        hit, crit = self.chances(context, mod)
+        return 1 - (crit / (hit + crit))
 
     def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:
         chances, sixes = self.chances(context, mod)

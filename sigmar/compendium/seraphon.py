@@ -31,7 +31,7 @@ def ordered_cohort(u: Unit):
             return 1, 0
         return 0, 0
     for w in u.weapons:
-        w.tohit.extra_bonuses.append(buff)
+        w.tohit.rules.append(buff)
 
     def attack(data):
         if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 30:
@@ -39,7 +39,7 @@ def ordered_cohort(u: Unit):
         return 0
     for w in u.weapons:
         if 'Celestite' in w.name:
-            w.attacks.extra_bonuses.append(attack)
+            w.attacks.rules.append(attack)
 
 
 def celestial_cohort(u: Unit):
@@ -51,7 +51,7 @@ def celestial_cohort(u: Unit):
         return 0, 0
     for w in u.weapons:
         if w.range.average({}) > 3:
-            w.tohit.extra_bonuses.append(buff)
+            w.tohit.rules.append(buff)
 
 
 SERAPHONS_WS.append(Warscroll(

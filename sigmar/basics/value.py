@@ -106,6 +106,8 @@ class DiceValue(Value):
             return 3.5
         elif self.defined_value == '2D6':
             return 7
+        elif self.defined_value == '3D6':
+            return 10.5
         elif self.defined_value == 'D3':
             return 2
         elif self.defined_value == 'all_in_range':
@@ -121,6 +123,8 @@ class DiceValue(Value):
             return 6
         elif self.defined_value == '2D6':
             return 12
+        elif self.defined_value == '3D6':
+            return 18
         elif self.defined_value == 'D3':
             return 3
         elif self.defined_value == 'all_in_range':
@@ -133,12 +137,15 @@ class DiceValue(Value):
 
     def _potential_values(self, context: dict):
         if self.defined_value == 'D6':
-            return [(i, 1/6) for i in range(6)]
+            return [(i + 1, 1/6) for i in range(6)]
         elif self.defined_value == '2D6':
             values = [a + b for a in range(6) for b in range(6)]
-            return [(a, values.count(a)/36) for a in set(values)]
+            return [(a + 2, values.count(a)/36) for a in set(values)]
+        elif self.defined_value == '3D6':
+            values = [a + b + c for a in range(6) for b in range(6) for c in range(6)]
+            return [(a + 3, values.count(a)/216) for a in set(values)]
         elif self.defined_value == 'D3':
-            return [(i, 1/3) for i in range(3)]
+            return [(i + 1, 1/3) for i in range(3)]
         elif self.defined_value == 'all_in_range':
             return [(self.average(context), 1)]
         else:
@@ -185,3 +192,22 @@ def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]
     if isinstance(defined_value, dict):
         return MonsterValue(defined_value)
     return DiceValue(defined_value)
+
+
+class SumValue(Value):
+    def __init__(self, val_1: Value, val_2: Value):
+        Value.__init__(self)
+        self.val_1 = val_1
+        self.val_2 = val_2
+
+    def _average(self, context: dict):
+        return self.val_1.average(context) + self.val_2.average(context)
+
+    def _max(self, context: dict):
+        return self.val_1.max(context) + self.val_2.max(context)
+
+    def _potential_values(self, context: dict):
+        pot_1 = self.val_1.potential_values(context)
+        pot_2 = self.val_2.potential_values(context)
+        values = [(a + b, p_a * p_b) for (a, p_a) in pot_1 for (b, p_b) in pot_2]
+        return [(a, sum([p_b for b, p_b in values if b == a])) for a in set(a for a, _ in values)]
