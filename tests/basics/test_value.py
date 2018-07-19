@@ -35,7 +35,7 @@ def test_max_apply_extras_on_context():
     def bonus(context):
         return context.get('bonus', 0)
 
-    random_value = DiceValue('D6')
+    random_value = DiceValue(6)
     random_value.rules.append(bonus)
     # assert
     assert random_value.max({'bonus': 37}, mod=-1) == 42
@@ -48,7 +48,7 @@ def test_average_apply_extras_on_context():
         return context.get('bonus', 0)
 
     random_value = value(1)
-    random_value.extra_bonuses.append(bonus)
+    random_value.rules.append(bonus)
     # assert
     assert random_value.average({'bonus': 21}, mod=20) == 42
 
@@ -57,6 +57,6 @@ def test_rv_create_rv():
     # given
     a = value(6)
     b = value('D6')
-    c = value(DiceValue('D6'))
+    c = value(DiceValue(6))
     # assert
     assert a.max({}) == b.max({}) == c.max({})

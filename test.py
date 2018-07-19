@@ -5,12 +5,12 @@ from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
-)
+    SELF_NUMBERS)
 from sigmar.basics.value import value
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.seraphon import SERAPHONS_WS
+from sigmar.compendium.seraphon import SERAPHONS_WS, seraphons_by_name
 from sigmar.compendium.sylvaneth import SYLVANETH_WS
 
 warscrolls = SYLVANETH_WS

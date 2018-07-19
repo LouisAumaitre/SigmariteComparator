@@ -2,6 +2,8 @@ from typing import List, Union, Tuple, Callable, Dict
 
 from math import factorial
 
+from copy import copy
+
 from sigmar.basics.attack_round import average_damage_computer
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
@@ -104,7 +106,7 @@ class Weapon:
             return 0
         context[WEAPON_RANGE] = self.range.average(context)
         return average_damage_computer(
-            self.attacks, self.tohit, self.towound, self.rend, self.wounds, self.attack_rules, context)
+            self.attacks, self.tohit, self.towound, self.rend, self.wounds, self.attack_rules, copy(context))
 
 
 def binomial(n, k):

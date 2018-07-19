@@ -1,4 +1,4 @@
-from typing import Union, List, Dict
+from typing import Union, List, Dict, Tuple, Any
 
 from copy import copy
 
@@ -138,16 +138,25 @@ class WeaponRule(Rule):
 
 
 class SpecialUser(Unit):
-    def __init__(self, parent: Unit, name, weapons, rules, max_amount, **kwargs):
+    def __init__(
+            self,
+            parent_args: Tuple[Any, ...],
+            parent_rules,
+            parent_kwargs: dict,
+            name,
+            weapons,
+            rules,
+            max_amount,
+            **kwargs):  # TODO: improve def
         defaults = {
-            'move': parent.move,
-            'save': parent.save,
-            'bravery': parent.bravery,
-            'wounds': parent.wounds,
+            'move': parent_args[0],
+            'save': parent_args[1],
+            'bravery': parent_args[2],
+            'wounds': parent_args[3],
             'min_size': 1,
-            'base': parent.base,
-            'rules': [*parent.rules, *rules],
-            'keywords': parent.keywords,
+            'base': parent_args[5],
+            'rules': [*parent_rules, *rules],
+            'keywords': parent_kwargs['keywords'],
         }
         for k, v in kwargs.items():
             defaults[k] = v

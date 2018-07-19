@@ -186,6 +186,7 @@ def attack_round(
             'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
             'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
         } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
+        # raise AssertionError  # testing
     except AssertionError:
         info = {
             'potential_attacks': potential_attacks,
@@ -201,6 +202,8 @@ def attack_round(
                 print(str({k: str(v) for k, v in e.items()}).replace("'", "").replace("\"", ""))
             sum_proba = sum(e['proba'] for e in potent)
             print(f'   total={sum_proba}')
+        average = sum(d.get('damage') for d in cleaned_damage)
+        print(f'AVERAGE: {average}')
 
     return cleaned_damage
 

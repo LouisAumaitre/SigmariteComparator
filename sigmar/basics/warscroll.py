@@ -1,6 +1,6 @@
 from typing import Union, List
 
-from copy import copy
+from copy import copy, deepcopy
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -102,7 +102,7 @@ class Warscroll:
 
         self.units = {}
         for combo in combinations:
-            u = Unit(name, combo['weapons'], *args, rules=combo['rules'], **kwargs)
+            u = Unit(name, [deepcopy(w) for w in combo['weapons']], *args, rules=combo['rules'], **kwargs)
             complete_id = combo['id']
             for o in combo['options']:
                 if not len(o):
@@ -110,8 +110,8 @@ class Warscroll:
                 option_name = o.get('name', '')
                 option_id = option_version_id(o, special_options, weapon_options, combo['id'])
                 u.special_users.append(SpecialUser(
-                    u, option_name,
-                    o.get('weapons', []),
+                    args, combo['rules'], kwargs, option_name,
+                    [deepcopy(w) for w in o.get('weapons', [])],
                     o.get('rules', []),
                     o.get('max_amount', 1),
                     **{k: v for k, v in kwargs.items() if k not in ['name', 'weapons', 'rules', 'max_amount']}
