@@ -4,7 +4,7 @@ from math import factorial
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND, \
-    EXTRA_ATTACK_ON_HIT
+    EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT
 from sigmar.basics.value import Value, value
 
 
@@ -22,9 +22,11 @@ def probability_of_hit_and_crit(dices, success, crit, roll: Roll, context) -> fl
     return success_rate * crit_rate
 
 
-def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context) -> float:
+def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context, crit_hit=0) -> float:
     success_rate = binomial(dices, success)
-    success_rate *= pow(roll.success(context), success) * pow(roll.fail(context), dices - success)
+    success_rate *= pow(roll.success(context, context.get(TOWOUND_MOD_ON_CRIT_HIT, 0)), crit_hit)
+    success_rate *= pow(roll.success(context), success - crit_hit)
+    success_rate *= pow(roll.fail(context), dices - success)
     crit_rate = binomial(success, crit) * pow(
         roll.critic_given_success(context), crit
     ) * pow(roll.no_critic_given_success(context), success - crit)
@@ -98,7 +100,8 @@ def attack_round(
                 **hit,
                 'wounds': nb,
                 'crit_wounds': nb_crit,
-                'proba': hit['proba'] * probability_of_wound_and_crit(hit['hits'], nb, nb_crit, towound, my_context)
+                'proba': hit['proba'] * probability_of_wound_and_crit(
+                    hit['hits'], nb, nb_crit, towound, my_context, crit_hit=hit['crit_hits'])
             } for hit in potential_hits for nb in range(hit['hits'] + 1) for nb_crit in range(nb + 1)
         ]
         assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)

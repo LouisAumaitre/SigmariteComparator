@@ -17,8 +17,8 @@ REND = 'rend'
 EXTRA_HIT_ON_CRIT = 'extra hit on crit'
 EXTRA_DAMAGE_ON_CRIT_WOUND = 'extra damage on crit wound'
 EXTRA_ATTACK_ON_HIT = 'extra attack on _hit'
-
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
+
 BONUS_REND = 'bonus rend'
 CRIT_BONUS_REND = 'crit bonus rend'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'

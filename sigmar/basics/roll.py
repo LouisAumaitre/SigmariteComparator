@@ -9,25 +9,25 @@ class Roll:
             self.base_value = base_value.base_value
         else:
             self.base_value = value(base_value)
-        self.rerolls = 0
+        self.rerolled = 0
         self.rules: List[Callable] = []  # function take dict, return mod and reroll
         self.mod_ignored = []
 
     def chances(self, context: dict, mod=0) -> Tuple[float, float]:
         if isinstance(self.base_value, FixedValue) and self.base_value.defined_value == 1:
             return 1, 0
-        rerolls = self.rerolls
+        rerolled = self.rerolled
         if mod in self.mod_ignored or 'all' in self.mod_ignored:
             mod = 0
 
         for bonus in self.rules:
             add_mod, add_reroll = bonus(context)
             mod += add_mod
-            rerolls = max(rerolls, add_reroll)
+            rerolled = max(rerolled, add_reroll)
 
         base_value = self.base_value.average(context) - mod
         chances = (7 - base_value) / 6
-        rerolls_chance = 1 + min(rerolls, base_value - 1) / 6
+        rerolls_chance = 1 + min(rerolled, base_value - 1) / 6
         chances *= rerolls_chance
         sixes = rerolls_chance * max(0, 1 + mod) / 6 if base_value <= 6 else 0
         return max(0, chances - sixes), sixes
