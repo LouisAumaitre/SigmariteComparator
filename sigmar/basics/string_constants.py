@@ -1,4 +1,4 @@
-SELF_NUMBERS = 'self_numbers'
+SELF_NUMBERS = 'self_numbers'  # amount of minis
 SELF_BASE = 'self_base'
 SELF_WOUNDS = 'self wounds'
 
@@ -10,22 +10,21 @@ ENEMY_SAVE = 'enemy_save'
 
 CHARGING = 'charging'
 
-WEAPON_RANGE = 'weapon range'
 REND = 'rend'
+RANGE = 'range'  # distance to enemy
+WEAPON_RANGE = 'weapon range'  # range of the weapon
 
 # done
-EXTRA_HIT_ON_CRIT = 'extra hit on crit'
-EXTRA_DAMAGE_ON_CRIT_WOUND = 'extra damage on crit wound'
+AUTO_WOUND_ON_CRIT = 'auto wound on crit'
+CRIT_BONUS_REND = 'crit bonus rend'
 EXTRA_ATTACK_ON_HIT = 'extra attack on _hit'
-TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
+EXTRA_DAMAGE_ON_CRIT_WOUND = 'extra damage on crit wound'
+EXTRA_HIT_ON_CRIT = 'extra hit on crit'
+EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
+MW_IF_DAMAGE = 'mortal wound if damage'  # whole unit counts once
+MW_ON_DAMAGE = 'mortal wound on damage'  # each attack counts once
 MW_ON_HIT_CRIT = 'mortal wound on tohit crit'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
-CRIT_BONUS_REND = 'crit bonus rend'
-EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
-AUTO_WOUND_ON_CRIT = 'auto wound on crit'
-MW_ON_DAMAGE = 'mortal wound on damage'  # each attack counts once
-MW_IF_DAMAGE = 'mortal wound if damage'  # whole unit counts once
-
-RANGE = 'range'
+TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 
 INCH = 25.6

@@ -11,8 +11,9 @@ from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import SERAPHONS_WS
+from sigmar.compendium.sylvaneth import SYLVANETH_WS
 
-warscrolls = SERAPHONS_WS
+warscrolls = SYLVANETH_WS
 
 test_armour = Roll(4)
 context = {
@@ -22,7 +23,7 @@ context = {
     ENEMY_WOUNDS: 1,
     REND: -1,
     ENEMY_KEYWORDS: [CHAOS],
-    RANGE: 4,
+    RANGE: 0.1,
     ENEMY_SAVE: test_armour,
 }
 

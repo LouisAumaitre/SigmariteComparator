@@ -57,7 +57,7 @@ def impenetrable_thicket(u: Unit):
         if SELF_NUMBERS in data and data[SELF_NUMBERS] >= 12:
             return 1, 0
         return 0, 0
-    u.save.extra_bonuses.append(buff)
+    u.save.rules.append(buff)
 
 
 SYLVANETH_WS.append(Warscroll(
