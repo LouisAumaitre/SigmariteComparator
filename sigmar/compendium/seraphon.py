@@ -1,4 +1,4 @@
-from sigmar.basics.base import cavalry, infantry, large_infantry, monster
+from sigmar.basics.base import cavalry_base, infantry_base, large_infantry_base, monster_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.value import DiceValue, value, MultValue, RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
@@ -61,7 +61,7 @@ def dead_for_innumerable_ages(u: Unit):
 SERAPHONS_WS.append(Warscroll(
     'Slann Starmaster', [
         [Weapon('Azure Lightning', 3, 6, 4, 3, 1, 1, [])],
-    ], 5, 4, 10, 7, 1, large_infantry, rules=[
+    ], 5, 4, 10, 7, 1, large_infantry_base, rules=[
         Rule('Fly', fly),
         Rule('Celestial Configuration', lambda x: None),
         Rule('Arcane Vassal', lambda x: None),
@@ -74,7 +74,7 @@ SERAPHONS_WS.append(Warscroll(
 SERAPHONS_WS.append(Warscroll(
     'Lord Kroak', [
         [Weapon('Spectral Claws', 3, "2D6", 3, 3, 1, 1, [])],
-    ], 5, 4, 10, 0, 1, large_infantry, rules=[
+    ], 5, 4, 10, 0, 1, large_infantry_base, rules=[
         Rule('Fly', fly),
         Rule('Dead for Innumerable Ages', dead_for_innumerable_ages),
         Spell('Celestial Deliverance', 7, None),
@@ -91,7 +91,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Celestite Warblade', 1, 4, 3, 3, 0, 1, []), fearsome_jaws_old_blood],
         [Weapon('Celestite War-spear', 2, 4, 4, 3, -1, 1, []), fearsome_jaws_old_blood],
         [Weapon('Celestite Greatblade', 1, 2, 4, 3, -1, 2, []), fearsome_jaws_old_blood],
-    ], 5, 4, 10, 7, 1, infantry, rules=[
+    ], 5, 4, 10, 7, 1, infantry_base, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wrath of the Seraphon', lambda x: None),
         CommandAbility('Paragon of Order', None),
@@ -102,7 +102,7 @@ SERAPHONS_WS.append(Warscroll(
     'Saurus Sunblood', [
         [Weapon('Celestite War-mace', 1, 5, 3, 3, -1, 1, []),
          Weapon('Fearsome Jaws and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
-    ], 5, 4, 10, 7, 1, infantry, rules=[
+    ], 5, 4, 10, 7, 1, infantry_base, rules=[
         Rule('Aeon Shield', ignore_2_rend),
         WeaponRule('Ferocious Rage', hits_on_crit('D3')),
         CommandAbility('Scent of Weakness', None),
@@ -116,7 +116,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, [Rule('Blazing Sunbolts', lambda x: None)]),
          Weapon('Sunstone Spear', 2, 3, 3, 3, -1, 'D3', []),
          carnosaur_forelimbs, carnosaur_jaws],
-    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, rules=[
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster_base, rules=[
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),
@@ -127,7 +127,7 @@ SERAPHONS_WS.append(Warscroll(
 SERAPHONS_WS.append(Warscroll(
     'Saurus Eternity Warden', [
         [Weapon('Star-stone Mace', 1, 3, 3, 3, -1, 2, []), Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
-    ], 5, 4, 10, 7, 1, infantry, rules=[
+    ], 5, 4, 10, 7, 1, infantry_base, rules=[
         Rule('Selfless Protector', lambda x: None),
         Rule('Alpha Warden', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
@@ -137,7 +137,7 @@ powerful_jaws_and_shield = Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5,
 SERAPHONS_WS.append(Warscroll(
     'Saurus Guard', [
         [Weapon('Celestite Polearm', 1, 2, 3, 3, -1, 1, []), powerful_jaws_and_shield],
-    ], 5, 4, 10, 1, 5, infantry, rules=[
+    ], 5, 4, 10, 1, 5, infantry_base, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Sworn Guardians', lambda x: None),
         Rule('Wardrum', march_double),
@@ -157,7 +157,7 @@ SERAPHONS_WS.append(Warscroll(
          fearsome_jaws_scar_veteran, carnosaur_forelimbs, carnosaur_jaws],
         [Weapon('Celestite Greatblade', 1, 3, 4, 3, -1, 2, []),
          fearsome_jaws_scar_veteran, carnosaur_forelimbs, carnosaur_jaws],
-    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster, rules=[
+    ], {8: 10, 3: 8, 0: 6}, 4, 10, 12, 1, monster_base, rules=[
         WeaponRule('Pinned Down', lambda x: None),
         Rule('Blood Frenzy', lambda x: None),
         Rule('Bloodroar', lambda x: None),
@@ -175,7 +175,7 @@ SERAPHONS_WS.append(Warscroll(
     'Saurus Scar-veteran on Cold-One', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, [Rule('Fury of the Seraphon', fury_of_the_seraphon)]),
          fearsome_jaws_scar_veteran, cold_one_bite],
-    ], 10, 4, 10, 7, 1, cavalry, rules=[
+    ], 10, 4, 10, 7, 1, cavalry_base, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         CommandAbility('Savage Charge', None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
@@ -185,7 +185,7 @@ SERAPHONS_WS.append(Warscroll(
     'Saurus Warriors', [
         [Weapon('Celestite Club', 1, 1, 4, 3, 0, 1, []), powerful_jaws_and_shield],
         [Weapon('Celestite Spear', 2, 1, 4, 4, 0, 1, []), powerful_jaws_and_shield],
-    ], 5, 5, 10, 1, 10, infantry, rules=[
+    ], 5, 5, 10, 1, 10, infantry_base, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Ordered Cohort', ordered_cohort),
         Rule('Wardrum', march_double),
@@ -205,7 +205,7 @@ SERAPHONS_WS.append(Warscroll(
     'Saurus Astrolith Bearer', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, []),
          Weapon('Fearsome Jaws', 1, 1, 4, 4, 0, 1, [])],
-    ], 10, 4, 10, 7, 1, cavalry, rules=[
+    ], 10, 4, 10, 7, 1, cavalry_base, rules=[
         Rule('Celestial Conduit', lambda x: None),
         Rule('Proud Defiance', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
@@ -216,7 +216,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Celestite Blade', 1, 1, 3, 3, 0, 1, []), powerful_jaws_and_shield, cold_one_bite],
         [Weapon('Celestite Lance', 2, 1, 4, 3, 0, 1, [Rule('Blazing Lances', add_mw_on_6_towound_in_charge)]),
          powerful_jaws_and_shield, cold_one_bite],
-    ], 7, 5, 10, 2, 5, cavalry, rules=[
+    ], 7, 5, 10, 2, 5, cavalry_base, rules=[
         Rule('Stardrake Shield', ignore_1_rend),
         Rule('Wardrum', march_double),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS],
@@ -233,7 +233,7 @@ SERAPHONS_WS.append(Warscroll(
 SERAPHONS_WS.append(Warscroll(
     'Skink Starseer', [
         [Weapon('Astromancer`s Staff', 2, 1, 4, 4, -1, 'D3', [])],
-    ], 8, 4, 10, 5, 1, infantry, rules=[
+    ], 8, 4, 10, 5, 1, infantry_base, rules=[
         Rule('Fly', fly),
         Rule('Cosmic Herald', lambda x: None),
         Spell('Curse of Fate', 4, None),
@@ -243,7 +243,7 @@ SERAPHONS_WS.append(Warscroll(
 SERAPHONS_WS.append(Warscroll(
     'Skink Starpriest', [
         [Weapon('Star-stone Dagger', 1, 3, 3, 4, -1, 1, [])],
-    ], 8, 5, 10, 4, 1, infantry, rules=[
+    ], 8, 5, 10, 4, 1, infantry_base, rules=[
         Rule('Serpent Staff', lambda x: None),
         Spell('Summon  Starlight', 6, None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, WIZARD],
@@ -255,7 +255,7 @@ SERAPHONS_WS.append(Warscroll(
          Weapon('Venomous Bite', 2, 6, 4, {10: 2, 5: 3, 3: 4, 0: 5}, 0, 2, []),
          Weapon('Troglodon`s Clawed Forelimbs', 2, 2, 4, 3, 0, 2, []),
          Weapon('Skink Oracle`s Divining Rod', 1, 1, 4, 5, 0, 1, [])],
-    ], {10: 10, 8: 9, 5: 8, 3: 7, 0: 6}, 4, 10, 12, 1, monster, rules=[
+    ], {10: 10, 8: 9, 5: 8, 3: 7, 0: 6}, 4, 10, 12, 1, monster_base, rules=[
         Rule('Divining Rod', lambda x: None),
         Rule('Primeval Roar', lambda x: None),
         Rule('Drawn to the Screams', lambda x: None),
@@ -276,7 +276,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Starbolt', 18, 'D3', 3, 3, -1, 1, []),
          Weapon('Star-stone Staff', 1, 3, 4, 3, -1, 1, []),
          Rule('Priestly Trappings', lambda x: None)],
-    ], 8, 5, 10, 4, 1, infantry, rules=[
+    ], 8, 5, 10, 4, 1, infantry_base, rules=[
         Rule('Celestial Rites', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, PRIEST]))
 
@@ -290,7 +290,7 @@ SERAPHONS_WS.append(Warscroll(
         [boltspitter, Weapon('Boltspitter', 1, 1, 5, 6, 0, 1, []),
          Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, [])],
         [Weapon('Moonstone Club', 1, 1, 5, 4, 0, 1, []), Rule('Star-buckler', ignore_1_rend)],
-    ], 8, 6, 10, 1, 10, infantry, rules=[
+    ], 8, 6, 10, 1, 10, infantry_base, rules=[
         Rule('Celestial cohort', celestial_cohort),
         Rule('Wary Fighters', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON],
@@ -327,7 +327,7 @@ SERAPHONS_WS.append(Warscroll(
     'Chameleon Skinks', [
         [Weapon('Dartpipe', 16, 2, 3, 4, 0, 1, [Rule('Star-venom', star_venom)]),
          Weapon('Envenomed Dart', 1, 1, 5, 5, 0, 1, [])]
-    ], 8, 6, 10, 1, 5, infantry, rules=[
+    ], 8, 6, 10, 1, 5, infantry_base, rules=[
         Rule('Chameleon Ambush', lambda x: None),
         Rule('Disappear from Sight', lambda x: None),
         Rule('Perfect Mimicry', lambda x: None),
@@ -345,7 +345,7 @@ SERAPHONS_WS.append(Warscroll(
     'Kroxigors', [
         [Weapon('Drakebite Maul', 2, 4, 4, 3, 0, 2, []),
          Weapon('Vice-like Jaws', 1, 1, 4, 3, -1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])],
-    ], 8, 4, 10, 4, 3, large_infantry, rules=[
+    ], 8, 4, 10, 4, 3, large_infantry_base, rules=[
         Rule('Energy transcendence', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON],
     special_options=[{'weapons': [
@@ -358,7 +358,7 @@ SERAPHONS_WS.append(Warscroll(
     'Salamanders', [
         [Weapon('Stream of Fire', 8, 1, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)]),
          Weapon('Corrosive Bite', 1, 3, 3, 3, -1, 1, [])],
-    ], 8, 5, 10, 3, 1, large_infantry, rules=[
+    ], 8, 5, 10, 3, 1, large_infantry_base, rules=[
         Rule('Goaded to Fury', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
 
@@ -374,7 +374,7 @@ SERAPHONS_WS.append(Warscroll(
     'Razordons', [
         [Weapon('Volley of Spikes', 12, '2D6', 3, 4, 0, 1, [Rule('Piercing Barbs', piercing_barbs)]),
          Weapon('Fierce Bite and Spiked Tail', 1, 3, 4, 3, 0, 1, [])],
-    ], 8, 4, 10, 3, 1, large_infantry, rules=[
+    ], 8, 4, 10, 3, 1, large_infantry_base, rules=[
         Rule('Goaded to Anger', lambda x: None),
         Rule('Instinctive Defense', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON]))
@@ -382,7 +382,7 @@ SERAPHONS_WS.append(Warscroll(
 SERAPHONS_WS.append(Warscroll(
     'Skink Handlers', [
         [Weapon('Goad-spears', 2, 1, 5, 5, 0, 1, [Rule('Aim for Their Eyes', auto_wound_on_crit_hit)])],
-    ], 8, 6, 10, 1, 1, infantry, rules=[], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
+    ], 8, 6, 10, 1, 1, infantry_base, rules=[], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK]))
 
 
 def impervious_defense(u: Unit):
@@ -397,7 +397,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Ark of Sotek', 8, 'D6', 1, 1, -6, 1, []),
          Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),
          Weapon('Bludgeoning Tail', 2, 3, 3, 3, -1, 'D3', [])],
-    ], 5, 3, 10, 8, 1, monster, rules=[
+    ], 5, 3, 10, 8, 1, monster_base, rules=[
         Rule('Impervious Defense', impervious_defense),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
 
@@ -407,7 +407,7 @@ SERAPHONS_WS.append(Warscroll(
     'Terradon Riders', [
         [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []), terradon_beak],
         [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', hits_on_crit('D6'))]), terradon_beak],
-    ], 14, 5, 10, 3, 3, large_infantry, rules=[
+    ], 14, 5, 10, 3, 3, large_infantry_base, rules=[
         Rule('Deadly Cargo', lambda x: None),
         Rule('Swooping Dive', lambda x: None),
         Rule('Fly', fly),
@@ -430,7 +430,7 @@ SERAPHONS_WS.append(Warscroll(
         [Weapon('Moonstone War-spear', 2, 1, 4, 4, 0, 1, []),
          Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
          Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', extra_attack_on_hit)])],
-    ], 14, 5, 10, 3, 3, large_infantry, rules=[
+    ], 14, 5, 10, 3, 3, large_infantry_base, rules=[
         Rule('Star-buckler', ignore_1_rend),
         Rule('Swooping Dive', lambda x: None),
         Rule('Toad Rage', lambda x: None),
@@ -464,7 +464,7 @@ SERAPHONS_WS.append(Warscroll(
          Weapon('Sunfire Throwers', 8, 'all_in_range', 3, 3, 0, 1, []),
          Weapon('Massive Horns', 2, 3, 3, 3, {8: -3, 4: -2, 0: -1}, 2, []),
          stegadon_stomps, Rule('Skink Alpha', lambda x: None)],
-    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster, rules=[
+    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster_base, rules=[
         Rule('Steadfast Majesty', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, MONSTER]))
 
@@ -474,7 +474,7 @@ SERAPHONS_WS.append(Warscroll(
          Weapon('Sharpened Horns', 2, 4, 3, 3, -1, 2, []),
          Weapon('Crushing Stomps', 1, {8: '3D6', 4: '2D6', 0: 'D6'}, 4, 4, 0, 1, [
              Rule('Unstoppable Stampede', plus_1_towound_in_charge)])],
-    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster, rules=[
+    ], {8: 8, 6: 7, 4: 6, 2: 5, 0: 4}, 4, 10, 10, 1, monster_base, rules=[
         Rule('Steadfast Majesty', lambda x: None),
         Rule('Cosmic Engine', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SKINK, HERO, MONSTER, PRIEST, 'SKINK PRIEST']))

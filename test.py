@@ -1,5 +1,5 @@
 from sigmar.basics.attack_round import attack_round
-from sigmar.basics.base import infantry
+from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
@@ -14,7 +14,7 @@ warscrolls = SERAPHONS_WS
 test_armour = Roll(4)
 context = {
     CHARGING: False,
-    ENEMY_BASE: infantry,
+    ENEMY_BASE: infantry_base,
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
     REND: -1,

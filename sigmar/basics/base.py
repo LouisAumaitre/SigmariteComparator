@@ -12,7 +12,7 @@ class Base:
         return math.pi * self.width * self.width
 
 
-infantry = Base(25)
-large_infantry = Base(40)
-cavalry = Base(50, 25)
-monster = Base(60, 10)
+infantry_base = Base(25)
+large_infantry_base = Base(40)
+cavalry_base = Base(50, 25)
+monster_base = Base(60, 10)

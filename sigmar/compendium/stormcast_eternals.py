@@ -1,4 +1,4 @@
-from sigmar.basics.base import large_infantry, monster
+from sigmar.basics.base import large_infantry_base, monster_base
 from sigmar.basics.rules import Rule, CommandAbility
 from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING
 from sigmar.basics.unit import WeaponRule
@@ -19,7 +19,7 @@ STORMCAST_WS.append(Warscroll(
     'Celestant-Prime', [
         [Weapon('Comet-strike Scepter', 24, 1, 1, 1, -6, 'D3', []),
          Weapon('Ghal Maraz, the Hammer of Sigmar', 2, 2, 3, 2, -3, 3, [])],
-    ], 12, 3, 10, 8, 1, monster, rules=[
+    ], 12, 3, 10, 8, 1, monster_base, rules=[
         Rule('Fly', fly),
         Rule('Retribution from on High', lambda x: None),
         Rule('Orrery of Celestial Fates', lambda x: None),
@@ -56,7 +56,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Thunderaxe', 2, 3, 3, 3, -1, 2, [Rule('', lambda x: None)]), dracoth_claws_and_fangs],
         [Weapon('Tempestos Hammer', 2, 3, 3, 2, -1, 'D3', [Rule('', d3_extra_attacks_in_charge)]),
          dracoth_claws_and_fangs],
-    ], 10, 3, 9, 7, 1, monster, rules=[
+    ], 10, 3, 9, 7, 1, monster_base, rules=[
         Rule('Retribution from on High', lambda x: None),
         CommandAbility('Lord of the Host', None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
@@ -67,7 +67,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Warblade', 1, 2, 3, 4, 0, 1, []), sigmarite_shields],
         [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
         [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
-    ], 5, 4, 6, 2, 5, large_infantry, rules=[
+    ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
         WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER]))
 

@@ -1,4 +1,4 @@
-from sigmar.basics.base import monster, infantry
+from sigmar.basics.base import monster_base, infantry_base
 from sigmar.basics.rules import Rule, Spell
 from sigmar.basics.string_constants import ENEMY_WOUNDS, MW_ON_DAMAGE, SELF_NUMBERS
 from sigmar.basics.unit import Unit
@@ -25,7 +25,7 @@ SYLVANETH_WS.append(Warscroll(
         [Weapon('Doom Tendril Staff', 18, 1, {10: 2, 8: 3, 5: 4, 3: 5, 0: 6}, 3, -1, 'D6', []),
          Weapon('Sweeping Blows', 3, {10: 3, 5: 2, 0: 1}, 3, 3, -1, 'D6', []),
          Weapon('Massive Impaling Talons', 1, 1, 3, {8: 2, 3: 3, 0: 4}, -2, 1, [Rule('Impale', impale)])],
-    ], 5, 3, 9, 12, 1, monster, rules=[
+    ], 5, 3, 9, 12, 1, monster_base, rules=[
         Rule('Groundshaking Stomp', lambda x: None),
         Rule('Spirit Path', lambda x: None),
         Spell('Awakening the Wood', 6, None),
@@ -37,7 +37,7 @@ SYLVANETH_WS.append(Warscroll(
         [Weapon('Strangleroots', 12, 5, {10: 2, 8: 3, 5: 4, 3: 5, 0: 6}, 3, -1, 1, []),
          Weapon('Sweeping Blows', 3, {10: 3, 5: 2, 0: 1}, 3, 3, -1, 'D6', []),
          Weapon('Massive Impaling Talons', 1, 1, 3, {8: 2, 3: 3, 0: 4}, -2, 1, [Rule('Impale', impale)])],
-    ], 6, 3, 6, 12, 1, monster, rules=[
+    ], 6, 3, 6, 12, 1, monster_base, rules=[
         Rule('Groundshaking Stomp', lambda x: None),
         Rule('Spirit Path', lambda x: None),
     ], keywords=[ORDER, SYLVANETH, MONSTER]))
@@ -46,7 +46,7 @@ SYLVANETH_WS.append(Warscroll(
 SYLVANETH_WS.append(Warscroll(
     'Branchwraith', [
         [Weapon('Piercing Talons', 2, 3, 4, 4, -1, 1, [])],
-    ], 7, 5, 8, 5, 1, infantry, rules=[
+    ], 7, 5, 8, 5, 1, infantry_base, rules=[
         Rule('Blessings from the Forest', lambda x: None),
         Spell('Roused to Wrath', 7, None),
     ], keywords=[ORDER, SYLVANETH, HERO, WIZARD], cast=1, unbind=1))
@@ -63,7 +63,7 @@ def impenetrable_thicket(u: Unit):
 SYLVANETH_WS.append(Warscroll(
     'Dryads', [
         [Weapon('Wracking Talons', 2, 2, 4, 4, 0, 1, [])],
-    ], 7, 5, 6, 1, 5, infantry, rules=[
+    ], 7, 5, 6, 1, 5, infantry_base, rules=[
         Rule('Blessings from the Forest', lambda x: None),
         Rule('Enrapturing Song', lambda x: None),
         Rule('Impenetrable Thicket', impenetrable_thicket),

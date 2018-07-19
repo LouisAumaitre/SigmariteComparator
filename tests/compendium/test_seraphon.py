@@ -1,4 +1,4 @@
-from sigmar.basics.base import infantry
+from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import ENEMY_BASE, ENEMY_NUMBERS
 from sigmar.compendium.seraphon import seraphons_by_name
@@ -7,7 +7,7 @@ from sigmar.compendium.seraphon import seraphons_by_name
 def test_saurus_stats():
     # given
     context = {
-        ENEMY_BASE: infantry,
+        ENEMY_BASE: infantry_base,
         ENEMY_NUMBERS: 10,
     }
     clubs = seraphons_by_name['Saurus Warriors'].units['Celestite Club, Powerful Jaws and Stardrake Shield']
@@ -26,7 +26,7 @@ def test_saurus_stats():
 def test_skinks_stats():
     # given
     context = {
-        ENEMY_BASE: infantry,
+        ENEMY_BASE: infantry_base,
         ENEMY_NUMBERS: 10,
     }
     jav = seraphons_by_name['Skinks'].units['Meteoritic Javelin, Star-buckler']
@@ -47,7 +47,7 @@ def test_skinks_stats():
 def test_kroxigor_stats():
     # given
     context = {
-        ENEMY_BASE: infantry,
+        ENEMY_BASE: infantry_base,
         ENEMY_NUMBERS: 10,
     }
     krok = seraphons_by_name['Kroxigors'].units['Drakebite Maul, Vice-like Jaws']
