@@ -59,7 +59,7 @@ def probability_of_save_fail(dices, success, roll: Roll, context, rend, crit_wnd
     return pass_rate
 
 
-def attack_round(
+def attack_round_computer(
             attacks: Value,
             tohit: Roll,
             towound: Roll,
@@ -206,17 +206,3 @@ def attack_round(
         print(f'AVERAGE: {average}')
 
     return cleaned_damage
-
-
-def average_damage_computer(
-            attacks: Value,
-            tohit: Roll,
-            towound: Roll,
-            rend: Value,
-            damage: Value,
-            rules: List[Callable],
-            context: dict,
-            users=1,
-) -> float:
-    dmg = attack_round(attacks, tohit, towound, rend, damage, rules, context, users)
-    return sum([e['damage'] * e['proba'] for e in dmg])

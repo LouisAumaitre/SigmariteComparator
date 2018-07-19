@@ -4,24 +4,14 @@ from math import factorial
 
 from copy import copy
 
-from sigmar.basics.attack_round import average_damage_computer
+from sigmar.basics.attack_round import attack_round_computer
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
-    TOWOUND_MOD_ON_CRIT_HIT,
-    CRIT_BONUS_REND,
-    MW_ON_HIT_CRIT,
-    MW_ON_WOUND_CRIT,
-    EXTRA_HIT_ON_CRIT,
-    EXTRA_WOUND_ON_CRIT,
     WEAPON_RANGE,
-    EXTRA_DAMAGE_ON_CRIT_WOUND,
     RANGE,
-    AUTO_WOUND_ON_CRIT,
     ENEMY_SAVE,
-    EXTRA_ATTACK_ON_HIT,
-    MW_ON_DAMAGE,
 )
 
 
@@ -66,8 +56,9 @@ class Weapon:
                 or self.range.average(context) > 3 >= context.get(RANGE, 0):
             return 0
         context[WEAPON_RANGE] = self.range.average(context)
-        return average_damage_computer(
+        dmg = attack_round_computer(
             self.attacks, self.tohit, self.towound, self.rend, self.wounds, self.attack_rules, copy(context))
+        return sum([e['damage'] * e['proba'] for e in dmg])
 
 
 def binomial(n, k):
