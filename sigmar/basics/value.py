@@ -45,6 +45,8 @@ class Value:
     def __mul__(self, other):
         if other == 1:
             return self
+        if other == 0:
+            return FixedValue(0)
         return MultValue(self, value(other))
 
     def __sub__(self, other):
@@ -71,6 +73,9 @@ class SumValue(Value):
         values = [(a + b, p_a * p_b) for (a, p_a) in pot_1 for (b, p_b) in pot_2]
         return [(a, sum([p_b for b, p_b in values if b == a])) for a in set(a for a, _ in values)]
 
+    def __str__(self):
+        return f'|{self.val_1}+{self.val_2}|'
+
 
 class MultValue(Value):
     def __init__(self, val_1: Value, val_2: Value):
@@ -90,6 +95,9 @@ class MultValue(Value):
         values = [(a * b, p_a * p_b) for (a, p_a) in pot_1 for (b, p_b) in pot_2]
         return [(a, sum([p_b for b, p_b in values if b == a])) for a in set(a for a, _ in values)]
 
+    def __str__(self):
+        return f'|{self.val_1}*{self.val_2}|'
+
 
 class RandomValue(Value):
     def __init__(self, probas: Dict[int, float]):
@@ -104,6 +112,10 @@ class RandomValue(Value):
 
     def _potential_values(self, context: dict, mod=0):
         return [(k, v) for k, v in self.probas.items()]
+
+    def __str__(self):
+        short_probas = {f'{int(round(v, 2) * 100)}%': k for k, v in self.probas.items()}
+        return f'|R{short_probas}|'
 
 
 class FixedValue(Value):
@@ -122,6 +134,11 @@ class FixedValue(Value):
 
     def __str__(self):
         return f'|{self.defined_value}|'
+
+    def __eq__(self, other):
+        if other == self.defined_value:
+            return True
+        return self == other
 
 
 class DiceValue(Value):

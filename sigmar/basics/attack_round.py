@@ -156,6 +156,7 @@ def attack_round(
             {
                 **dmg,
                 'damage': dmg['damage'] + nb,
+                'mortal_wounds': nb,
                 'proba': dmg['proba'] * proba,
             } for dmg in potential_damage for (nb, proba) in dmg['mortal_wounds'].potential_values(my_context)
         ]
@@ -164,19 +165,21 @@ def attack_round(
             'damage': pick,
             'proba': sum([dmg['proba'] for dmg in potential_damage if dmg['damage'] == pick])
         } for pick in set(dmg['damage'] for dmg in potential_damage)]
+        raise AssertionError
     except AssertionError:
         info = {
             'potential_attacks': potential_attacks,
             'potential_hits': potential_hits,
             'potential_wounds': potential_wounds,
             'potential_unsaved': potential_unsaved,
+            'potential_damage': potential_damage,
         }
         for k, potent in info.items():
-            cleaned = [(
-                pick, round(sum([proba for (val, proba) in potent if val == pick]), 2)
-            ) for pick in set([a for (a, b) in potent])]
-            print(f' - {k}: {[(val, round(prob, 2))for (val, prob) in potent]}={cleaned}='
-                  f'{sum([proba for (val, proba) in potent])} ({sum([proba for (val, proba) in potent]) - 1})')
+            print(f'- {k}:')
+            for e in potent:
+                print(str({k: str(v) for k, v in e.items()}).replace("'", "").replace("\"", ""))
+            sum_proba = sum(e['proba'] for e in potent)
+            print(f'   total={sum_proba}')
 
     return cleaned_damage
 

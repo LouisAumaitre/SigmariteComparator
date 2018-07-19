@@ -1,13 +1,15 @@
 from sigmar.basics.attack_round import attack_round
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
+from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
 )
 from sigmar.basics.value import value
+from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.seraphon import SERAPHONS_WS
+from sigmar.compendium.seraphon import SERAPHONS_WS, steel_trap_jaws
 
 warscrolls = SERAPHONS_WS
 
@@ -25,6 +27,8 @@ context = {
 
 for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
+# w = Weapon('Vice-like Jaws', 1, 1, 4, 3, -1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])
+# w.average_damage(context)
 # for o in attack_round(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context):
 #     print(o)
 # print(average_damage(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context))
