@@ -13,7 +13,7 @@ from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import (
     add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded,
     auto_wound_on_crit_hit, d6_hit_on_crit, reroll_all_tohit,
-    plus_1_towound_in_charge)
+    plus_1_towound_in_charge, extra_attack_on_hit)
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS, PRIEST
 
 SERAPHONS_WS = []
@@ -439,17 +439,11 @@ SERAPHONS_WS.append(Warscroll(
     }]))
 
 
-def voracious_appetite(w: Weapon):
-    def buff(data):
-        data[EXTRA_ATTACK_ON_HIT] = 1
-    w.attack_rules.append(buff)
-
-
 SERAPHONS_WS.append(Warscroll(
     'Ripperdactyl Riders', [
         [Weapon('Moonstone War-spear', 2, 1, 4, 4, 0, 1, []),
          Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
-         Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
+         Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', extra_attack_on_hit)])],
     ], 14, 5, 10, 3, 3, large_infantry, rules=[
         Rule('Star-buckler', ignore_1_rend),
         Rule('Swooping Dive', lambda x: None),
@@ -461,7 +455,7 @@ SERAPHONS_WS.append(Warscroll(
         'weapons': [
             Weapon('Moonstone War-spear', 2, 2, 4, 4, 0, 1, []),
             Weapon('Ripperdactyl`s Slashing Claws', 1, 3, 3, 3, 0, 1, []),
-            Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', voracious_appetite)])],
+            Weapon('Ripperdactyl`s Vicious Beak', 1, 1, 4, 3, 0, 1, [Rule('Voracious Appetite', extra_attack_on_hit)])],
     }]))
 
 stegadon_stomps = Weapon('Crushing Stomps', 1, {8: '3D6', 4: '2D6', 0: 'D6'}, 4, 3, 0, 1, [

@@ -3,7 +3,8 @@ from copy import copy
 from math import factorial
 
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND
+from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND, \
+    EXTRA_ATTACK_ON_HIT
 from sigmar.basics.value import Value, value
 
 
@@ -70,8 +71,18 @@ def attack_round(
                 **att,
                 'hits': value(nb) + my_context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
                 'crit_hits': nb_crit,
+                'second_attacks': nb * my_context.get(EXTRA_ATTACK_ON_HIT, 0),
                 'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, my_context)
             } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
+        ]
+        potential_hits = [
+            {
+                **att,
+                'hits': att['hits'] + value(nb) + my_context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
+                'crit_hits': nb_crit + att['crit_hits'],
+                'proba': att['proba'] * probability_of_hit_and_crit(
+                    att['second_attacks'], nb, nb_crit, tohit, my_context)
+            } for att in potential_hits for nb in range(att['second_attacks'] + 1) for nb_crit in range(nb + 1)
         ]
         potential_hits = [
             {

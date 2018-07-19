@@ -1,8 +1,8 @@
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
-    AUTO_WOUND_ON_CRIT
-)
+    AUTO_WOUND_ON_CRIT,
+    EXTRA_ATTACK_ON_HIT)
 from sigmar.basics.value import value
 from sigmar.basics.weapon import Weapon
 
@@ -75,4 +75,10 @@ def d3_mw_on_4_if_wounded(w: Weapon):
 def auto_wound_on_crit_hit(w: Weapon):
     def buff(data):
         data[AUTO_WOUND_ON_CRIT] = True
+    w.attack_rules.append(buff)
+
+
+def extra_attack_on_hit(w: Weapon):
+    def buff(data):
+        data[EXTRA_ATTACK_ON_HIT] = 1
     w.attack_rules.append(buff)
