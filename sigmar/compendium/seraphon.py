@@ -54,6 +54,10 @@ def celestial_cohort(u: Unit):
             w.tohit.rules.append(buff)
 
 
+def dead_for_innumerable_ages(u: Unit):
+    u.wounds = u.bravery - DiceValue(6).average({})
+
+
 SERAPHONS_WS.append(Warscroll(
     'Slann Starmaster', [
         [Weapon('Azure Lightning', 3, 6, 4, 3, 1, 1, [])],
@@ -65,10 +69,6 @@ SERAPHONS_WS.append(Warscroll(
         CommandAbility('Gift from the Heavens', None),
     ], keywords=[ORDER, CELESTIAL, SERAPHON, SLAAN, WIZARD, HERO],
     cast=3, unbind=3))
-
-
-def dead_for_innumerable_ages(u: Unit):
-    u.wounds = u.bravery - DiceValue('D6').average({})
 
 
 SERAPHONS_WS.append(Warscroll(
@@ -85,8 +85,6 @@ SERAPHONS_WS.append(Warscroll(
 
 
 fearsome_jaws_old_blood = Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Saurus Oldblood', [
         [Weapon('Suntooth Maul', 1, 2, 3, 4, -1, 'D3', []), fearsome_jaws_old_blood],
@@ -113,8 +111,6 @@ SERAPHONS_WS.append(Warscroll(
 
 carnosaur_forelimbs = Weapon('Carnosaur`s Clawed Forelimbs', 2, 2, {10: 3, 5: 4, 0: 5}, 3, 0, 2, [])
 carnosaur_jaws = Weapon('Carnosaur`s Massive Jaws', 2, {10: 5, 8: 4, 5: 3, 3: 2, 0: 1}, 4, 3, -1, 3, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Saurus Oldblood on Carnosaur', [
         [Weapon('Sunbolt Gauntlet', 18, 'D6', 3, 4, -1, 1, [Rule('Blazing Sunbolts', lambda x: None)]),
@@ -138,8 +134,6 @@ SERAPHONS_WS.append(Warscroll(
 
 
 powerful_jaws_and_shield = Weapon('Powerful Jaws and Stardrake Shield', 1, 1, 5, 4, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Saurus Guard', [
         [Weapon('Celestite Polearm', 1, 2, 3, 3, -1, 1, []), powerful_jaws_and_shield],
@@ -155,8 +149,6 @@ SERAPHONS_WS.append(Warscroll(
 
 
 fearsome_jaws_scar_veteran = Weapon('Fearsome Jaws and Stardrake Shield', 1, 1, 4, 3, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Saurus Scar-veteran on Carnosaur', [
         [Weapon('Celestite Warblade', 1, 6, 3, 3, 0, 1, []),
@@ -179,8 +171,6 @@ def fury_of_the_seraphon(w: Weapon):
 
 
 cold_one_bite = Weapon('Cold One`s Vicious Bite', 1, 2, 3, 4, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Saurus Scar-veteran on Cold-One', [
         [Weapon('Celestite War-pick', 1, 3, 3, 3, -1, 1, [Rule('Fury of the Seraphon', fury_of_the_seraphon)]),
@@ -293,8 +283,6 @@ SERAPHONS_WS.append(Warscroll(
 
 meteoritic_javelin = Weapon('Meteoritic Javelin', 8, 1, 5, 4, 0, 1, [])
 boltspitter = Weapon('Boltspitter', 16, 1, 5, 5, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Skinks', [
         [meteoritic_javelin, Weapon('Meteoritic Javelin', 1, 1, 6, 5, 0, 1, []), Rule('Star-buckler', ignore_1_rend)],
@@ -415,8 +403,6 @@ SERAPHONS_WS.append(Warscroll(
 
 
 terradon_beak = Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, [])
-
-
 SERAPHONS_WS.append(Warscroll(
     'Terradon Riders', [
         [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []), terradon_beak],
@@ -460,7 +446,6 @@ SERAPHONS_WS.append(Warscroll(
 
 stegadon_stomps = Weapon('Crushing Stomps', 1, {8: '3D6', 4: '2D6', 0: 'D6'}, 4, 3, 0, 1, [
     Rule('Unstoppable Stampede', plus_1_towound_in_charge)])
-
 SERAPHONS_WS.append(Warscroll(
     'Stegadon', [
         [Weapon('Meteoritic Javelins', 8, 4, 5, 4, 0, 1, []),

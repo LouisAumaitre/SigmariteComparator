@@ -5,7 +5,10 @@ from sigmar.basics.value import value, FixedValue
 
 class Roll:
     def __init__(self, base_value):
-        self.base_value = value(base_value)
+        if isinstance(base_value, Roll):
+            self.base_value = base_value.base_value
+        else:
+            self.base_value = value(base_value)
         self.rerolls = 0
         self.rules: List[Callable] = []  # function take dict, return mod and reroll
         self.mod_ignored = []
@@ -48,3 +51,6 @@ class Roll:
     def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:
         chances, sixes = self.chances(context, mod)
         return chances * dices, sixes * dices
+
+    def __str__(self):
+        return f'roll_{self.base_value}+'

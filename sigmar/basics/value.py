@@ -114,47 +114,26 @@ class FixedValue(Value):
     def _potential_values(self, context: dict):
         return [(self.defined_value, 1)]
 
+    def __str__(self):
+        return f'|{self.defined_value}|'
+
 
 class DiceValue(Value):
-    def __init__(self, defined_value: str):
+    def __init__(self, defined_value: int):
         Value.__init__(self)
         self.defined_value = defined_value
 
     def _average(self, context: dict):
-        if self.defined_value == 'D6':
-            return 3.5
-        elif self.defined_value == 'D3':
-            return 2
-        elif self.defined_value == 'all_in_range':
-            swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
-            hits = swing * 2 / context[ENEMY_BASE].width + 1
-            hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
-            return max(1, min(hits, context[ENEMY_NUMBERS]))
-        else:
-            return 0
+        return sum([i + 1 for i in range(self.defined_value)]) / self.defined_value
 
     def _max(self, context: dict):
-        if self.defined_value == 'D6':
-            return 6
-        elif self.defined_value == 'D3':
-            return 3
-        elif self.defined_value == 'all_in_range':
-            swing = context[WEAPON_RANGE] * INCH + context[SELF_BASE].width
-            hits = swing * 2 / context[ENEMY_BASE].width + 1
-            hits += max(0, context[WEAPON_RANGE] * INCH - context[ENEMY_BASE].depth) / context[ENEMY_BASE].width
-            return max(1, min(hits, context[ENEMY_NUMBERS]))
-        else:
-            return 0
+        return self.defined_value
 
     def _potential_values(self, context: dict):
-        if self.defined_value == 'D6':
-            return [(i + 1, 1/6) for i in range(6)]
-        elif self.defined_value == 'D3':
-            return [(i + 1, 1/3) for i in range(3)]
-        elif self.defined_value == 'all_in_range':
-            return [(self.average(context), 1)]
-        else:
-            return 0
+        return [(i + 1, 1/self.defined_value) for i in range(self.defined_value)]
+
+    def __str__(self):
+        return f'|D{self.defined_value}|'
 
 
 class AllInRangeValue(Value):
@@ -182,14 +161,18 @@ def _value(defined_value: Union[str, int, Value]):
     if isinstance(defined_value, int):
         return FixedValue(defined_value)
     if defined_value == '2D6':
-        return SumValue(DiceValue('D6'), DiceValue('D6'))
+        return SumValue(DiceValue(6), DiceValue(6))
     if defined_value == '3D6':
-        return SumValue(_value('2D6'), DiceValue('D6'))
+        return SumValue(_value('2D6'), DiceValue(6))
     if defined_value == '2D3':
-        return SumValue(DiceValue('D3'), DiceValue('D3'))
+        return SumValue(DiceValue(3), DiceValue(3))
     if defined_value == 'all_in_range':
         return AllInRangeValue()
-    return DiceValue(defined_value)
+    if defined_value == 'D6':
+        return DiceValue(6)
+    if defined_value == 'D3':
+        return DiceValue(3)
+    raise ValueError(f'{defined_value} is not recognised to define a value')
 
 
 class MonsterValue(Value):
