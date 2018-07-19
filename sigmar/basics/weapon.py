@@ -50,7 +50,7 @@ class Weapon:
         return 1 - chances - crit
 
     def average_damage(self, context: dict, users=1):
-        if context.get(RANGE, 0) > self.range.average(context)\
+        if context.get(RANGE, 0) > self.range.average(context) \
                 or self.range.average(context) > 3 >= context.get(RANGE, 0):
             return 0
         context[WEAPON_RANGE] = self.range.average(context)
@@ -59,8 +59,6 @@ class Weapon:
 
     def attack_round(self, context, users=1):
         attacks = self.attacks
-        tohit = self.tohit
-        towound = self.towound
         my_context = copy(context)
         rend = self.rend
         damage = self.damage
@@ -84,51 +82,10 @@ class Weapon:
                 'proba': sum([att['proba'] for att in potential_attacks if att['attacks'] == pick])
             } for pick in set(att['attacks'] for att in potential_attacks)]
 
-            potential_hits = [
-                {
-                    **att,
-                    'hits': value(nb) + my_context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
-                    'crit_hits': nb_crit,
-                    'second_attacks': nb * my_context.get(EXTRA_ATTACK_ON_HIT, 0),
-                    'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, my_context)
-                } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
-            ]
-            potential_hits = [
-                {
-                    **att,
-                    'hits': att['hits'] + value(nb) + my_context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
-                    'crit_hits': nb_crit + att['crit_hits'],
-                    'proba': att['proba'] * probability_of_hit_and_crit(
-                        att['second_attacks'], nb, nb_crit, tohit, my_context)
-                } for att in potential_hits for nb in range(att['second_attacks'] + 1) for nb_crit in range(nb + 1)
-            ]
-            potential_hits = [
-                {
-                    **hit,
-                    'hits': nb,
-                    'mortal_wounds': hit['mortal_wounds'] + my_context.get(MW_ON_HIT_CRIT, 0) * hit['crit_hits'],
-                    'proba': hit['proba'] * proba,
-                } for hit in potential_hits for (nb, proba) in hit['hits'].potential_values(my_context)
-            ]
+            potential_hits = compute_potential_hits(my_context, potential_attacks, self.tohit)
             assert abs(sum([hit['proba'] for hit in potential_hits]) - 1) <= pow(0.1, 5)
 
-            potential_wounds = [
-                {
-                    **hit,
-                    'wounds': value(nb) + my_context.get(EXTRA_WOUND_ON_CRIT, 0) * nb_crit,
-                    'crit_wounds': nb_crit,
-                    'mortal_wounds': hit['mortal_wounds'] + my_context.get(MW_ON_WOUND_CRIT, 0) * nb_crit,
-                    'proba': hit['proba'] * probability_of_wound_and_crit(
-                        hit['hits'], nb, nb_crit, towound, my_context, crit_hit=hit['crit_hits'])
-                } for hit in potential_hits for nb in range(hit['hits'] + 1) for nb_crit in range(nb + 1)
-            ]
-            potential_wounds = [
-                {
-                    **wnd,
-                    'wounds': nb,
-                    'proba': wnd['proba'] * proba,
-                } for wnd in potential_wounds for (nb, proba) in wnd['wounds'].potential_values(my_context)
-            ]
+            potential_wounds = compute_potential_wounds(my_context, potential_hits, self.towound)
             assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)
 
             potential_unsaved = [
@@ -202,6 +159,57 @@ class Weapon:
         return cleaned_damage
 
 
+def compute_potential_wounds(context, potential_hits, towound):
+    potential_wounds = [
+        {
+            **hit,
+            'wounds': value(nb) + context.get(EXTRA_WOUND_ON_CRIT, 0) * nb_crit,
+            'crit_wounds': nb_crit,
+            'mortal_wounds': hit['mortal_wounds'] + context.get(MW_ON_WOUND_CRIT, 0) * nb_crit,
+            'proba': hit['proba'] * probability_of_wound_and_crit(
+                hit['hits'], nb, nb_crit, towound, context, crit_hit=hit['crit_hits'])
+        } for hit in potential_hits for nb in range(hit['hits'] + 1) for nb_crit in range(nb + 1)
+    ]
+    potential_wounds = [
+        {
+            **wnd,
+            'wounds': nb,
+            'proba': wnd['proba'] * proba,
+        } for wnd in potential_wounds for (nb, proba) in wnd['wounds'].potential_values(context)
+    ]
+    return potential_wounds
+
+
+def compute_potential_hits(context, potential_attacks, tohit):
+    potential_hits = [
+        {
+            **att,
+            'hits': value(nb) + context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
+            'crit_hits': nb_crit,
+            'second_attacks': nb * context.get(EXTRA_ATTACK_ON_HIT, 0),
+            'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, context)
+        } for att in potential_attacks for nb in range(att['attacks'] + 1) for nb_crit in range(nb + 1)
+    ]
+    potential_hits = [
+        {
+            **att,
+            'hits': att['hits'] + value(nb) + context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
+            'crit_hits': nb_crit + att['crit_hits'],
+            'proba': att['proba'] * probability_of_hit_and_crit(
+                att['second_attacks'], nb, nb_crit, tohit, context)
+        } for att in potential_hits for nb in range(att['second_attacks'] + 1) for nb_crit in range(nb + 1)
+    ]
+    potential_hits = [
+        {
+            **hit,
+            'hits': nb,
+            'mortal_wounds': hit['mortal_wounds'] + context.get(MW_ON_HIT_CRIT, 0) * hit['crit_hits'],
+            'proba': hit['proba'] * proba,
+        } for hit in potential_hits for (nb, proba) in hit['hits'].potential_values(context)
+    ]
+    return potential_hits
+
+
 def binomial(n, k):
     # combinations of k in n
     return factorial(n) / (factorial(k) * factorial(n - k))
@@ -248,4 +256,3 @@ def probability_of_save_fail(dices, success, roll: Roll, context, rend, crit_wnd
     pass_rate *= pow(roll.fail(context, rend), success - crit_wnd)
     pass_rate *= pow(roll.success(context, rend), dices - success)
     return pass_rate
-
