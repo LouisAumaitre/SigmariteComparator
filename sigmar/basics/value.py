@@ -1,4 +1,4 @@
-from typing import Union, List, Callable, Dict, Any
+from typing import Union, List, Callable, Dict
 
 from sigmar.basics.string_constants import WEAPON_RANGE, SELF_BASE, ENEMY_BASE, ENEMY_NUMBERS, INCH, SELF_WOUNDS
 

@@ -59,6 +59,7 @@ def attack_round(
     potential_hits = {}
     potential_wounds = {}
     potential_unsaved = {}
+    potential_damage = {}
     cleaned_damage = []
     try:
         potential_attacks = [{
@@ -165,7 +166,6 @@ def attack_round(
             'damage': pick,
             'proba': sum([dmg['proba'] for dmg in potential_damage if dmg['damage'] == pick])
         } for pick in set(dmg['damage'] for dmg in potential_damage)]
-        raise AssertionError
     except AssertionError:
         info = {
             'potential_attacks': potential_attacks,
