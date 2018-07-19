@@ -84,6 +84,7 @@ class Weapon:
 
             potential_wounds = compute_potential_wounds(my_context, potential_hits, self.towound)
             assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)
+            potential_wounds = cleaned_dict_list(potential_wounds, ['wounds', 'crit_wounds', 'mortal_wounds'])
 
             potential_unsaved = [
                 {
