@@ -1,3 +1,5 @@
+from typing import Union
+
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
@@ -52,16 +54,12 @@ def extra_hit_on_crit(w: Weapon):
     w.attack_rules.append(buff)
 
 
-def d6_hit_on_crit(w: Weapon):
-    def buff(data):
-        data[EXTRA_HIT_ON_CRIT] = value('D6') - 1
-    w.attack_rules.append(buff)
-
-
-def d3_hits_on_crit(w: Weapon):
-    def buff(data):
-        data[EXTRA_HIT_ON_CRIT] = value('D3') - 1
-    w.attack_rules.append(buff)
+def hits_on_crit(amount: Union[int, str]):
+    def rule_func(w: Weapon):
+        def buff(data):
+            data[EXTRA_HIT_ON_CRIT] = value(amount) - 1
+        w.attack_rules.append(buff)
+    return rule_func
 
 
 def d3_mw_on_4_if_wounded(w: Weapon):

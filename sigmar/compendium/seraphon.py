@@ -4,16 +4,16 @@ from sigmar.basics.value import DiceValue, value, MultValue, RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import (
     SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT,
-    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE, EXTRA_ATTACK_ON_HIT
+    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE
 )
 from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import (
-    add_mw_on_6_towound_in_charge, d3_hits_on_crit, d3_mw_on_4_if_wounded,
-    auto_wound_on_crit_hit, d6_hit_on_crit, reroll_all_tohit,
-    plus_1_towound_in_charge, extra_attack_on_hit)
+    add_mw_on_6_towound_in_charge, d3_mw_on_4_if_wounded,
+    auto_wound_on_crit_hit, reroll_all_tohit,
+    plus_1_towound_in_charge, extra_attack_on_hit, hits_on_crit)
 from sigmar.compendium.generic_keywords import CELESTIAL, ORDER, DAEMON, WIZARD, HERO, MONSTER, CHAOS, PRIEST
 
 SERAPHONS_WS = []
@@ -106,7 +106,7 @@ SERAPHONS_WS.append(Warscroll(
          Weapon('Fearsome Jaws and Aeon Shield', 1, 2, 4, 3, 0, 1, [])],
     ], 5, 4, 10, 7, 1, infantry, rules=[
         Rule('Aeon Shield', ignore_2_rend),
-        WeaponRule('Ferocious Rage', d3_hits_on_crit),
+        WeaponRule('Ferocious Rage', hits_on_crit('D3')),
         CommandAbility('Scent of Weakness', None),
     ], keywords=[ORDER, CELESTIAL, DAEMON, SERAPHON, SAURUS, HERO]))
 
@@ -420,7 +420,7 @@ terradon_beak = Weapon('Terradon`s Razor-sharp Beak', 1, 4, 4, 4, 0, 1, [])
 SERAPHONS_WS.append(Warscroll(
     'Terradon Riders', [
         [Weapon('Starstrike Javelin', 10, 2, 4, 3, 0, 1, []), terradon_beak],
-        [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]), terradon_beak],
+        [Weapon('Sunleech Bolas', 5, 1, 4, 4, 0, 1, [Rule('Sunleech Bolas', hits_on_crit('D6'))]), terradon_beak],
     ], 14, 5, 10, 3, 3, large_infantry, rules=[
         Rule('Deadly Cargo', lambda x: None),
         Rule('Swooping Dive', lambda x: None),
@@ -432,7 +432,7 @@ SERAPHONS_WS.append(Warscroll(
     }, {
         'name': 'Alpha',
         'weapons': [
-            Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', d6_hit_on_crit)]), terradon_beak],
+            Weapon('Sunleech Bolas', 5, 1, 3, 4, 0, 1, [Rule('Sunleech Bolas', hits_on_crit('D6'))]), terradon_beak],
     }, {
         'name': 'Skymaster',
         'weapons': [Weapon('Skyblade', 1, 3, 3, 4, 0, 1, [Rule('Skyblade', reroll_all_tohit)]), terradon_beak],
