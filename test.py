@@ -8,8 +8,9 @@ from sigmar.basics.string_constants import (
 )
 from sigmar.basics.value import value
 from sigmar.basics.weapon import Weapon
+from sigmar.basics.weapon_rules import d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.seraphon import SERAPHONS_WS, steel_trap_jaws
+from sigmar.compendium.seraphon import SERAPHONS_WS
 
 warscrolls = SERAPHONS_WS
 
@@ -21,14 +22,14 @@ context = {
     ENEMY_WOUNDS: 1,
     REND: -1,
     ENEMY_KEYWORDS: [CHAOS],
-    RANGE: 0.1,
+    RANGE: 4,
     ENEMY_SAVE: test_armour,
 }
 
 for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
-# w = Weapon('Vice-like Jaws', 1, 1, 4, 3, -1, 1, [Rule('Jaws like a steel trap', steel_trap_jaws)])
-# w.average_damage(context)
+# w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
+# print(w.average_damage(context))
 # for o in attack_round(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context):
 #     print(o)
 # print(average_damage(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context))

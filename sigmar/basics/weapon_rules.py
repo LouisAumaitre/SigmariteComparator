@@ -4,8 +4,8 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
     AUTO_WOUND_ON_CRIT,
-    EXTRA_ATTACK_ON_HIT)
-from sigmar.basics.value import value
+    EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE)
+from sigmar.basics.value import value, RandomValue
 from sigmar.basics.weapon import Weapon
 
 
@@ -63,11 +63,9 @@ def hits_on_crit(amount: Union[int, str]):
 
 
 def d3_mw_on_4_if_wounded(w: Weapon):
-    def hellfire(data, users=1):
-        proba = w.probability_of_damage(data, users=users)
-        proba *= Roll(4).success(data)
-        return proba * value('D3').average(data)
-    w.extra_wounds_after_everything_else.append(hellfire)
+    def hellfire(data):
+        data[MW_IF_DAMAGE] = value('D3') * RandomValue({1: 0.5, 0: 0.5})
+    w.attack_rules.append(hellfire)
 
 
 def auto_wound_on_crit_hit(w: Weapon):

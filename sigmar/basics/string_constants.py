@@ -23,8 +23,8 @@ MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
 CRIT_BONUS_REND = 'crit bonus rend'
 EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
-
-MW_ON_DAMAGE = 'mortal wound on damage'
+MW_ON_DAMAGE = 'mortal wound on damage'  # each attack counts once
+MW_IF_DAMAGE = 'mortal wound if damage'  # whole unit counts once
 
 RANGE = 'range'
 

@@ -7,7 +7,7 @@ from sigmar.basics.string_constants import (
     ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND,
     EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT, MW_ON_HIT_CRIT,
     MW_ON_WOUND_CRIT, CRIT_BONUS_REND, EXTRA_WOUND_ON_CRIT,
-    AUTO_WOUND_ON_CRIT)
+    AUTO_WOUND_ON_CRIT, MW_ON_DAMAGE, MW_IF_DAMAGE)
 from sigmar.basics.value import Value, value
 
 
@@ -165,13 +165,15 @@ def attack_round(
             potential_damage.extend([
                 {
                     **unsvd,
-                    'damage': nb + unsvd['crit_wounds'] * my_context.get(
-                        EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
-                    'proba': unsvd['proba'] * proba
+                    'damage': nb + unsvd['crit_wounds'] * my_context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
+                    'mortal_wounds': unsvd['mortal_wounds'] + (
+                        my_context.get(MW_ON_DAMAGE, 0) * nb) + (
+                        my_context.get(MW_IF_DAMAGE, 0) if nb else 0),
+                    'proba': unsvd['proba'] * proba,
                 } for (nb, proba) in potential_results
             ])
 
-        potential_damage = [
+        potential_full_damage = [
             {
                 **dmg,
                 'damage': dmg['damage'] + nb,
@@ -181,9 +183,9 @@ def attack_round(
         ]
 
         cleaned_damage = [{
-            'damage': pick,
-            'proba': sum([dmg['proba'] for dmg in potential_damage if dmg['damage'] == pick])
-        } for pick in set(dmg['damage'] for dmg in potential_damage)]
+            'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
+            'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
+        } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
     except AssertionError:
         info = {
             'potential_attacks': potential_attacks,
@@ -191,6 +193,7 @@ def attack_round(
             'potential_wounds': potential_wounds,
             'potential_unsaved': potential_unsaved,
             'potential_damage': potential_damage,
+            'cleaned_damage': cleaned_damage,
         }
         for k, potent in info.items():
             print(f'- {k}:')

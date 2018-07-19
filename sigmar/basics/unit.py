@@ -84,7 +84,6 @@ class Unit:
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
-        users = {}
         _range = data.get(RANGE, 0)
         for row in self.formation(unit_data, front_size):
             # specials
@@ -97,13 +96,7 @@ class Unit:
             total += (row - specials) * sum(
                 [w.average_damage(copy(unit_data)) for w in self.weapons]
             )
-            for w in [w for w in self.weapons if w.range.average(data) >= _range]:
-                users[w] = users.get(w, 0) + row
             _range += self.base.depth / INCH
-
-        for w in self.weapons:
-            for extra_func in w.extra_wounds_after_everything_else:
-                total += extra_func(data, users=users.get(w, 0))
 
         return total
 
