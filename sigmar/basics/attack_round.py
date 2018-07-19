@@ -28,7 +28,8 @@ def probability_of_hit_and_crit(dices, success, crit, roll: Roll, context) -> fl
 def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context, crit_hit=0) -> float:
     succ_crit_hit = min(crit_hit, success)
     failed_crit_hit = crit_hit - succ_crit_hit
-    if context.get(AUTO_WOUND_ON_CRIT, False) and failed_crit_hit:
+    if context.get(AUTO_WOUND_ON_CRIT, False) and (failed_crit_hit or crit > success - succ_crit_hit):
+        # cannot fail, nor get a critical wound roll an automatic success
         return 0
     success_rate = binomial(dices, success)
     # successful after a critical_hit
@@ -42,9 +43,11 @@ def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context, cri
     success_rate *= pow(roll.fail(context), dices - success - failed_crit_hit)
 
     # crit rate may be flawed in case of crit_hit bonuses TODO: fix
-    crit_rate = binomial(success, crit) * pow(
-        roll.critic_given_success(context), crit
-    ) * pow(roll.no_critic_given_success(context), success - crit)
+    crit_rate = binomial(success, crit)
+    # critical wound after a critical_hit
+    crit_rate *= pow(roll.critic_given_success(context), crit)
+    if not (context.get(AUTO_WOUND_ON_CRIT, False) and crit_hit):
+        crit_rate *= pow(roll.no_critic_given_success(context), success - crit)
     return success_rate * crit_rate
 
 
