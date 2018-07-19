@@ -155,23 +155,27 @@ class AllInRangeValue(Value):
         return [(i + 1, 1/m) for i in range(m)]
 
 
+def make_dice_value(amount: int, val: int) -> Value:
+    if amount == 1:
+        return DiceValue(val)
+    else:
+        return SumValue(make_dice_value(amount - 1, val), DiceValue(val))
+
+
 def _value(defined_value: Union[str, int, Value]):
     if isinstance(defined_value, Value):
         return defined_value
     if isinstance(defined_value, int):
         return FixedValue(defined_value)
-    if defined_value == '2D6':
-        return SumValue(DiceValue(6), DiceValue(6))
-    if defined_value == '3D6':
-        return SumValue(_value('2D6'), DiceValue(6))
-    if defined_value == '2D3':
-        return SumValue(DiceValue(3), DiceValue(3))
+    if isinstance(defined_value, str) and 'D' in defined_value:
+        try:
+            nb = 1 if defined_value[0] == 'D' else int(defined_value.split('D')[0])
+            val = int(defined_value.split('D')[-1])
+            return make_dice_value(nb, val)
+        except TypeError:
+            pass
     if defined_value == 'all_in_range':
         return AllInRangeValue()
-    if defined_value == 'D6':
-        return DiceValue(6)
-    if defined_value == 'D3':
-        return DiceValue(3)
     raise ValueError(f'{defined_value} is not recognised to define a value')
 
 
@@ -197,6 +201,9 @@ class MonsterValue(Value):
             possible = [key for key in self.defined_value.keys() if key <= context[SELF_WOUNDS]]
             return self.defined_value[max(possible)].max(context, 0)
         return self.defined_value[max(self.defined_value.keys())].potential_values(context, 0)
+
+    def __str__(self):
+        return f'|M{self.defined_value}|'
 
 
 def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]]]):
