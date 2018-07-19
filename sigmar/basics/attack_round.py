@@ -3,8 +3,11 @@ from copy import copy
 from math import factorial
 
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND, \
-    EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT, MW_ON_HIT_CRIT, MW_ON_WOUND_CRIT, CRIT_BONUS_REND, EXTRA_WOUND_ON_CRIT
+from sigmar.basics.string_constants import (
+    ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND,
+    EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT, MW_ON_HIT_CRIT,
+    MW_ON_WOUND_CRIT, CRIT_BONUS_REND, EXTRA_WOUND_ON_CRIT,
+    AUTO_WOUND_ON_CRIT)
 from sigmar.basics.value import Value, value
 
 
@@ -23,10 +26,22 @@ def probability_of_hit_and_crit(dices, success, crit, roll: Roll, context) -> fl
 
 
 def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context, crit_hit=0) -> float:
+    succ_crit_hit = min(crit_hit, success)
+    failed_crit_hit = crit_hit - succ_crit_hit
+    if context.get(AUTO_WOUND_ON_CRIT, False) and failed_crit_hit:
+        return 0
     success_rate = binomial(dices, success)
-    success_rate *= pow(roll.success(context, context.get(TOWOUND_MOD_ON_CRIT_HIT, 0)), crit_hit)
-    success_rate *= pow(roll.success(context), success - crit_hit)
-    success_rate *= pow(roll.fail(context), dices - success)
+    # successful after a critical_hit
+    if not context.get(AUTO_WOUND_ON_CRIT, False):
+        success_rate *= pow(roll.success(context, context.get(TOWOUND_MOD_ON_CRIT_HIT, 0)), succ_crit_hit)
+    # successful without a critical_hit
+    success_rate *= pow(roll.success(context), success - succ_crit_hit)
+    # failed despite a critical_hit
+    success_rate *= pow(roll.fail(context, context.get(TOWOUND_MOD_ON_CRIT_HIT, 0)), failed_crit_hit)
+    # failed without a critical_hit
+    success_rate *= pow(roll.fail(context), dices - success - failed_crit_hit)
+
+    # crit rate may be flawed in case of crit_hit bonuses TODO: fix
     crit_rate = binomial(success, crit) * pow(
         roll.critic_given_success(context), crit
     ) * pow(roll.no_critic_given_success(context), success - crit)

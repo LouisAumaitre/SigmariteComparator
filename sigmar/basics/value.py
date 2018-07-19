@@ -136,9 +136,9 @@ class FixedValue(Value):
         return f'|{self.defined_value}|'
 
     def __eq__(self, other):
-        if other == self.defined_value:
+        if other == self.defined_value or (isinstance(other, FixedValue) and other.defined_value == self.defined_value):
             return True
-        return self == other
+        return False
 
 
 class DiceValue(Value):
