@@ -99,6 +99,7 @@ class Weapon:
                 } for wnd in potential_wounds for nb in range(wnd['wounds'] + 1)
             ]
             assert abs(sum([unsvd['proba'] for unsvd in potential_unsaved]) - 1) <= pow(0.1, 5)
+            potential_unsaved = cleaned_dict_list(potential_unsaved, ['unsaved', 'mortal_wounds'])
 
             potential_damage = compute_potential_damage(damage, my_context, potential_unsaved)
             assert abs(sum([dmg['proba'] for dmg in potential_damage]) - 1) <= pow(0.1, 5)
@@ -111,6 +112,7 @@ class Weapon:
                     'proba': dmg['proba'] * proba,
                 } for dmg in potential_damage for (nb, proba) in dmg['mortal_wounds'].potential_values(my_context)
             ]
+            potential_full_damage = cleaned_dict_list(potential_full_damage, ['damage'])
 
             cleaned_damage = [{
                 'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),

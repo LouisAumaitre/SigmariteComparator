@@ -94,7 +94,7 @@ class Unit:
                     specials += sp_usr.size
 
             users = row - specials
-            if users < 10:
+            if users < 20:
                 total += sum([w.average_damage(copy(unit_data), users=users) for w in self.weapons])
             else:  # let's avoid taking years to compute
                 total += users * sum([w.average_damage(copy(unit_data)) for w in self.weapons])
