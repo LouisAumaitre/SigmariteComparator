@@ -61,45 +61,6 @@ class Weapon:
         chances, crit = extra_data[ENEMY_SAVE].chances({}, mod=self.rend.average(extra_data, extra_rend))
         return 1 - chances - crit
 
-    def _average_damage(self, data: dict):
-        if data.get(RANGE, 0) > self.range.average(data) or self.range.average(data) > 3 >= data.get(RANGE, 0):
-            return 0
-        data[WEAPON_RANGE] = self.range.average(data)
-        for rule in self.attack_rules:
-            rule(data)
-        mortal_wounds = 0
-
-        attacks = self.attacks.average(data)
-        hits, critic_hits = self.average_hits(attacks, data)
-        _hits, _critic_hits = self.average_hits(data.get(EXTRA_ATTACK_ON_HIT, 0) * (hits + critic_hits), data)
-        hits += _hits
-        critic_hits += _critic_hits
-        hits += critic_hits * data.get(EXTRA_HIT_ON_CRIT, 0)
-
-        wounds, critic_wounds = self.average_wounds(hits, data)
-        if data.get(AUTO_WOUND_ON_CRIT, False):
-            _wounds, _critic_wounds = critic_hits, 0
-        else:
-            _wounds, _critic_wounds = self.average_wounds(critic_hits, data, mod=data.get(TOWOUND_MOD_ON_CRIT_HIT, 0))
-        wounds += _wounds
-        critic_wounds += _critic_wounds
-        wounds += critic_wounds * data.get(EXTRA_WOUND_ON_CRIT, 0)
-
-        unsaved = wounds * self.unsaved_chances(data)
-        unsaved += critic_wounds * self.unsaved_chances(
-            data, extra_rend=data.get(CRIT_BONUS_REND, 0))
-
-        mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
-        mortal_wounds += data.get(MW_ON_DAMAGE, 0) * unsaved
-        if wounds == 0:
-            damage_per_hit = self.wounds.average(data)
-        else:
-            damage_per_hit = self.wounds.average(data) \
-                             + data.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0) * critic_wounds / wounds
-        damage = unsaved * damage_per_hit + mortal_wounds
-
-        return damage
-
     def average_damage(self, context: dict):
         if context.get(RANGE, 0) > self.range.average(context)\
                 or self.range.average(context) > 3 >= context.get(RANGE, 0):
