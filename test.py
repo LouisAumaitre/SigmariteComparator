@@ -1,3 +1,5 @@
+import time
+
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -26,7 +28,10 @@ context = {
     ENEMY_SAVE: test_armour,
 }
 
+start = time.time()
 for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
+print(f'{time.time() - start}s')
+# warscrolls[0].simplest_stats(context, front_size=145)
 # w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
 # print(w.average_damage(context))

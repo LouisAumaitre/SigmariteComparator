@@ -73,17 +73,14 @@ class Weapon:
         cleaned_damage = []
         try:
             potential_attacks = [{
-                'attacks': nb * users, 'proba': proba,
+                'attacks': nb * users, 'proba': proba, 'mortal_wounds': value(0),
             } for (nb, proba) in attacks.potential_values(my_context)]
             assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
-            potential_attacks = [{
-                'mortal_wounds': value(0),
-                'attacks': pick,
-                'proba': sum([att['proba'] for att in potential_attacks if att['attacks'] == pick])
-            } for pick in set(att['attacks'] for att in potential_attacks)]
+            potential_attacks = cleaned_dict_list(potential_attacks, ['attacks'])
 
             potential_hits = compute_potential_hits(my_context, potential_attacks, self.tohit)
             assert abs(sum([hit['proba'] for hit in potential_hits]) - 1) <= pow(0.1, 5)
+            potential_hits = cleaned_dict_list(potential_hits, ['hits', 'crit_hits', 'mortal_wounds'])
 
             potential_wounds = compute_potential_wounds(my_context, potential_hits, self.towound)
             assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)
@@ -102,27 +99,8 @@ class Weapon:
             ]
             assert abs(sum([unsvd['proba'] for unsvd in potential_unsaved]) - 1) <= pow(0.1, 5)
 
-            potential_damage = []
-            for unsvd in potential_unsaved:
-                potential_results = {0: 1}
-                for att in range(unsvd['unsaved']):
-                    new_results = {}
-                    for (val, val_proba) in damage.potential_values(my_context):
-                        for total, total_proba in potential_results.items():
-                            new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
-                    potential_results = new_results
-                potential_results = [(k, v) for k, v in potential_results.items()]
-
-                potential_damage.extend([
-                    {
-                        **unsvd,
-                        'damage': nb + unsvd['crit_wounds'] * my_context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
-                        'mortal_wounds': unsvd['mortal_wounds'] + (
-                            my_context.get(MW_ON_DAMAGE, 0) * nb) + (
-                                             my_context.get(MW_IF_DAMAGE, 0) if nb else 0),
-                        'proba': unsvd['proba'] * proba,
-                    } for (nb, proba) in potential_results
-                ])
+            potential_damage = compute_potential_damage(damage, my_context, potential_unsaved)
+            assert abs(sum([dmg['proba'] for dmg in potential_damage]) - 1) <= pow(0.1, 5)
 
             potential_full_damage = [
                 {
@@ -137,7 +115,7 @@ class Weapon:
                 'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
                 'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
             } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
-            # raise AssertionError  # testing
+            # raise AssertionError  # testing
         except AssertionError:
             info = {
                 'potential_attacks': potential_attacks,
@@ -157,6 +135,45 @@ class Weapon:
             print(f'AVERAGE: {average}')
 
         return cleaned_damage
+
+
+def cleaned_dict_list(list_of_dicts, keys_to_keep):
+    new_list = []
+    for d in list_of_dicts:
+        ok = False
+        for already_in in new_list:
+            if len([k for k in keys_to_keep if d[k] == already_in[k]]) == len(keys_to_keep):  # keys are good
+                already_in['proba'] += d['proba']
+                ok = True
+                break
+        if not ok:
+            new_list.append(d)
+    return new_list
+
+
+def compute_potential_damage(damage, context, potential_unsaved):
+    potential_damage = []
+    for unsvd in potential_unsaved:
+        potential_results = {0: 1}
+        for att in range(unsvd['unsaved']):
+            new_results = {}
+            for (val, val_proba) in damage.potential_values(context):
+                for total, total_proba in potential_results.items():
+                    new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
+            potential_results = new_results
+        potential_results = [(k, v) for k, v in potential_results.items()]
+
+        potential_damage.extend([
+            {
+                **unsvd,
+                'damage': nb + unsvd['crit_wounds'] * context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
+                'mortal_wounds': unsvd['mortal_wounds'] + (
+                    context.get(MW_ON_DAMAGE, 0) * nb) + (
+                                     context.get(MW_IF_DAMAGE, 0) if nb else 0),
+                'proba': unsvd['proba'] * proba,
+            } for (nb, proba) in potential_results
+        ])
+    return potential_damage
 
 
 def compute_potential_wounds(context, potential_hits, towound):
