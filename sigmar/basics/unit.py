@@ -93,9 +93,11 @@ class Unit:
                     total += sp_usr.size * sum([w.average_damage(copy(unit_data)) for w in sp_usr.weapons])
                     specials += sp_usr.size
 
-            total += (row - specials) * sum(
-                [w.average_damage(copy(unit_data)) for w in self.weapons]
-            )
+            users = row - specials
+            if users < 10:
+                total += sum([w.average_damage(copy(unit_data), users=users) for w in self.weapons])
+            else:  # let's avoid taking years to compute
+                total += users * sum([w.average_damage(copy(unit_data)) for w in self.weapons])
             _range += self.base.depth / INCH
 
         return total

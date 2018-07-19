@@ -45,7 +45,7 @@ def stormstrike_glaive(w: Weapon):
         if data.get(CHARGING, False):
             return -1
         return 0
-    w.wounds.rules.append(extra_damage)
+    w.damage.rules.append(extra_damage)
     w.rend.rules.append(extra_rend)
 
 

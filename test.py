@@ -1,4 +1,3 @@
-from sigmar.basics.attack_round import attack_round
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
@@ -13,7 +12,7 @@ from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import SERAPHONS_WS, seraphons_by_name
 from sigmar.compendium.sylvaneth import SYLVANETH_WS
 
-warscrolls = SYLVANETH_WS
+warscrolls = SERAPHONS_WS
 
 test_armour = Roll(4)
 context = {
@@ -31,9 +30,3 @@ for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
 # w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
 # print(w.average_damage(context))
-# for o in attack_round(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context):
-#     print(o)
-# print(average_damage(value('3D6'), Roll(4), Roll(4), value(0), value(1), [], context))
-# print(value(4).average({}))
-# print((value('3D6') * value(2)).average({}))
-# print((value('3D6') * value('D3')).max({}))
