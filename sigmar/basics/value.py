@@ -38,12 +38,18 @@ class Value:
         raise NotImplementedError
 
     def __add__(self, other):
+        if other == 0:
+            return self
         return SumValue(self, value(other))
 
     def __mul__(self, other):
+        if other == 1:
+            return self
         return MultValue(self, value(other))
 
     def __sub__(self, other):
+        if other == 0:
+            return self
         return SumValue(self, MultValue(FixedValue(-1), value(other)))
 
 

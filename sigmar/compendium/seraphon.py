@@ -336,8 +336,8 @@ SERAPHONS_WS.append(Warscroll(
 
 def steel_trap_jaws(w: Weapon):
     def buff(data):
-        data[MW_ON_WOUND_CRIT] = 35/36
-        data[EXTRA_WOUND_ON_CRIT] = -15/36
+        data[MW_ON_WOUND_CRIT] = RandomValue({5: 1/36, 4: 2/36, 3: 3/36, 2: 4/36, 1: 5/36, 0: 21/36})
+        data[EXTRA_WOUND_ON_CRIT] = RandomValue({-1: 15/36, 0: 21/36})
     w.attack_rules.append(buff)
 
 

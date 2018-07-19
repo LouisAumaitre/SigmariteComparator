@@ -4,7 +4,7 @@ from math import factorial
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import ENEMY_SAVE, EXTRA_HIT_ON_CRIT, EXTRA_DAMAGE_ON_CRIT_WOUND, \
-    EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT, MW_ON_HIT_CRIT, MW_ON_WOUND_CRIT, CRIT_BONUS_REND
+    EXTRA_ATTACK_ON_HIT, TOWOUND_MOD_ON_CRIT_HIT, MW_ON_HIT_CRIT, MW_ON_WOUND_CRIT, CRIT_BONUS_REND, EXTRA_WOUND_ON_CRIT
 from sigmar.basics.value import Value, value
 
 
@@ -66,7 +66,7 @@ def attack_round(
         } for (nb, proba) in attacks.potential_values(my_context)]
         assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
         potential_attacks = [{
-            'mortal_wounds': 0,
+            'mortal_wounds': value(0),
             'attacks': pick,
             'proba': sum([att['proba'] for att in potential_attacks if att['attacks'] == pick])
         } for pick in set(att['attacks'] for att in potential_attacks)]
@@ -102,12 +102,19 @@ def attack_round(
         potential_wounds = [
             {
                 **hit,
-                'wounds': nb,
+                'wounds': value(nb) + my_context.get(EXTRA_WOUND_ON_CRIT, 0) * nb_crit,
                 'crit_wounds': nb_crit,
                 'mortal_wounds': hit['mortal_wounds'] + my_context.get(MW_ON_WOUND_CRIT, 0) * nb_crit,
                 'proba': hit['proba'] * probability_of_wound_and_crit(
                     hit['hits'], nb, nb_crit, towound, my_context, crit_hit=hit['crit_hits'])
             } for hit in potential_hits for nb in range(hit['hits'] + 1) for nb_crit in range(nb + 1)
+        ]
+        potential_wounds = [
+            {
+                **wnd,
+                'wounds': nb,
+                'proba': wnd['proba'] * proba,
+            } for wnd in potential_wounds for (nb, proba) in wnd['wounds'].potential_values(my_context)
         ]
         assert abs(sum([wnd['proba'] for wnd in potential_wounds]) - 1) <= pow(0.1, 5)
 
@@ -139,11 +146,19 @@ def attack_round(
             potential_damage.extend([
                 {
                     **unsvd,
-                    'damage': nb + unsvd['mortal_wounds'] + unsvd['crit_wounds'] * my_context.get(
+                    'damage': nb + unsvd['crit_wounds'] * my_context.get(
                         EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
                     'proba': unsvd['proba'] * proba
                 } for (nb, proba) in potential_results
             ])
+
+        potential_damage = [
+            {
+                **dmg,
+                'damage': dmg['damage'] + nb,
+                'proba': dmg['proba'] * proba,
+            } for dmg in potential_damage for (nb, proba) in dmg['mortal_wounds'].potential_values(my_context)
+        ]
 
         cleaned_damage = [{
             'damage': pick,
