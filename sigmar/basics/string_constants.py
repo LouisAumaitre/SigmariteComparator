@@ -20,9 +20,8 @@ EXTRA_ATTACK_ON_HIT = 'extra attack on _hit'
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 MW_ON_HIT_CRIT = 'mortal wound on tohit crit'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
-
-BONUS_REND = 'bonus rend'
 CRIT_BONUS_REND = 'crit bonus rend'
+
 EXTRA_WOUND_ON_CRIT = 'extra wound on crit'
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
 MW_ON_DAMAGE = 'mortal wound on damage'

@@ -4,7 +4,7 @@ from sigmar.basics.value import DiceValue, value, MultValue, RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import (
     SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT,
-    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, BONUS_REND, RANGE
+    EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, RANGE
 )
 from sigmar.basics.unit import Unit, WeaponRule
 from sigmar.basics.unit_rules import ignore_1_rend, fly, ignore_2_rend, march_double
@@ -365,9 +365,8 @@ SERAPHONS_WS.append(Warscroll(
 
 def piercing_barbs(w: Weapon):
     def buff(data):
-        if data[RANGE] <= 6:
-            data[BONUS_REND] = data.get(BONUS_REND, 0) - 1
-    w.attack_rules.append(buff)
+        return -1 if data[RANGE] <= 6 else 0
+    w.rend.rules.append(buff)
 
 
 SERAPHONS_WS.append(Warscroll(

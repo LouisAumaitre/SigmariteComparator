@@ -8,7 +8,6 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     TOWOUND_MOD_ON_CRIT_HIT,
-    BONUS_REND,
     CRIT_BONUS_REND,
     MW_ON_HIT_CRIT,
     MW_ON_WOUND_CRIT,
@@ -85,9 +84,9 @@ class Weapon:
         critic_wounds += _critic_wounds
         wounds += critic_wounds * data.get(EXTRA_WOUND_ON_CRIT, 0)
 
-        unsaved = wounds * self.unsaved_chances(data, extra_rend=data.get(BONUS_REND, 0))
+        unsaved = wounds * self.unsaved_chances(data)
         unsaved += critic_wounds * self.unsaved_chances(
-            data, extra_rend=data.get(BONUS_REND, 0) + data.get(CRIT_BONUS_REND, 0))
+            data, extra_rend=data.get(CRIT_BONUS_REND, 0))
 
         mortal_wounds += data.get(MW_ON_HIT_CRIT, 0) * critic_hits + data.get(MW_ON_WOUND_CRIT, 0) * critic_wounds
         mortal_wounds += data.get(MW_ON_DAMAGE, 0) * unsaved
