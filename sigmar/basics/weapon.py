@@ -158,9 +158,10 @@ def compute_potential_damage(damage, context, potential_unsaved):
     potential_damage = []
     for unsvd in potential_unsaved:
         potential_results = {0: 1}
+        this_damage = damage + context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0) * unsvd['crit_wounds']
         for att in range(unsvd['unsaved']):
             new_results = {}
-            for (val, val_proba) in damage.potential_values(context):
+            for (val, val_proba) in this_damage.potential_values(context):
                 for total, total_proba in potential_results.items():
                     new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
             potential_results = new_results
@@ -169,10 +170,9 @@ def compute_potential_damage(damage, context, potential_unsaved):
         potential_damage.extend([
             {
                 **unsvd,
-                'damage': nb + unsvd['crit_wounds'] * context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0),
+                'damage': nb,
                 'mortal_wounds': unsvd['mortal_wounds'] + (
-                    context.get(MW_ON_DAMAGE, 0) * nb) + (
-                                     context.get(MW_IF_DAMAGE, 0) if nb else 0),
+                    context.get(MW_ON_DAMAGE, 0) * nb) + (context.get(MW_IF_DAMAGE, 0) if nb else 0),
                 'proba': unsvd['proba'] * proba,
             } for (nb, proba) in potential_results
         ])

@@ -5,7 +5,7 @@ from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge
+from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge, d6_dmg_on_crit
 from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO
 
 STORMCAST_WS = []
@@ -25,7 +25,8 @@ STORMCAST_WS.append(Warscroll(
         Rule('Orrery of Celestial Fates', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
-dracoth_claws_and_fangs = Weapon('Dracoth`s Claws and Fangs', 1, 3, 3, 3, -1, 1, [])
+dracoth_claws_and_fangs = Weapon('Dracoth`s Claws and Fangs', 1, 3, 3, 3, -1, 1, [
+    Rule('Intolerable_damage', d6_dmg_on_crit)])
 
 
 def lightning_hammer(w: Weapon):

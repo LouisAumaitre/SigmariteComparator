@@ -11,10 +11,9 @@ from sigmar.basics.value import value
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.seraphon import SERAPHONS_WS, seraphons_by_name
-from sigmar.compendium.sylvaneth import SYLVANETH_WS
+from sigmar.compendium.stormcast_eternals import STORMCAST_WS
 
-warscrolls = SERAPHONS_WS
+warscrolls = STORMCAST_WS
 
 test_armour = Roll(4)
 context = {
