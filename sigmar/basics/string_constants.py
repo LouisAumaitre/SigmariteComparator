@@ -9,6 +9,7 @@ ENEMY_KEYWORDS = 'enemy keywords'
 ENEMY_SAVE = 'enemy_save'
 
 CHARGING = 'charging'
+DID_MOVE = 'did move'
 
 REND = 'rend'
 RANGE = 'range'  # distance to enemy

@@ -137,6 +137,7 @@ class Warscroll:
     def simplest_stats(self, context: dict, front_size=1000, max_variants=3):
         amount = 0
         for k, v in self.units.items():
+            amount += 1
             if amount > max_variants:
                 print('...')
                 break
@@ -160,4 +161,3 @@ class Warscroll:
                 f'/{int(round(v.average_health(unit_context)))} '
                 f'{v.describe_formation(unit_context, front_size)} '
                 f'M{v.speed_grade(unit_context)}{flight}')
-            amount += 1

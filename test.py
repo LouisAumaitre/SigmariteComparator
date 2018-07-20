@@ -6,7 +6,7 @@ from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
-    SELF_NUMBERS)
+    SELF_NUMBERS, DID_MOVE)
 from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import seraphons_by_name
@@ -20,6 +20,7 @@ context = {
     ENEMY_BASE: infantry_base,
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
+    # DID_MOVE: False,
     REND: -1,
     ENEMY_KEYWORDS: [],
     RANGE: 4,
@@ -28,7 +29,7 @@ context = {
 
 start = time.time()
 for ws in warscrolls:
-    ws.simplest_stats(context, front_size=145)
+    ws.simplest_stats(context, front_size=145, max_variants=5)
 print(f't={time.time() - start}s')
 
 # for k, u in seraphons_by_name['Kroxigors'].units.items():

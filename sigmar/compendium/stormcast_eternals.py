@@ -1,6 +1,7 @@
 from sigmar.basics.base import large_infantry_base, monster_base
 from sigmar.basics.rules import Rule, CommandAbility
-from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS
+from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS, \
+    DID_MOVE
 from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
 from sigmar.basics.value import value, RandomValue
@@ -163,6 +164,14 @@ def plus_1_tohit_chaos(w: Weapon):
     w.tohit.rules.append(buff)
 
 
+def rapid_fire(w: Weapon):
+    def buff(data):
+        if not data.get(DID_MOVE, True):
+            return 1
+        return 0
+    w.attacks.rules.append(buff)
+
+
 def thunderbolt(w: Weapon):
     def buff(data):
         # roll a dice (-1 if monster). if is equal to or less than the number of minis in the unit, D3 MW
@@ -181,7 +190,7 @@ def thunderbolt(w: Weapon):
 STORMCAST_WS.append(Warscroll(
     'Judicators', [
         [Weapon('Skybolt Bow', 24, 1, 3, 3, -1, 1, []), storm_gladius],
-        [Weapon('Boltstorm Crossbow', 12, 2, 3, 4, 0, 1, []), storm_gladius],
+        [Weapon('Boltstorm Crossbow', 12, 2, 3, 4, 0, 1, [Rule('Rapid Fire', rapid_fire)]), storm_gladius],
     ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
         WeaponRule('Eternal Judgement', plus_1_tohit_chaos),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
@@ -189,7 +198,7 @@ STORMCAST_WS.append(Warscroll(
         {'name': 'Judicator-Prime',
          'weapons': [Weapon('Skybolt Bow', 24, 1, 2, 3, -1, 1, []), storm_gladius]},
         {'name': 'Judicator-Prime',
-         'weapons': [Weapon('Boltstorm Crossbow', 12, 2, 2, 4, 0, 1, []), storm_gladius]},
+         'weapons': [Weapon('Boltstorm Crossbow', 12, 2, 2, 4, 0, 1, [Rule('Rapid Fire', rapid_fire)]), storm_gladius]},
         {'type': 'special weapon',
          'weapons': [Weapon('Shockbolt Bow', 24, 1, 3, 3, -1, 1, [Rule('', multiple_hits('D6'))]), storm_gladius]},
         {'type': 'special weapon',
