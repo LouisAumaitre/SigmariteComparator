@@ -4,8 +4,27 @@ from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
     AUTO_WOUND_ON_CRIT,
     EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE, EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND)
-from sigmar.basics.value import value, RandomValue
+from sigmar.basics.value import value, RandomValue, Value
 from sigmar.basics.weapon import Weapon
+
+
+def hits_on_crit(amount: Union[int, str, Value]):
+    def rule_func(w: Weapon):
+        def buff(data):
+            data[EXTRA_HIT_ON_CRIT] = value(amount) - 1
+        w.attack_rules.append(buff)
+    return rule_func
+
+
+def plus_x_tohit_y_wounds(hit_bonus: int, min_wounds: int):
+    def rule_func(w: Weapon):
+        def buff(data):
+            if data.get(ENEMY_WOUNDS, 0) >= min_wounds:
+                return hit_bonus, 0
+            return 0, 0
+        w.tohit.rules.append(buff)
+
+    return rule_func
 
 
 def reroll_1_tohit(w: Weapon):
@@ -16,14 +35,6 @@ def reroll_all_tohit(w: Weapon):
     w.tohit.rerolls = 5
 
 
-def plus_1_tohit_5_wounds(w: Weapon):
-    def buff(data):
-        if data.get(ENEMY_WOUNDS, 0) >= 5:
-            return 1, 0
-        return 0, 0
-    w.tohit.rules.append(buff)
-
-
 def add_mw_on_6_towound_in_charge(w: Weapon):
     def buff(data):
         if data.get(CHARGING, False):
@@ -31,20 +42,14 @@ def add_mw_on_6_towound_in_charge(w: Weapon):
     w.attack_rules.append(buff)
 
 
-def d3_extra_attacks_in_charge(w: Weapon):
-    def buff(data):
-        if data.get(CHARGING, False):
-            return value('D3')
-        return 0
-    w.attacks.rules.append(buff)
-
-
-def extra_attack_in_charge(w: Weapon):
-    def buff(data):
-        if data.get(CHARGING, False):
-            return 1
-        return 0
-    w.attacks.rules.append(buff)
+def extra_attacks_in_charge(extra_attacks: Union[int, str, Value]):
+    def rule_func(w: Weapon):
+        def buff(data):
+            if data.get(CHARGING, False):
+                return value(extra_attacks)
+            return 0
+        w.attacks.rules.append(buff)
+    return rule_func
 
 
 def plus_1_towound_in_charge(w: Weapon):
@@ -59,14 +64,6 @@ def extra_hit_on_crit(w: Weapon):
     def buff(data):
         data[EXTRA_HIT_ON_CRIT] = 1
     w.attack_rules.append(buff)
-
-
-def hits_on_crit(amount: Union[int, str]):
-    def rule_func(w: Weapon):
-        def buff(data):
-            data[EXTRA_HIT_ON_CRIT] = value(amount) - 1
-        w.attack_rules.append(buff)
-    return rule_func
 
 
 def d3_mw_on_4_if_wounded(w: Weapon):

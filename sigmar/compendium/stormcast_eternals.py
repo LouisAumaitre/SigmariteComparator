@@ -5,8 +5,10 @@ from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge, \
-    d6_dmg_on_crit, extra_attack_in_charge, extra_3_rend_on_crit_hit
+from sigmar.basics.weapon_rules import (
+    reroll_1_tohit, extra_attacks_in_charge,
+    d6_dmg_on_crit, extra_3_rend_on_crit_hit, plus_x_tohit_y_wounds
+)
 from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO, TOTEM
 
 STORMCAST_WS = []
@@ -56,7 +58,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Stormstrike Glaive', 2, 4, 3, 4, -1, 1, [Rule('', stormstrike_glaive)]), dracoth_claws_and_fangs],
         [Weapon('Lightning Hammer', 1, 3, 3, 3, -1, 2, [Rule('', lightning_hammer)]), dracoth_claws_and_fangs],
         [Weapon('Thunderaxe', 2, 3, 3, 3, -1, 2, [Rule('', lambda x: None)]), dracoth_claws_and_fangs],
-        [Weapon('Tempestos Hammer', 2, 3, 3, 2, -1, 'D3', [Rule('', d3_extra_attacks_in_charge)]),
+        [Weapon('Tempestos Hammer', 2, 3, 3, 2, -1, 'D3', [Rule('', extra_attacks_in_charge('D3'))]),
          dracoth_claws_and_fangs],
     ], 10, 3, 9, 7, 1, monster_base, rules=[
         Rule('Retribution from on High', lambda x: None),
@@ -69,7 +71,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Sigmarite Runeblade', 1, 4, 3, 3, -1, 1, []),
          Weapon('Warhammer', 1, 2, 4, 3, 0, 1, [])],
     ], 5, 3, 9, 5, 1, large_infantry_base, rules=[
-        WeaponRule('Inescapable Vengeance', extra_attack_in_charge),
+        WeaponRule('Inescapable Vengeance', extra_attacks_in_charge(1)),
         Rule('Sigmarite Warcloak', lambda x: None),
         CommandAbility('Furious Retribution', None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
@@ -132,7 +134,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
         [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
     ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
-        WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
+        WeaponRule('Lay low the Tyrants', plus_x_tohit_y_wounds(1, 5)),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
     special_options=[
         {'name': 'Liberator-Prime',
