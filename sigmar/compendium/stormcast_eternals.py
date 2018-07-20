@@ -118,6 +118,14 @@ STORMCAST_WS.append(Warscroll(
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO, TOTEM]))
 
 STORMCAST_WS.append(Warscroll(
+    'Knight-Heraldor', [
+        [Weapon('Sigmarite Broadsword', 1, 4, 3, 4, -1, 1, [])],
+    ], 5, 4, 8, 5, 1, large_infantry_base, rules=[
+        Rule('Onward to Glory', lambda x: None),
+        Rule('Thunderblast', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+STORMCAST_WS.append(Warscroll(
     'Liberators', [
         [Weapon('Warhammer', 1, 2, 4, 3, 0, 1, []), sigmarite_shields],
         [Weapon('Warblade', 1, 2, 3, 4, 0, 1, []), sigmarite_shields],
@@ -125,7 +133,21 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
     ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
         WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
-    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER]))
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
+    special_options=[
+        {'name': 'Liberator-Prime',
+         'weapons': [Weapon('Warhammer', 1, 3, 4, 3, 0, 1, [])], 'rules': [sigmarite_shields]},
+        {'name': 'Liberator-Prime',
+         'weapons': [Weapon('Warblade', 1, 2, 3, 4, 0, 1, [])], 'rules': [sigmarite_shields]},
+        {'name': 'Liberator-Prime',
+         'weapons': [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])]},
+        {'name': 'Liberator-Prime',
+         'weapons': [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Grandhammer', 1, 2, 4, 3, -1, 2, [])]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Grandblade', 1, 2, 3, 4, -1, 2, [])]},
+    ]))
 
 # at the end
 stormcasts_by_name = {unit.name: unit for unit in STORMCAST_WS}

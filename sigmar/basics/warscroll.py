@@ -134,8 +134,12 @@ class Warscroll:
             unit.average_damage(armour, context, front_size, nb), unit.average_health(context)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, context: dict, front_size=1000):
+    def simplest_stats(self, context: dict, front_size=1000, max_variants=3):
+        amount = 0
         for k, v in self.units.items():
+            if amount > max_variants:
+                print('...')
+                break
             unit_context = copy(context)
             numbers = context.get(SELF_NUMBERS, v.size)
             unit_context[SELF_NUMBERS] = numbers
@@ -156,3 +160,4 @@ class Warscroll:
                 f'/{int(round(v.average_health(unit_context)))} '
                 f'{v.describe_formation(unit_context, front_size)} '
                 f'M{v.speed_grade(unit_context)}{flight}')
+            amount += 1
