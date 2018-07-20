@@ -76,7 +76,7 @@ class Weapon:
                 'attacks': nb * users, 'proba': proba, 'mortal_wounds': value(0),
             } for (nb, proba) in attacks.potential_values(my_context)]
             assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
-            potential_attacks = cleaned_dict_list(potential_attacks, ['attacks'])
+            potential_attacks = cleaned_dict_list(potential_attacks, ['attacks', 'mortal_wounds'])
 
             potential_hits = compute_potential_hits(my_context, potential_attacks, self.tohit)
             assert abs(sum([hit['proba'] for hit in potential_hits]) - 1) <= pow(0.1, 5)
@@ -90,16 +90,19 @@ class Weapon:
                 {
                     **wnd,
                     'unsaved': nb,
+                    'unsaved_crit_wound': nb_crit,
                     'proba': wnd['proba'] * probability_of_save_fail(
                         wnd['wounds'],
-                        nb, my_context[ENEMY_SAVE],
+                        nb, nb_crit, my_context[ENEMY_SAVE],
                         my_context,
                         rend=rend.average(my_context),
                         crit_wnd=wnd['crit_wounds'])
-                } for wnd in potential_wounds for nb in range(wnd['wounds'] + 1)
+                } for wnd in potential_wounds
+                for nb in range(wnd['wounds'] + 1)
+                for nb_crit in range(max(0, wnd['crit_wounds'] - (wnd['wounds'] - nb)), min(wnd['crit_wounds'], nb) + 1)
             ]
             assert abs(sum([unsvd['proba'] for unsvd in potential_unsaved]) - 1) <= pow(0.1, 5)
-            potential_unsaved = cleaned_dict_list(potential_unsaved, ['unsaved', 'crit_wounds', 'mortal_wounds'])
+            potential_unsaved = cleaned_dict_list(potential_unsaved, ['unsaved', 'unsaved_crit_wound', 'mortal_wounds'])
 
             potential_damage = compute_potential_damage(damage, my_context, potential_unsaved)
             assert abs(sum([dmg['proba'] for dmg in potential_damage]) - 1) <= pow(0.1, 5)
@@ -118,7 +121,7 @@ class Weapon:
                 'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
                 'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
             } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
-            raise AssertionError  # testing
+            # raise AssertionError  # testing
         except AssertionError:
             info = {
                 'potential_attacks': potential_attacks,
@@ -150,7 +153,7 @@ def cleaned_dict_list(list_of_dicts, keys_to_keep):
                 ok = True
                 break
         if not ok:
-            new_list.append(d)
+            new_list.append({k: d[k] for k in [*keys_to_keep, 'proba']})
     return new_list
 
 
@@ -159,13 +162,13 @@ def compute_potential_damage(damage, context, potential_unsaved):
     for unsvd in potential_unsaved:
         potential_results = {0: 1}
         crit_damage = damage + context.get(EXTRA_DAMAGE_ON_CRIT_WOUND, 0)
-        for att in range(min(unsvd['unsaved'], unsvd['crit_wounds'])):
+        for att in range(min(unsvd['unsaved'], unsvd['unsaved_crit_wound'])):
             new_results = {}
             for (val, val_proba) in crit_damage.potential_values(context):
                 for total, total_proba in potential_results.items():
                     new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
             potential_results = new_results
-        for att in range(min(unsvd['unsaved'] - unsvd['crit_wounds'], 0)):
+        for att in range(min(unsvd['unsaved'] - unsvd['unsaved_crit_wound'], 0)):
             new_results = {}
             for (val, val_proba) in damage.potential_values(context):
                 for total, total_proba in potential_results.items():
@@ -238,6 +241,8 @@ def compute_potential_hits(context, potential_attacks, tohit):
 
 def binomial(n, k):
     # combinations of k in n
+    if k > n:
+        raise ValueError(f'binomial of {k} in {n}')
     return factorial(n) / (factorial(k) * factorial(n - k))
 
 
@@ -276,9 +281,18 @@ def probability_of_wound_and_crit(dices, success, crit, roll: Roll, context, cri
     return success_rate * crit_rate
 
 
-def probability_of_save_fail(dices, success, roll: Roll, context, rend, crit_wnd=0) -> float:
-    pass_rate = binomial(dices, success)
-    pass_rate *= pow(roll.fail(context, rend + context.get(CRIT_BONUS_REND, 0)), crit_wnd)
-    pass_rate *= pow(roll.fail(context, rend), success - crit_wnd)
-    pass_rate *= pow(roll.success(context, rend), dices - success)
-    return pass_rate
+def probability_of_save_fail(dices, success, after_crit_wound, roll: Roll, context, rend, crit_wnd=0) -> float:
+    if after_crit_wound > success:
+        raise ValueError(f'trying to compute {after_crit_wound} success after crit amongst {success} successes')
+    if after_crit_wound > crit_wnd:
+        raise ValueError(f'trying to compute {after_crit_wound} success after crit with {crit_wnd} crits')
+
+    regular_pass_rate = binomial(dices - crit_wnd, success - after_crit_wound)
+    regular_pass_rate *= pow(roll.fail(context, rend), success - after_crit_wound)
+    regular_pass_rate *= pow(roll.success(context, rend), (dices - crit_wnd) - (success - after_crit_wound))
+
+    crit_pass_rate = binomial(crit_wnd, after_crit_wound)
+    crit_pass_rate *= pow(roll.fail(context, rend + context.get(CRIT_BONUS_REND, 0)), after_crit_wound)
+    crit_pass_rate *= pow(roll.success(context, rend + context.get(CRIT_BONUS_REND, 0)), crit_wnd - after_crit_wound)
+
+    return regular_pass_rate * crit_pass_rate

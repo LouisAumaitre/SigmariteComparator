@@ -8,6 +8,7 @@ from sigmar.basics.string_constants import (
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS)
 from sigmar.basics.weapon import Weapon
+from sigmar.basics.weapon_rules import d6_dmg_on_crit
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.stormcast_eternals import STORMCAST_WS, stormstrike_glaive, dracoth_claws_and_fangs
 
@@ -15,7 +16,7 @@ warscrolls = STORMCAST_WS
 
 test_armour = Roll(4)
 context = {
-    CHARGING: False,
+    CHARGING: True,
     ENEMY_BASE: infantry_base,
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
@@ -25,10 +26,11 @@ context = {
     ENEMY_SAVE: test_armour,
 }
 
-# start = time.time()
-# for ws in warscrolls:
-#     ws.simplest_stats(context, front_size=145)
-print(dracoth_claws_and_fangs.average_damage(context))
+start = time.time()
+for ws in warscrolls:
+    ws.simplest_stats(context, front_size=145)
+print(f't={time.time() - start}s')
+# print(dracoth_claws_and_fangs.average_damage(context))
 # warscrolls[0].simplest_stats(context, front_size=145)
 # w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
 # print(w.average_damage(context))
