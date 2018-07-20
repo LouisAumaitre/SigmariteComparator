@@ -34,7 +34,7 @@ def add_mw_on_6_towound_in_charge(w: Weapon):
 def d3_extra_attacks_in_charge(w: Weapon):
     def buff(data):
         if data.get(CHARGING, False):
-            return value('D3').average(data)  # TODO
+            return value('D3')
         return 0
     w.attacks.rules.append(buff)
 
