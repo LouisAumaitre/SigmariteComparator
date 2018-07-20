@@ -1,4 +1,5 @@
 from sigmar.basics.unit import Unit
+from sigmar.basics.value import value
 
 
 def fly(u: Unit):
@@ -20,3 +21,7 @@ def ignore_2_rend(u: Unit):
 
 def march_double(u: Unit):
     u.run_distance = u.move
+
+
+def charge_at_3d6(u: Unit):
+    u.charge_range = value('3D6')

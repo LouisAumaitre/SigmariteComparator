@@ -10,7 +10,7 @@ from sigmar.basics.string_constants import (
 from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import seraphons_by_name
-from sigmar.compendium.stormcast_eternals import STORMCAST_WS, thunderbolt
+from sigmar.compendium.stormcast_eternals import STORMCAST_WS, thunderbolt, stormcasts_by_name
 
 warscrolls = STORMCAST_WS
 
@@ -23,13 +23,13 @@ context = {
     # DID_MOVE: False,
     REND: -1,
     ENEMY_KEYWORDS: [],
-    RANGE: 4,
+    RANGE: 0.1,
     ENEMY_SAVE: test_armour,
 }
 
 start = time.time()
 for ws in warscrolls:
-    ws.simplest_stats(context, front_size=145, max_variants=5)
+    ws.simplest_stats(context, front_size=145, max_variants=3)
 print(f't={time.time() - start}s')
 
 # for k, u in seraphons_by_name['Kroxigors'].units.items():
@@ -40,3 +40,5 @@ print(f't={time.time() - start}s')
 
 # w = Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)])
 # print(w.average_damage(context))
+# print(stormcasts_by_name['Prosecutors'].units['Celestial Hammers'].speed_description(context))
+# print(stormcasts_by_name['Prosecutors'].units['Celestial Hammers'].charge_range)

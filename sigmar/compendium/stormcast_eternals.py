@@ -3,7 +3,7 @@ from sigmar.basics.rules import Rule, CommandAbility
 from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS, \
     DID_MOVE
 from sigmar.basics.unit import WeaponRule
-from sigmar.basics.unit_rules import reroll_1_save, fly
+from sigmar.basics.unit_rules import reroll_1_save, fly, charge_at_3d6
 from sigmar.basics.value import value, RandomValue
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
@@ -17,6 +17,8 @@ STORMCAST_WS = []
 
 STORMCAST_ETERNAL = 'STORMCAST ETERNAL'
 REDEEMER = 'REDEEMER'
+JUSTICAR = 'JUSTICAR'
+ANGELOS = 'ANGELOS'
 
 sigmarite_shields = Rule('Sigmarite shields', reroll_1_save)
 
@@ -133,8 +135,8 @@ STORMCAST_WS.append(Warscroll(
     'Liberators', [
         [Weapon('Warhammer', 1, 2, 4, 3, 0, 1, []), sigmarite_shields],
         [Weapon('Warblade', 1, 2, 3, 4, 0, 1, []), sigmarite_shields],
-        [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
-        [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])],
+        [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired Weapons', reroll_1_tohit)])],
+        [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired Weapons', reroll_1_tohit)])],
     ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
         WeaponRule('Lay low the Tyrants', plus_x_tohit_y_wounds(1, 5)),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
@@ -144,9 +146,9 @@ STORMCAST_WS.append(Warscroll(
         {'name': 'Liberator-Prime',
          'weapons': [Weapon('Warblade', 1, 2, 3, 4, 0, 1, [])], 'rules': [sigmarite_shields]},
         {'name': 'Liberator-Prime',
-         'weapons': [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])]},
+         'weapons': [Weapon('Warhammers', 1, 2, 4, 3, 0, 1, [Rule('Paired Weapons', reroll_1_tohit)])]},
         {'name': 'Liberator-Prime',
-         'weapons': [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired weapons', reroll_1_tohit)])]},
+         'weapons': [Weapon('Warblades', 1, 2, 3, 4, 0, 1, [Rule('Paired Weapons', reroll_1_tohit)])]},
         {'type': 'special weapon',
          'weapons': [Weapon('Grandhammer', 1, 2, 4, 3, -1, 2, [])]},
         {'type': 'special weapon',
@@ -193,7 +195,7 @@ STORMCAST_WS.append(Warscroll(
         [Weapon('Boltstorm Crossbow', 12, 2, 3, 4, 0, 1, [Rule('Rapid Fire', rapid_fire)]), storm_gladius],
     ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
         WeaponRule('Eternal Judgement', plus_1_tohit_chaos),
-    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, JUSTICAR],
     special_options=[
         {'name': 'Judicator-Prime',
          'weapons': [Weapon('Skybolt Bow', 24, 1, 2, 3, -1, 1, []), storm_gladius]},
@@ -203,6 +205,35 @@ STORMCAST_WS.append(Warscroll(
          'weapons': [Weapon('Shockbolt Bow', 24, 1, 3, 3, -1, 1, [Rule('', multiple_hits('D6'))]), storm_gladius]},
         {'type': 'special weapon',
          'weapons': [Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)]), storm_gladius]},
+    ]))
+
+STORMCAST_WS.append(Warscroll(
+    'Prosecutors', [
+        [Weapon('Celestial Hammer', 18, 2, 4, 4, 0, 1, []),
+         Weapon('Celestial Hammer', 1, 2, 3, 3, 0, 1, []),
+         sigmarite_shields],
+        [Weapon('Celestial Hammers', 18, 2, 4, 4, 0, 1, [Rule('Paired Celestial Hammers', reroll_1_tohit)]),
+         Weapon('Celestial Hammers', 1, 2, 3, 3, 0, 1, [Rule('Paired Celestial Hammers', reroll_1_tohit)])],
+    ], 12, 4, 6, 2, 5, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Heralds of Righteousness', charge_at_3d6),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, ANGELOS],
+    special_options=[
+        {'name': 'Prosecutor-Prime',
+         'weapons': [
+             Weapon('Celestial Hammer', 18, 2, 4, 4, 0, 1, []),
+             Weapon('Celestial Hammer', 1, 3, 3, 3, 0, 1, [])],
+         'rules': [sigmarite_shields]},
+        {'name': 'Prosecutor-Prime',
+         'weapons': [
+             Weapon('Celestial Hammers', 18, 2, 4, 4, 0, 1, [Rule('Paired Celestial Hammers', reroll_1_tohit)]),
+             Weapon('Celestial Hammers', 1, 3, 3, 3, 0, 1, [Rule('Paired Celestial Hammers', reroll_1_tohit)])]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Grandhammer', 1, 2, 4, 3, -1, 2, [])]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Grandblade', 1, 2, 3, 4, -1, 2, [])]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Grandaxe', 1, 'all_in_range', 3, 3, -1, 1, [])]},
     ]))
 
 # at the end
