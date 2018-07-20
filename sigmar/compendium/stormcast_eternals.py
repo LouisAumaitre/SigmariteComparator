@@ -1,15 +1,16 @@
 from sigmar.basics.base import large_infantry_base, monster_base
 from sigmar.basics.rules import Rule, CommandAbility
-from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING
+from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS
 from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
+from sigmar.basics.value import value, RandomValue
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import (
     reroll_1_tohit, extra_attacks_in_charge,
-    d6_dmg_on_crit, extra_3_rend_on_crit_hit, plus_x_tohit_y_wounds
-)
-from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO, TOTEM
+    d6_dmg_on_crit, extra_3_rend_on_crit_hit, plus_x_tohit_y_wounds,
+    multiple_hits)
+from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO, TOTEM, CHAOS, MONSTER
 
 STORMCAST_WS = []
 
@@ -149,6 +150,50 @@ STORMCAST_WS.append(Warscroll(
          'weapons': [Weapon('Grandhammer', 1, 2, 4, 3, -1, 2, [])]},
         {'type': 'special weapon',
          'weapons': [Weapon('Grandblade', 1, 2, 3, 4, -1, 2, [])]},
+    ]))
+
+storm_gladius = Weapon('Storm Gladius', 1, 1, 3, 4, 0, 1, [])
+
+
+def plus_1_tohit_chaos(w: Weapon):
+    def buff(data):
+        if CHAOS in data.get(ENEMY_KEYWORDS, []):
+            return 1, 0
+        return 0, 0
+    w.tohit.rules.append(buff)
+
+
+def thunderbolt(w: Weapon):
+    def buff(data):
+        # roll a dice (-1 if monster). if is equal to or less than the number of minis in the unit, D3 MW
+        mod = 0
+        if MONSTER in data.get(ENEMY_KEYWORDS, []):
+            mod = -1
+        possibilities = {val: proba for val, proba in value('D6').potential_values(data, mod)}
+        nb_enemies = data.get(ENEMY_NUMBERS, 1)
+        possible_success = sum([proba for val, proba in possibilities.items() if val <= nb_enemies])
+        possible_damage = {val: proba * possible_success for val, proba in value('D3').potential_values(data)}
+        possible_damage[0] = 1 - possible_success
+        data[MORTAL_WOUNDS] = RandomValue(possible_damage)
+    w.attack_rules.append(buff)
+
+
+STORMCAST_WS.append(Warscroll(
+    'Judicators', [
+        [Weapon('Skybolt Bow', 24, 1, 3, 3, -1, 1, []), storm_gladius],
+        [Weapon('Boltstorm Crossbow', 12, 2, 3, 4, 0, 1, []), storm_gladius],
+    ], 5, 4, 6, 2, 5, large_infantry_base, rules=[
+        WeaponRule('Eternal Judgement', plus_1_tohit_chaos),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER],
+    special_options=[
+        {'name': 'Judicator-Prime',
+         'weapons': [Weapon('Skybolt Bow', 24, 1, 2, 3, -1, 1, []), storm_gladius]},
+        {'name': 'Judicator-Prime',
+         'weapons': [Weapon('Boltstorm Crossbow', 12, 2, 2, 4, 0, 1, []), storm_gladius]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Shockbolt Bow', 24, 1, 3, 3, -1, 1, [Rule('', multiple_hits('D6'))]), storm_gladius]},
+        {'type': 'special weapon',
+         'weapons': [Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)]), storm_gladius]},
     ]))
 
 # at the end

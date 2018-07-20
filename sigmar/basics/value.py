@@ -127,7 +127,7 @@ class RandomValue(Value):
         return [(k, v) for k, v in self.probas.items()]
 
     def __str__(self):
-        short_probas = {f'{int(round(v, 2) * 100)}%': k for k, v in self.probas.items()}
+        short_probas = [(f'{int(round(v, 2) * 100)}%', k) for k, v in self.probas.items()]
         return f'|R{short_probas}|'
 
 

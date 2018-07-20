@@ -10,7 +10,8 @@ from sigmar.basics.string_constants import (
     RANGE,
     ENEMY_SAVE,
     AUTO_WOUND_ON_CRIT, CRIT_BONUS_REND, TOWOUND_MOD_ON_CRIT_HIT, EXTRA_HIT_ON_CRIT, EXTRA_ATTACK_ON_HIT,
-    EXTRA_WOUND_ON_CRIT, MW_ON_WOUND_CRIT, MW_ON_HIT_CRIT, MW_ON_DAMAGE, MW_IF_DAMAGE, EXTRA_DAMAGE_ON_CRIT_WOUND)
+    EXTRA_WOUND_ON_CRIT, MW_ON_WOUND_CRIT, MW_ON_HIT_CRIT, MW_ON_DAMAGE, MW_IF_DAMAGE, EXTRA_DAMAGE_ON_CRIT_WOUND,
+    NUMBER_OF_HITS, MORTAL_WOUNDS)
 
 
 class Weapon:
@@ -58,10 +59,7 @@ class Weapon:
         return sum([e['damage'] * e['proba'] for e in dmg])
 
     def attack_round(self, context, users=1):
-        attacks = self.attacks
         my_context = copy(context)
-        rend = self.rend
-        damage = self.damage
         for r in self.attack_rules:
             r(my_context)
 
@@ -73,8 +71,8 @@ class Weapon:
         cleaned_damage = []
         try:
             potential_attacks = [{
-                'attacks': nb * users, 'proba': proba, 'mortal_wounds': value(0),
-            } for (nb, proba) in attacks.potential_values(my_context)]
+                'attacks': nb * users, 'proba': proba, 'mortal_wounds': my_context.get(MORTAL_WOUNDS, value(0)),
+            } for (nb, proba) in self.attacks.potential_values(my_context)]
             assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
             potential_attacks = cleaned_dict_list(potential_attacks, ['attacks', 'mortal_wounds'])
 
@@ -95,7 +93,7 @@ class Weapon:
                         wnd['wounds'],
                         nb, nb_crit, my_context[ENEMY_SAVE],
                         my_context,
-                        rend=rend.average(my_context),
+                        rend=self.rend.average(my_context),
                         crit_wnd=wnd['crit_wounds'])
                 } for wnd in potential_wounds
                 for nb in range(wnd['wounds'] + 1)
@@ -104,7 +102,7 @@ class Weapon:
             assert abs(sum([unsvd['proba'] for unsvd in potential_unsaved]) - 1) <= pow(0.1, 5)
             potential_unsaved = cleaned_dict_list(potential_unsaved, ['unsaved', 'unsaved_crit_wound', 'mortal_wounds'])
 
-            potential_damage = compute_potential_damage(damage, my_context, potential_unsaved)
+            potential_damage = compute_potential_damage(self.damage, my_context, potential_unsaved)
             assert abs(sum([dmg['proba'] for dmg in potential_damage]) - 1) <= pow(0.1, 5)
 
             potential_full_damage = [
@@ -213,7 +211,7 @@ def compute_potential_hits(context, potential_attacks, tohit):
     potential_hits = [
         {
             **att,
-            'hits': value(nb) + context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
+            'hits': value(nb) * context.get(NUMBER_OF_HITS, 1) + context.get(EXTRA_HIT_ON_CRIT, 0) * nb_crit,
             'crit_hits': nb_crit,
             'second_attacks': nb * context.get(EXTRA_ATTACK_ON_HIT, 0),
             'proba': att['proba'] * probability_of_hit_and_crit(att['attacks'], nb, nb_crit, tohit, context)

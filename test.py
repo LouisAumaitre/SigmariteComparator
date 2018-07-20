@@ -7,9 +7,10 @@ from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS)
+from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
 from sigmar.compendium.seraphon import seraphons_by_name
-from sigmar.compendium.stormcast_eternals import STORMCAST_WS
+from sigmar.compendium.stormcast_eternals import STORMCAST_WS, thunderbolt
 
 warscrolls = STORMCAST_WS
 
@@ -20,8 +21,8 @@ context = {
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
     REND: -1,
-    ENEMY_KEYWORDS: [CHAOS],
-    RANGE: 0.1,
+    ENEMY_KEYWORDS: [],
+    RANGE: 4,
     ENEMY_SAVE: test_armour,
 }
 
@@ -36,5 +37,5 @@ print(f't={time.time() - start}s')
 #     break
 
 
-# w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
+# w = Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)])
 # print(w.average_damage(context))

@@ -14,6 +14,8 @@ REND = 'rend'
 RANGE = 'range'  # distance to enemy
 WEAPON_RANGE = 'weapon range'  # range of the weapon
 
+MORTAL_WOUNDS = 'mortal wounds'
+
 # done
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
 CRIT_BONUS_REND = 'crit bonus rend'
@@ -25,6 +27,7 @@ MW_IF_DAMAGE = 'mortal wound if damage'  # whole unit counts once
 MW_ON_DAMAGE = 'mortal wound on damage'  # each attack counts once
 MW_ON_HIT_CRIT = 'mortal wound on tohit crit'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
+NUMBER_OF_HITS = 'number of hits'
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 
 INCH = 25.6
