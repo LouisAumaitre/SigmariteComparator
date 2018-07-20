@@ -8,31 +8,42 @@ class Value:
         self.rules: List[Callable] = []  # function take dict, return mod
 
     def average(self, context: dict, mod=0):
+        mod = value(mod)
         for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
-        return self._average(context) + mod
+        if isinstance(mod, FixedValue) and mod.defined_value == 0:
+            return self._average(context)
+        return self._average(context) + mod.average(context)
 
     def _average(self, context: dict):
         raise NotImplementedError
 
     def max(self, context: dict, mod=0):
+        mod = value(mod)
         for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
-        return self._max(context) + mod
+        if isinstance(mod, FixedValue) and mod.defined_value == 0:
+            return self._max(context)
+        return self._max(context) + mod.max(context)
 
     def _max(self, context: dict):
         raise NotImplementedError
 
     def potential_values(self, context: dict, mod=0):
+        mod = value(mod)
         for bonus in self.rules:
             add_mod = bonus(context)
             mod += add_mod
 
-        return [(potential + mod, proba) for (potential, proba) in self._potential_values(context)]
+        if isinstance(mod, FixedValue) and mod.defined_value == 0:
+            return [(potential, proba) for (potential, proba) in self._potential_values(context)]
+        return [(potential + potential_mod, proba * proba_mod)
+                for (potential, proba) in self._potential_values(context)
+                for (potential_mod, proba_mod) in mod.potential_values(context)]
 
     def _potential_values(self, context: dict):
         raise NotImplementedError
