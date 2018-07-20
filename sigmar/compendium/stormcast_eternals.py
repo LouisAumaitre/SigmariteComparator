@@ -6,8 +6,8 @@ from sigmar.basics.unit_rules import reroll_1_save, fly
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge, \
-    d6_dmg_on_crit, extra_attack_in_charge
-from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO
+    d6_dmg_on_crit, extra_attack_in_charge, extra_3_rend_on_crit_hit
+from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO, TOTEM
 
 STORMCAST_WS = []
 
@@ -64,7 +64,6 @@ STORMCAST_WS.append(Warscroll(
         CommandAbility('Lord of the Host', None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
-
 STORMCAST_WS.append(Warscroll(
     'Lord-Celestant', [
         [Weapon('Sigmarite Runeblade', 1, 4, 3, 3, -1, 1, []),
@@ -75,14 +74,12 @@ STORMCAST_WS.append(Warscroll(
         CommandAbility('Furious Retribution', None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
-
 STORMCAST_WS.append(Warscroll(
     'Lord-Castellant', [
         [Weapon('Castellant`s Halberd', 2, 3, 3, 3, -1, 2, [])],
     ], 5, 3, 9, 6, 1, large_infantry_base, rules=[
         Rule('Warding Lantern', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
-
 
 STORMCAST_WS.append(Warscroll(
     'Lord-Relictor', [
@@ -91,6 +88,34 @@ STORMCAST_WS.append(Warscroll(
         Rule('Lightning Storm', lambda x: None),
         Rule('Healing Storm', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+STORMCAST_WS.append(Warscroll(
+    'Knight-Azyros', [
+        [Weapon('Starblade', 1, 4, 3, 3, -1, 1, [])],
+    ], 12, 3, 9, 5, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Leader of the Way', lambda x: None),
+        Rule('Illuminator of the Lost', lambda x: None),
+        Rule('The Light of Sigmar', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+STORMCAST_WS.append(Warscroll(
+    'Knight-Venator', [
+        [Weapon('Realmhunter`s Bow', 30, 3, 2, 3, -1, 1, []),
+         Weapon('Star-eagle`s Celestial Talons', 30, 3, 4, 3, 0, 1, [Rule('', extra_3_rend_on_crit_hit)]),
+         Weapon('Star-eagle`s Celestial Talons', 1, 3, 4, 3, 0, 1, [Rule('', extra_3_rend_on_crit_hit)])],
+    ], 12, 3, 9, 5, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Star-fated Arrow', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+STORMCAST_WS.append(Warscroll(
+    'Knight-Vexillor', [
+        [Weapon('Warhammer', 1, 4, 4, 3, 0, 1, []), Rule('Meteoritic Standard', lambda x: None)],
+        [Weapon('Warhammer', 1, 4, 4, 3, 0, 1, []), Rule('Pennant of the Stormbringer', lambda x: None)],
+    ], 4, 3, 9, 5, 1, large_infantry_base, rules=[
+        Rule('Icon of War', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO, TOTEM]))
 
 STORMCAST_WS.append(Warscroll(
     'Liberators', [
@@ -102,4 +127,5 @@ STORMCAST_WS.append(Warscroll(
         WeaponRule('Lay low the Tyrants', plus_1_tohit_5_wounds),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, REDEEMER]))
 
+# at the end
 stormcasts_by_name = {unit.name: unit for unit in STORMCAST_WS}

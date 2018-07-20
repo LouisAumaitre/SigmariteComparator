@@ -15,7 +15,7 @@ warscrolls = STORMCAST_WS
 
 test_armour = Roll(4)
 context = {
-    CHARGING: False,
+    CHARGING: True,
     ENEMY_BASE: infantry_base,
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,

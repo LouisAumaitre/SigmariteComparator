@@ -121,7 +121,7 @@ class Weapon:
                 'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
                 'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
             } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
-            raise AssertionError  # testing
+            # raise AssertionError  # testing
         except AssertionError:
             info = {
                 'potential_attacks': potential_attacks,
