@@ -30,3 +30,8 @@ class CommandAbility(Rule):
             item.command_abilities.append(self)
         except Exception:
             raise ValueError(f'Command Abilities must be given to units, not {item.__class__}')
+
+
+class TodoRule(Rule):
+    def apply(self, item):
+        print(f'Remember to do rule {self.name} for item {item.name}')

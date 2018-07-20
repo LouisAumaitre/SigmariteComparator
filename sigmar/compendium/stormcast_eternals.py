@@ -5,7 +5,8 @@ from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge, d6_dmg_on_crit
+from sigmar.basics.weapon_rules import reroll_1_tohit, plus_1_tohit_5_wounds, d3_extra_attacks_in_charge, \
+    d6_dmg_on_crit, extra_attack_in_charge
 from sigmar.compendium.generic_keywords import ORDER, HUMAN, CELESTIAL, HERO
 
 STORMCAST_WS = []
@@ -59,7 +60,27 @@ STORMCAST_WS.append(Warscroll(
          dracoth_claws_and_fangs],
     ], 10, 3, 9, 7, 1, monster_base, rules=[
         Rule('Retribution from on High', lambda x: None),
+        Rule('Storm Breath', lambda x: None),
         CommandAbility('Lord of the Host', None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+
+STORMCAST_WS.append(Warscroll(
+    'Lord-Celestant', [
+        [Weapon('Sigmarite Runeblade', 1, 4, 3, 3, -1, 1, []),
+         Weapon('Warhammer', 1, 2, 4, 3, 0, 1, [])],
+    ], 5, 3, 9, 5, 1, large_infantry_base, rules=[
+        WeaponRule('Inescapable Vengeance', extra_attack_in_charge),
+        Rule('Sigmarite Warcloak', lambda x: None),
+        CommandAbility('Furious Retribution', None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
+
+STORMCAST_WS.append(Warscroll(
+    'Lord-Castellant', [
+        [Weapon('Castellant`s Halberd', 2, 3, 3, 3, -1, 2, [])],
+    ], 5, 3, 9, 6, 1, large_infantry_base, rules=[
+        Rule('Warding Lantern', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
 STORMCAST_WS.append(Warscroll(
