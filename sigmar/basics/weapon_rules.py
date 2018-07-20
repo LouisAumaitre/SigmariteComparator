@@ -8,6 +8,8 @@ from sigmar.basics.value import value, RandomValue, Value
 from sigmar.basics.weapon import Weapon
 
 
+# generic rules (call in the Rule declaration)
+# ex: Rule('Test', hits_on_crit('D3'))
 def hits_on_crit(amount: Union[int, str, Value]):
     def rule_func(w: Weapon):
         def buff(data):
@@ -27,6 +29,18 @@ def plus_x_tohit_y_wounds(hit_bonus: int, min_wounds: int):
     return rule_func
 
 
+def extra_attacks_in_charge(extra_attacks: Union[int, str, Value]):
+    def rule_func(w: Weapon):
+        def buff(data):
+            if data.get(CHARGING, False):
+                return value(extra_attacks)
+            return 0
+        w.attacks.rules.append(buff)
+    return rule_func
+
+
+# specific rules (use as value in the Rule declaration)
+# ex: Rule('Test', reroll_1_tohit)
 def reroll_1_tohit(w: Weapon):
     w.tohit.rerolls = 1
 
@@ -40,16 +54,6 @@ def add_mw_on_6_towound_in_charge(w: Weapon):
         if data.get(CHARGING, False):
             data[MW_ON_WOUND_CRIT] = 1
     w.attack_rules.append(buff)
-
-
-def extra_attacks_in_charge(extra_attacks: Union[int, str, Value]):
-    def rule_func(w: Weapon):
-        def buff(data):
-            if data.get(CHARGING, False):
-                return value(extra_attacks)
-            return 0
-        w.attacks.rules.append(buff)
-    return rule_func
 
 
 def plus_1_towound_in_charge(w: Weapon):
