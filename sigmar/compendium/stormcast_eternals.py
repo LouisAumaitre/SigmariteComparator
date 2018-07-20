@@ -83,6 +83,15 @@ STORMCAST_WS.append(Warscroll(
         Rule('Warding Lantern', lambda x: None),
     ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
 
+
+STORMCAST_WS.append(Warscroll(
+    'Lord-Relictor', [
+        [Weapon('Relic Hammer', 1, 4, 3, 3, -1, 1, [])],
+    ], 5, 3, 9, 5, 1, large_infantry_base, rules=[
+        Rule('Lightning Storm', lambda x: None),
+        Rule('Healing Storm', lambda x: None),
+    ], keywords=[ORDER, CELESTIAL, HUMAN, STORMCAST_ETERNAL, HERO]))
+
 STORMCAST_WS.append(Warscroll(
     'Liberators', [
         [Weapon('Warhammer', 1, 2, 4, 3, 0, 1, []), sigmarite_shields],
