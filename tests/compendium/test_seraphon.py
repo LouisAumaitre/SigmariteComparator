@@ -67,6 +67,6 @@ def test_kroxigor_stats():
     }
     krok = seraphons_by_name['Kroxigors'].units['']
     # assert
-    assert round(krok.average_damage(context), 2) == 1.61
+    assert round(krok.average_damage(context), 2) == 1.58
     context[RANGE] = 1.5
     assert round(krok.average_damage(context), 2) == 1.33

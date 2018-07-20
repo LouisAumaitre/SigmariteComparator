@@ -121,7 +121,7 @@ class Weapon:
                 'damage': pick * (1 + context.get(MW_ON_DAMAGE, 0)),
                 'proba': sum([dmg['proba'] for dmg in potential_full_damage if dmg['damage'] == pick])
             } for pick in set(dmg['damage'] for dmg in potential_full_damage)]
-            # raise AssertionError  # testing
+            raise AssertionError  # testing
         except AssertionError:
             info = {
                 'potential_attacks': potential_attacks,
@@ -168,7 +168,7 @@ def compute_potential_damage(damage, context, potential_unsaved):
                 for total, total_proba in potential_results.items():
                     new_results[total + val] = val_proba * total_proba + new_results.get(total + val, 0)
             potential_results = new_results
-        for att in range(min(unsvd['unsaved'] - unsvd['unsaved_crit_wound'], 0)):
+        for att in range(max(unsvd['unsaved'] - unsvd['unsaved_crit_wound'], 0)):
             new_results = {}
             for (val, val_proba) in damage.potential_values(context):
                 for total, total_proba in potential_results.items():

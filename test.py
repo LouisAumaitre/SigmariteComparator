@@ -8,6 +8,7 @@ from sigmar.basics.string_constants import (
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS)
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
+from sigmar.compendium.seraphon import seraphons_by_name
 from sigmar.compendium.stormcast_eternals import STORMCAST_WS
 
 warscrolls = STORMCAST_WS
@@ -29,10 +30,11 @@ for ws in warscrolls:
     ws.simplest_stats(context, front_size=145)
 print(f't={time.time() - start}s')
 
-# for k, u in warscrolls[1].units.items():
+# for k, u in seraphons_by_name['Kroxigors'].units.items():
 #     for w in u.weapons:
 #         print(f'{w.name}: {w.average_damage(context)}')
-# warscrolls[0].simplest_stats(context, front_size=145)
+#     break
+
 
 # w = Weapon('Stream of Fire', 8, 2, 3, 3, -2, 'D6', [Rule('It burns!', d3_mw_on_4_if_wounded)])
 # print(w.average_damage(context))
