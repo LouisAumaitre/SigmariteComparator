@@ -137,7 +137,7 @@ class Weapon:
                     print(str({k: str(v) for k, v in e.items()}).replace("'", "").replace("\"", ""))
                 sum_proba = sum(e['proba'] for e in potent)
                 print(f'   total={sum_proba}')
-            average = sum(d.get('damage') for d in cleaned_damage)
+            average = sum(d.get('damage') * d.get('proba') for d in cleaned_damage)
             print(f'AVERAGE: {average}')
 
         return cleaned_damage

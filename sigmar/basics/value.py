@@ -51,12 +51,16 @@ class Value:
     def __add__(self, other):
         if other == 0:
             return self
+        if self == 0:
+            return value(other)
         return SumValue(self, value(other))
 
     def __mul__(self, other):
         if other == 1:
             return self
-        if other == 0:
+        if self == 1:
+            return value(other)
+        if other == 0 or self == 1:
             return FixedValue(0)
         return MultValue(self, value(other))
 
