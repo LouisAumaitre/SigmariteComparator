@@ -1,13 +1,20 @@
 from sigmar.basics.base import monster_base
 from sigmar.basics.rules import Rule, Spell, CommandAbility
+from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly
-from sigmar.basics.value import value
+from sigmar.basics.value import value, RandomValue
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import extra_damage_on_keyword
 from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENCH, WIZARD, HERO, MONSTER
 
 TZEENCH_WS = []
+
+
+def mastery_of_magic(u: Unit):
+    # when casting/unbinding a spell, the lowest dice becomes equal to the highest
+    u.casting_value = RandomValue({2: 1/36, 4: 3/36, 6: 5/36, 8: 7/36, 10: 9/36, 12: 11/36})
+    u.unbinding_value = RandomValue({2: 1/36, 4: 3/36, 6: 5/36, 8: 7/36, 10: 9/36, 12: 11/36})
 
 
 TZEENCH_WS.append(Warscroll(
@@ -20,7 +27,7 @@ TZEENCH_WS.append(Warscroll(
          Weapon('Curved Beak and Wicked Talons', 1, 4, 4, 3, -1, 2, [])],
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
         Rule('Fly', fly),
-        Rule('Mastery of Magic', lambda x: None),
+        Rule('Mastery of Magic', mastery_of_magic),
         Rule('Spell-thief', lambda x: None),
         CommandAbility('Beacon of Sorcery', None),
         Spell('Infernal Gateway', 7, None),
@@ -33,7 +40,7 @@ TZEENCH_WS.append(Warscroll(
          Weapon('Beaks and Talons', 1, 5, 4, 3, -1, 2, [])],
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
         Rule('Fly', fly),
-        Rule('Mastery of Magic', lambda x: None),
+        Rule('Mastery of Magic', mastery_of_magic),
         Rule('Oracle of Eternity', lambda x: None),
         Spell('Gift of Change', 8, None),
     ], keywords=[CHAOS, DAEMON, TZEENCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=2, unbind=2, named=True))

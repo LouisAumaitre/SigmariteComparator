@@ -9,8 +9,6 @@ from sigmar.basics.string_constants import (
     SELF_NUMBERS, DID_MOVE)
 from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.seraphon import seraphons_by_name
-from sigmar.compendium.stormcast_eternals import STORMCAST_WS, thunderbolt, stormcasts_by_name
 from sigmar.compendium.tzeench_arcanites import TZEENCH_WS
 
 warscrolls = TZEENCH_WS

@@ -45,6 +45,7 @@ class Unit:
         self.charge_range = value('2D6')
         self.special_users = []
         self.casting_value = value('2D6')
+        self.unbinding_value = value('2D6')
 
         self.spells_per_turn = cast
         self.unbind_per_turn = unbind
@@ -135,9 +136,18 @@ class Unit:
         spells = []
         for sp in self.spells:
             chances = sum(proba for val, proba in potential_cast if val >= sp.power)
-            print(f'{self.name} has {int(chances * 100)}% chances of casting {sp.name}')
             spells.append(chances * sp.power)
         return self.spells_per_turn * sum(spells) / len(spells)
+
+    def unbind_power(self, context: dict):
+        if self.unbind_per_turn == 0:
+            return 0
+        potential_unbind = self.unbinding_value.potential_values(context)
+        spells = []
+        for sp_power in [5, 6, 7, 8, 9]:
+            chances = sum(proba for val, proba in potential_unbind if val >= sp_power)
+            spells.append(chances * sp_power)
+        return self.unbind_per_turn * sum(spells) / len(spells)
 
 
 class WeaponRule(Rule):
