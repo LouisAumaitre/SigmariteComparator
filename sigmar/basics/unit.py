@@ -47,8 +47,8 @@ class Unit:
         self.casting_value = value('2D6')
         self.unbinding_value = value('2D6')
 
-        self.spells_per_turn = cast
-        self.unbind_per_turn = unbind
+        self.spells_per_turn = value(cast)
+        self.unbind_per_turn = value(unbind)
         self.spells: List[Spell] = [ARCANE_BOLT, MAGIC_SHIELD]
         self.command_abilities: List[CommandAbility] = []
 
@@ -137,7 +137,7 @@ class Unit:
         for sp in self.spells:
             chances = sum(proba for val, proba in potential_cast if val >= sp.power)
             spells.append(chances * sp.power)
-        return self.spells_per_turn * sum(spells) / len(spells)
+        return self.spells_per_turn.average(context) * sum(spells) / len(spells)
 
     def unbind_power(self, context: dict):
         if self.unbind_per_turn == 0:
@@ -147,7 +147,7 @@ class Unit:
         for sp_power in [5, 6, 7, 8, 9]:
             chances = sum(proba for val, proba in potential_unbind if val >= sp_power)
             spells.append(chances * sp_power)
-        return self.unbind_per_turn * sum(spells) / len(spells)
+        return self.unbind_per_turn.average(context) * sum(spells) / len(spells)
 
 
 class WeaponRule(Rule):

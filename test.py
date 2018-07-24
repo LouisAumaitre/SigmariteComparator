@@ -2,16 +2,15 @@ import time
 
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS, DID_MOVE)
 from sigmar.basics.weapon import Weapon
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS
-from sigmar.compendium.tzeench_arcanites import TZEENCH_WS
+from sigmar.compendium.tzeench_arcanites import TZEENTCH_WS
 
-warscrolls = TZEENCH_WS
+warscrolls = TZEENTCH_WS
 
 test_armour = Roll(4)
 context = {
