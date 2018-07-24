@@ -2,7 +2,7 @@ from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly
-from sigmar.basics.value import value, RandomValue
+from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import extra_damage_on_keyword
@@ -48,6 +48,10 @@ TZEENTCH_WS.append(Warscroll(
     ], keywords=[CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=2, unbind=2, named=True))
 
 
+def arcane_tome(u: Unit):
+    u.casting_value = u.casting_value + OncePerGame('D6')
+
+
 TZEENTCH_WS.append(Warscroll(
     'Herald of Tzeentch on Burning Chariot', [
         [Weapon('Staff of Change', 2, 1, 4, 3, -1, 'D3', []),
@@ -60,7 +64,7 @@ TZEENTCH_WS.append(Warscroll(
          ])],
     ], 14, 5, 10, 8, 1, monster_base, rules=[
         Rule('Fly', fly),
-        Rule('Arcane Tome', lambda x: None),
+        Rule('Arcane Tome', arcane_tome),
         Rule('Wake of Fire', lambda x: None),
         Spell('Tzeentch`s Firestorm', 9, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
@@ -76,7 +80,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
     ], 16, 5, 10, 5, 1, large_infantry_base, rules=[
         Rule('Fly', fly),
-        Rule('Arcane Tome', lambda x: None),
+        Rule('Arcane Tome', arcane_tome),
         Spell('Blue Fire of Tzeentch', 4, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
 
@@ -111,7 +115,7 @@ TZEENTCH_WS.append(Warscroll(
         [Weapon('Magical Flames', 18, 2, 4, 4, 0, 1, []),
          Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, [])],
     ], 5, 5, 10, 5, 1, infantry_base, rules=[
-        Rule('Arcane Tome', lambda x: None),
+        Rule('Arcane Tome', arcane_tome),
         Rule('Fortune and Fate', fortune_and_fate),
         Spell('Pink Fire of Tzeentch', 9, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))

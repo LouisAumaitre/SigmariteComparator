@@ -246,3 +246,23 @@ def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]
     if isinstance(defined_value, dict):
         return MonsterValue(defined_value)
     return _value(defined_value)
+
+
+class OncePerGame(Value):
+    def __init__(self, defined_value: Union[str, int, Value]):
+        Value.__init__(self)
+        self.defined_value = value(defined_value)
+
+    def _average(self, context: dict):
+        return self.defined_value.average(context, 0) / 6
+
+    def _max(self, context: dict):
+        return self.defined_value.max(context, 0)
+
+    def _potential_values(self, context: dict):
+        possibilities = {val: proba * 0.2 for val, proba in self.defined_value.potential_values(context, 0)}
+        possibilities[0] = possibilities.get(0, 0) + 0.8
+        return [(val, proba) for val, proba in possibilities.items()]
+
+    def __str__(self):
+        return f'|OPG{self.defined_value}|'
