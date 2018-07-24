@@ -1,8 +1,9 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, Spell, CommandAbility
+from sigmar.basics.string_constants import UNBIND_RANGE
 from sigmar.basics.unit import Unit
-from sigmar.basics.unit_rules import fly
+from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
@@ -31,7 +32,7 @@ TZEENTCH_WS.append(Warscroll(
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
         Rule('Fly', fly),
         Rule('Mastery of Magic', mastery_of_magic),
-        Rule('Spell-thief', lambda x: None),
+        Rule('Spell-thief', can_steal_spells(UNBIND_RANGE, RandomValue({1: 5/9, 0: 4/9}), 2)),
         CommandAbility('Beacon of Sorcery', None),
         Spell('Infernal Gateway', 7, None),
     ], keywords=[CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER], cast=2, unbind=2))
@@ -44,7 +45,7 @@ TZEENTCH_WS.append(Warscroll(
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
         Rule('Fly', fly),
         Rule('Mastery of Magic', mastery_of_magic),
-        Rule('Oracle of Eternity', lambda x: None),
+        Rule('Oracle of Eternity', can_reroll_x_dice_during_game(1)),
         Spell('Gift of Change', 8, None),
     ], keywords=[CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=2, unbind=2, named=True))
 
@@ -94,6 +95,7 @@ TZEENTCH_WS.append(Warscroll(
         Rule('Arch-Deceiver', lambda x: None),
         Rule('Puckish Misdirection', lambda x: None),
         Rule('Formless Horror', lambda x: None),
+        Rule('', copy_spells(9))
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1, named=True))
 
 
@@ -133,7 +135,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Disc`s Many-fanged Mouths', 1, 'D3', 4, 4, 0, 1, [])],
     ], 16, 5, 10, 5, 1, large_infantry_base, rules=[
         Rule('Fly', fly),
-        Rule('Frantic Scribbling', lambda x: None),
+        Rule('Frantic Scribbling', can_steal_spells(18, RandomValue({1: 0.5, 0: 0.5}), 3)),  # tries illimited?
         Rule('Scrolls of Sorcery', scrolls_of_sorcery),
         Spell('Boon of Tzeentch', 4, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1, named=True))

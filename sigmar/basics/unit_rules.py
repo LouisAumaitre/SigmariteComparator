@@ -1,5 +1,36 @@
+from typing import Union
+
 from sigmar.basics.unit import Unit
-from sigmar.basics.value import value
+from sigmar.basics.value import value, Value
+
+
+def can_reroll_x_dice_during_game(amount: Union[Value, int, str]=1):
+    def rule_func(u: Unit):
+        value(amount)
+        pass
+    return rule_func
+
+
+def can_steal_spells(
+        range_: Union[Value, int, str]=18,
+        chances: Union[Value, int, str]=1,
+        tries_per_turn: Union[Value, int, str]=1
+):
+    def rule_func(u: Unit):
+        value(range_)
+        value(chances)
+        value(tries_per_turn)
+        pass
+    return rule_func
+
+
+def copy_spells(
+        range_: Union[Value, int, str]=18,
+):
+    def rule_func(u: Unit):
+        value(range_)
+        pass
+    return rule_func
 
 
 def fly(u: Unit):

@@ -33,3 +33,4 @@ NUMBER_OF_HITS = 'number of hits'
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 
 INCH = 25.6
+UNBIND_RANGE = 30
