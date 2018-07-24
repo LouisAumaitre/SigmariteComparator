@@ -3,8 +3,10 @@ from typing import Union
 from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
     AUTO_WOUND_ON_CRIT,
-    EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE, EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND,
-    NUMBER_OF_HITS)
+    EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE,
+    EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND,
+    NUMBER_OF_HITS, ENEMY_KEYWORDS,
+)
 from sigmar.basics.value import value, RandomValue, Value
 from sigmar.basics.weapon import Weapon
 
@@ -45,6 +47,16 @@ def multiple_hits(hits: Union[int, str, Value]):
         def buff(data):
             data[NUMBER_OF_HITS] = value(hits)
         w.attack_rules.append(buff)
+    return rule_func
+
+
+def extra_damage_on_keyword(extra_damage: Union[int, str, Value], keyword: str):
+    def rule_func(w: Weapon):
+        def buff(data):
+            if keyword in data.get(ENEMY_KEYWORDS, []):
+                return value(extra_damage)
+            return 0
+        w.damage.rules.append(buff)
     return rule_func
 
 
