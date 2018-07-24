@@ -134,9 +134,11 @@ class Warscroll:
             unit.average_damage(armour, context, front_size, nb), unit.average_health(context)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, context: dict, front_size=1000, max_variants=3):
+    def simplest_stats(self, context: dict, front_size=1000, max_variants=3, keyword=None):
         amount = 0
         for k, v in self.units.items():
+            if keyword is not None and keyword not in v.keywords:
+                continue
             amount += 1
             if amount > max_variants:
                 print('...')

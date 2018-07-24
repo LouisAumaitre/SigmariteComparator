@@ -7,7 +7,7 @@ from sigmar.basics.string_constants import (
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS, DID_MOVE)
 from sigmar.basics.weapon import Weapon
-from sigmar.compendium.generic_keywords import DAEMON, CHAOS
+from sigmar.compendium.generic_keywords import DAEMON, CHAOS, WIZARD
 from sigmar.compendium.tzeench_arcanites import TZEENTCH_WS
 
 warscrolls = TZEENTCH_WS
