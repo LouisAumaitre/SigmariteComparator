@@ -116,4 +116,20 @@ TZEENTCH_WS.append(Warscroll(
         Spell('Pink Fire of Tzeentch', 9, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
 
+
+def scrolls_of_sorcery(u: Unit):
+    u.casting_value = RandomValue({0: 1/6, 9: 5/6})
+
+
+TZEENTCH_WS.append(Warscroll(
+    'The Blue Scribes', [
+        [Weapon('Sharpened Quills', 1, 2, 5, 5, 0, 1, []),
+         Weapon('Disc`s Many-fanged Mouths', 1, 'D3', 4, 4, 0, 1, [])],
+    ], 16, 5, 10, 5, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Frantic Scribbling', lambda x: None),
+        Rule('Scrolls of Sorcery', scrolls_of_sorcery),
+        Spell('Boon of Tzeentch', 4, None),
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1, named=True))
+
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}
