@@ -25,7 +25,7 @@ class Weapon:
             rend,
             damage: Union[int, str, Value, Dict[int, Union[int, str, Value]]],
             rules: List[Rule],
-    ):
+    ) -> None:
         self.name = name
         self.range = value(range_)
         self.attacks = value(attacks)
