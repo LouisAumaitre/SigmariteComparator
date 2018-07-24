@@ -36,11 +36,11 @@ TZEENCH_WS.append(Warscroll(
         Rule('Mastery of Magic', lambda x: None),
         Rule('Oracle of Eternity', lambda x: None),
         Spell('Gift of Change', 8, None),
-    ], keywords=[CHAOS, DAEMON, TZEENCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=2, unbind=2))
+    ], keywords=[CHAOS, DAEMON, TZEENCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=2, unbind=2, named=True))
 
 
 TZEENCH_WS.append(Warscroll(
-    'Heral of Tzeench on Burning Chariot', [
+    'Herald of Tzeench on Burning Chariot', [
         [Weapon('Staff of Change', 2, 1, 4, 3, -1, 'D3', []),
          Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
          Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [
@@ -50,7 +50,7 @@ TZEENCH_WS.append(Warscroll(
         Rule('Fly', fly),
         Rule('Arcane Tome', lambda x: None),
         Rule('Wake of Fire', lambda x: None),
-        Spell('Tzeench`s Firestorm', 8, None),
+        Spell('Tzeench`s Firestorm', 9, None),
     ], keywords=[CHAOS, DAEMON, TZEENCH, WIZARD, HERO, MONSTER, 'LORD OF CHANGE'], cast=1, unbind=1))
 
 tzeenchites_by_name = {unit.name: unit for unit in TZEENCH_WS}

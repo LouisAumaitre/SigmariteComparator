@@ -24,6 +24,10 @@ class Spell(Rule):
             raise ValueError(f'Spells must be given to units, not {item.__class__}')
 
 
+ARCANE_BOLT = Spell('Arcane Bolt', 5, None)
+MAGIC_SHIELD = Spell('Magic Shield', 5, None)
+
+
 class CommandAbility(Rule):
     def apply(self, item):
         try:

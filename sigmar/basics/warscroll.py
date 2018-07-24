@@ -154,10 +154,13 @@ class Warscroll:
             ranged = f'{int(round(v.average_damage(ranged_context, front_size) * 10))}/'
             ranged = '' if ranged == '0/' else ranged
             flight = 'F' if v.can_fly else ''
+            spell_power = v.magic_power(context)
+            spell_power = int(spell_power * 2.5) if spell_power else ''
             print(
                 f'{numbers}{v.name}{health}{equip}: '
                 f'{ranged}'
                 f'{int(round(v.average_damage(unit_context, front_size) * 10))}'
                 f'/{int(round(v.average_health(unit_context)))} '
                 f'{v.describe_formation(unit_context, front_size)} '
-                f'M{v.speed_grade(unit_context)}{flight}')
+                f'M{v.speed_grade(unit_context)}{flight} '
+                f'magic:{spell_power}')

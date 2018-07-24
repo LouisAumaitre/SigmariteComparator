@@ -5,7 +5,7 @@ from copy import copy
 from sigmar.basics.base import Base
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule, CommandAbility, Spell
+from sigmar.basics.rules import Rule, CommandAbility, Spell, MAGIC_SHIELD, ARCANE_BOLT
 from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND, RANGE
 from sigmar.basics.weapon import Weapon
 
@@ -44,10 +44,11 @@ class Unit:
         self.run_distance = value('D6')
         self.charge_range = value('2D6')
         self.special_users = []
+        self.casting_value = value('2D6')
 
         self.spells_per_turn = cast
         self.unbind_per_turn = unbind
-        self.spells: List[Spell] = []
+        self.spells: List[Spell] = [ARCANE_BOLT, MAGIC_SHIELD]
         self.command_abilities: List[CommandAbility] = []
 
         self.rules = rules
@@ -126,6 +127,17 @@ class Unit:
         flight = 'F' if self.can_fly else ''
         m, s, c = self.average_speed(context)
         return f'{int(round(m))}-{int(round(s))}-{int(round(c))}{flight}'
+
+    def magic_power(self, context: dict):
+        if self.spells_per_turn == 0:
+            return 0
+        potential_cast = self.casting_value.potential_values(context)
+        spells = []
+        for sp in self.spells:
+            chances = sum(proba for val, proba in potential_cast if val >= sp.power)
+            print(f'{self.name} has {int(chances * 100)}% chances of casting {sp.name}')
+            spells.append(chances * sp.power)
+        return self.spells_per_turn * sum(spells) / len(spells)
 
 
 class WeaponRule(Rule):
