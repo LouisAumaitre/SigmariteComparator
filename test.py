@@ -2,11 +2,13 @@ import time
 
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
+from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
-    SELF_NUMBERS, DID_MOVE)
+    SELF_NUMBERS, DID_MOVE, SELF_MOVE)
 from sigmar.basics.weapon import Weapon
+from sigmar.basics.weapon_rules import deal_x_mortal_wound_on_roll
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS, WIZARD
 from sigmar.compendium.tzeench_arcanites import TZEENTCH_WS
 
@@ -36,7 +38,7 @@ print(f't={time.time() - start}s')
 #     break
 
 
-# w = Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)])
+# w = Weapon('Wake of Fire', 3, 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))])
 # print(w.average_damage(context))
 # print(stormcasts_by_name['Prosecutors'].units['Celestial Hammers'].speed_description(context))
 # print(stormcasts_by_name['Prosecutors'].units['Celestial Hammers'].charge_range)

@@ -1,11 +1,12 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
+from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import extra_damage_on_keyword
+from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll
 from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER
 
 TZEENTCH_WS = []
@@ -55,17 +56,18 @@ def arcane_tome(u: Unit):
 TZEENTCH_WS.append(Warscroll(
     'Herald of Tzeentch on Burning Chariot', [
         [Weapon('Staff of Change', 2, 1, 4, 3, -1, 'D3', []),
+         Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
          Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [
              Rule('Sky-sharks', extra_damage_on_keyword(value('D3') - 1, MONSTER))
          ])],
         [Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
+         Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
          Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [
              Rule('Sky-sharks', extra_damage_on_keyword(value('D3') - 1, MONSTER))
          ])],
     ], 14, 5, 10, 8, 1, monster_base, rules=[
         Rule('Fly', fly),
         Rule('Arcane Tome', arcane_tome),
-        Rule('Wake of Fire', lambda x: None),
         Spell('Tzeentch`s Firestorm', 9, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
 

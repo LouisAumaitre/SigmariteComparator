@@ -6,7 +6,7 @@ from sigmar.basics.base import Base
 from sigmar.basics.value import Value, value
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell, MAGIC_SHIELD, ARCANE_BOLT
-from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND, RANGE
+from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND, RANGE, SELF_MOVE
 from sigmar.basics.weapon import Weapon
 
 
@@ -86,6 +86,7 @@ class Unit:
         total = 0
         unit_data = copy(data)
         unit_data[SELF_BASE] = self.base
+        unit_data[SELF_MOVE] = self.move.average(data)
         _range = data.get(RANGE, 0)
         for row in self.formation(unit_data, front_size):
             # specials

@@ -4,7 +4,7 @@ from sigmar.basics.value import value, FixedValue
 
 
 class Roll:
-    def __init__(self, base_value):
+    def __init__(self, base_value) -> None:
         if isinstance(base_value, Roll):
             self.base_value = base_value.base_value
         else:
@@ -42,10 +42,14 @@ class Roll:
 
     def critic_given_success(self, context: dict, mod=0):
         hit, crit = self.chances(context, mod)
+        if hit + crit == 0:
+            return 0
         return crit / (hit + crit)
 
     def no_critic_given_success(self, context: dict, mod=0):
         hit, crit = self.chances(context, mod)
+        if hit + crit == 0:
+            return 1
         return 1 - (crit / (hit + crit))
 
     def average(self, dices, context: dict, mod=0) -> Tuple[float, float]:

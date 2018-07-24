@@ -1,6 +1,7 @@
 SELF_NUMBERS = 'self_numbers'  # amount of minis
 SELF_BASE = 'self_base'
 SELF_WOUNDS = 'self wounds'
+SELF_MOVE = 'self move'
 
 ENEMY_NUMBERS = 'enemy numbers'
 ENEMY_BASE = 'enemy base'

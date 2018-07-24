@@ -1,18 +1,31 @@
 from typing import Union
 
+from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
     ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
     AUTO_WOUND_ON_CRIT,
     EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE,
     EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND,
     NUMBER_OF_HITS, ENEMY_KEYWORDS,
-)
+    MORTAL_WOUNDS)
 from sigmar.basics.value import value, RandomValue, Value
 from sigmar.basics.weapon import Weapon
 
 
 # generic rules (call in the Rule declaration)
 # ex: Rule('Test', hits_on_crit('D3'))
+def deal_x_mortal_wound_on_roll(mortal_wounds: Union[int, str, Value], roll: Roll):
+    def rule_func(w: Weapon):
+        def buff(data):
+            possible_success = roll.success(data)
+            possible_damage = {
+                val: proba * possible_success for val, proba in value(mortal_wounds).potential_values(data)}
+            possible_damage[0] = possible_damage.get(0, 0) + 1 - possible_success
+            data[MORTAL_WOUNDS] = RandomValue(possible_damage)
+        w.attack_rules.append(buff)
+    return rule_func
+
+
 def hits_on_crit(amount: Union[int, str, Value]):
     def rule_func(w: Weapon):
         def buff(data):

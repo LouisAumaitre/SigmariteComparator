@@ -51,8 +51,8 @@ class Weapon:
         return 1 - chances - crit
 
     def average_damage(self, context: dict, users=1):
-        if context.get(RANGE, 0) > self.range.average(context) \
-                or self.range.average(context) > 3 >= context.get(RANGE, 0):
+        if context.get(RANGE, 0) > self.range.average(context) or \
+                                self.range.average(context) > 3 >= context.get(RANGE, 0):
             return 0
         context[WEAPON_RANGE] = self.range.average(context)
         dmg = self.attack_round(copy(context), users)

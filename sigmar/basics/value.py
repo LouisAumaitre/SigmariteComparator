@@ -1,6 +1,7 @@
 from typing import Union, List, Callable, Dict
 
-from sigmar.basics.string_constants import WEAPON_RANGE, SELF_BASE, ENEMY_BASE, ENEMY_NUMBERS, INCH, SELF_WOUNDS
+from sigmar.basics.string_constants import WEAPON_RANGE, SELF_BASE, ENEMY_BASE, ENEMY_NUMBERS, INCH, SELF_WOUNDS, \
+    SELF_MOVE, DID_MOVE
 
 
 class Value:
@@ -191,6 +192,23 @@ class AllInRangeValue(Value):
         return [(i + 1, 1/m) for i in range(m)]
 
 
+class MoveAcrossValue(Value):
+    def _average(self, context: dict):
+        if not context.get(DID_MOVE, True):
+            return 0
+        return context.get(SELF_MOVE, 0)
+
+    def _max(self, context: dict):
+        if not context.get(DID_MOVE, True):
+            return 0
+        return context.get(SELF_MOVE, 0)
+
+    def _potential_values(self, context: dict):
+        if not context.get(DID_MOVE, True):
+            return 0
+        return [(context.get(SELF_MOVE, 0), 1)]
+
+
 def make_dice_value(amount: int, val: int) -> Value:
     if amount == 1:
         return DiceValue(val)
@@ -210,8 +228,10 @@ def _value(defined_value: Union[str, int, Value]):
             return make_dice_value(nb, val)
         except TypeError:
             pass
-    if defined_value == 'all_in_range':
+    if defined_value == 'all_in_range' or defined_value == 'all in range':
         return AllInRangeValue()
+    if defined_value == 'move across':
+        return MoveAcrossValue()
     raise ValueError(f'{defined_value} is not recognised to define a value')
 
 
@@ -248,20 +268,24 @@ def value(defined_value: Union[str, int, Value, Dict[int, Union[str, int, Value]
     return _value(defined_value)
 
 
+ONCE_PER_GAME_MULT = 0.15
+
+
 class OncePerGame(Value):
     def __init__(self, defined_value: Union[str, int, Value]):
         Value.__init__(self)
         self.defined_value = value(defined_value)
 
     def _average(self, context: dict):
-        return self.defined_value.average(context, 0) / 6
+        return self.defined_value.average(context, 0) * ONCE_PER_GAME_MULT
 
     def _max(self, context: dict):
         return self.defined_value.max(context, 0)
 
     def _potential_values(self, context: dict):
-        possibilities = {val: proba * 0.2 for val, proba in self.defined_value.potential_values(context, 0)}
-        possibilities[0] = possibilities.get(0, 0) + 0.8
+        possibilities = {
+            val: proba * ONCE_PER_GAME_MULT for val, proba in self.defined_value.potential_values(context, 0)}
+        possibilities[0] = possibilities.get(0, 0) + 1 - ONCE_PER_GAME_MULT
         return [(val, proba) for val, proba in possibilities.items()]
 
     def __str__(self):
