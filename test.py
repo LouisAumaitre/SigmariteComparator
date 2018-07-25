@@ -7,6 +7,7 @@ from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
     SELF_NUMBERS, DID_MOVE, SELF_MOVE)
+from sigmar.basics.warscroll import formatted_scrolls
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import deal_x_mortal_wound_on_roll
 from sigmar.compendium.generic_keywords import DAEMON, CHAOS, WIZARD
@@ -28,8 +29,7 @@ context = {
 }
 
 start = time.time()
-for ws in warscrolls:
-    ws.simplest_stats(context, front_size=145, max_variants=3)
+formatted_scrolls(warscrolls, context, front_size=145, max_variants=3)
 print(f't={time.time() - start}s')
 
 # for k, u in seraphons_by_name['Kroxigors'].units.items():

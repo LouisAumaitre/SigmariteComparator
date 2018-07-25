@@ -36,9 +36,19 @@ class CommandAbility(Rule):
             raise ValueError(f'Command Abilities must be given to units, not {item.__class__}')
 
 
+class CommentRule(Rule):
+    def __init__(self, name, comment):
+        Rule.__init__(self, name, None)
+        self.comment = comment
+
+    def apply(self, item):
+        item.notes.append(self.comment)
+
+
 class TodoRule(Rule):
     def __init__(self, name):
         Rule.__init__(self, name, None)
 
     def apply(self, item):
-        print(f'Remember to do rule {self.name} for item {item.name}')
+        item.notes.append(self.name)
+        # print(f'Remember to do rule {self.name} for item {item.name}')

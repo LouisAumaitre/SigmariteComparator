@@ -46,6 +46,7 @@ class Unit:
         self.special_users = []
         self.casting_value = value('2D6')
         self.unbinding_value = value('2D6')
+        self.notes = []
 
         self.spells_per_turn = value(cast)
         self.unbind_per_turn = value(unbind)

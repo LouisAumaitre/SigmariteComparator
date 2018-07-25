@@ -134,19 +134,20 @@ class Warscroll:
             unit.average_damage(armour, context, front_size, nb), unit.average_health(context)
         ) for key, unit in self.units.items()}
 
-    def simplest_stats(self, context: dict, front_size=1000, max_variants=3, keyword=None):
+    def simplest_stats(self, context: dict, front_size=1000, max_variants=3, keyword=None, do_print=True):
         amount = 0
+        variants = []
         for k, v in self.units.items():
             if keyword is not None and keyword not in v.keywords:
                 continue
             amount += 1
             if amount > max_variants:
-                print('...')
+                if do_print:
+                    print('...')
                 break
             unit_context = copy(context)
             numbers = context.get(SELF_NUMBERS, v.size)
             unit_context[SELF_NUMBERS] = numbers
-            numbers = f'{numbers} ' if numbers > 1 else ''
             health = unit_context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''
             equip = f' with {k}' if k not in [v.name, ''] else ''
@@ -154,16 +155,65 @@ class Warscroll:
             ranged_context = copy(unit_context)
             ranged_context[RANGE] = max(3.01, unit_context.get(RANGE, 0))
             ranged = f'{int(round(v.average_damage(ranged_context, front_size) * 10))}/'
-            ranged = '' if ranged == '0/' else ranged
             flight = 'F' if v.can_fly else ''
             spell_power = v.magic_power(context)
             unbind_power = v.unbind_power(context)
-            spell_power = f'MP:{int(spell_power)}/{int(unbind_power)}' if spell_power or unbind_power else ''
-            print(
-                f'{numbers}{v.name}{health}{equip}: '
-                f'{ranged}'
-                f'{int(round(v.average_damage(unit_context, front_size) * 10))}'
-                f'/{int(round(v.average_health(unit_context)))} '
-                f'{v.describe_formation(unit_context, front_size)} '
-                f'{spell_power} '
-                f'M{v.speed_grade(unit_context)}{flight}')
+            comments = str(v.notes).replace("'", '')[1:-1]
+            elements = [
+                f'{numbers}' if numbers > 1 else '',
+                f'{v.name}{health}{equip}:',
+                '' if ranged == '0/' else ranged,
+                f'{int(round(v.average_damage(unit_context, front_size) * 10))}/',
+                str(int(round(v.average_health(unit_context)))),
+                v.describe_formation(unit_context, front_size),
+                f'{int(spell_power)}/{int(unbind_power)}' if spell_power or unbind_power else '',
+                f'{v.speed_grade(unit_context)}{flight}',
+                comments,
+            ]
+            if do_print:
+                out = ''
+                for e in elements:
+                    out += e + ' '
+                print(out)
+            variants.append(elements)
+        return variants
+
+
+def _push_right(_str, _len, fill=' '):
+    return fill * max(0, _len - len(_str)) + _str
+
+
+def _push_left(_str, _len, fill=' '):
+    return _str + fill * max(0, _len - len(_str))
+
+
+def formatted_scrolls(warscroll_list: List[Warscroll], context: dict, *args, **kwargs):
+    all_variants = [[
+        'NB',
+        'NAME',
+        'RG/',
+        'CC/',
+        'HP',
+        '',
+        'MAGIC',
+        'MOVE',
+        '',
+    ]]
+    for warscroll in warscroll_list:
+        all_variants.extend(warscroll.simplest_stats(context, *args, **kwargs, do_print=False))
+    max_lengths = []
+    for i in range(len(all_variants[0])):
+        max_lengths.append(max([len(var[i]) for var in all_variants]))
+    for var in all_variants:
+        fill_0 = '0'
+        print(
+            f'{_push_right(var[0], max_lengths[0])} '
+            f'{_push_left(var[1], max_lengths[1])} '
+            f'{_push_right(var[2], max_lengths[2])}'
+            f'{_push_right(var[3], max_lengths[3], fill_0)}'
+            f'{_push_right(var[4], max_lengths[4], fill_0)}  '
+            f'{_push_left(var[5], max_lengths[5])}  '
+            f'{_push_right(var[6], max_lengths[6])}  '
+            f'{_push_left(var[7], max_lengths[7])} '
+            f'{var[8]}'
+        )
