@@ -35,6 +35,7 @@ TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
 
 # rules generalization
 DEPLOYMENT = 'Deployment advantage'
+FEAR = 'Fear'
 
 INCH = 25.6
 UNBIND_RANGE = 30

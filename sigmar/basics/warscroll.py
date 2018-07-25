@@ -154,7 +154,8 @@ class Warscroll:
 
             ranged_context = copy(unit_context)
             ranged_context[RANGE] = max(3.01, unit_context.get(RANGE, 0))
-            ranged = f'{int(round(v.average_damage(ranged_context, front_size) * 10))}/'
+            ranged = str(int(round(v.average_damage(ranged_context, front_size) * 10)))
+
             flight = 'F' if v.can_fly else ''
             spell_power = v.magic_power(context)
             unbind_power = v.unbind_power(context)
@@ -162,12 +163,13 @@ class Warscroll:
             elements = [
                 f'{numbers}' if numbers > 1 else '',
                 f'{v.name}{health}{equip}:',
-                '' if ranged == '0/' else ranged,
-                f'{int(round(v.average_damage(unit_context, front_size) * 10))}/',
-                str(int(round(v.average_health(unit_context)))),
+                '' if ranged == '0' else ranged,
+                str(int(round(v.average_damage(unit_context, front_size) * 10))),
+                str(int(round(v.average_health(unit_context) * 4))),
                 v.describe_formation(unit_context, front_size),
                 f'{int(spell_power)}/{int(unbind_power)}' if spell_power or unbind_power else '',
-                f'{v.speed_grade(unit_context)}{flight}',
+                f'{flight}{v.speed_grade(unit_context)}',
+                str(int(round(v.morale_grade(unit_context), 0))),
                 comments,
             ]
             if do_print:
@@ -183,12 +185,13 @@ def formatted_scrolls(warscroll_list: List[Warscroll], context: dict, *args, **k
     all_variants = [[
         'NB',
         'NAME',
-        'RG/',
-        'CC/',
+        'RG',
+        'CC',
         'HP',
         '',
         'MAGIC',
         'MOVE',
+        'MORALE',
         '',
     ]]
     for warscroll in warscroll_list:
@@ -200,11 +203,12 @@ def formatted_scrolls(warscroll_list: List[Warscroll], context: dict, *args, **k
         print(
             f'{var[0]:>{max_lengths[0]}} '
             f'{var[1]:<{max_lengths[1]}} '
-            f'{var[2]:>{max_lengths[2]}}'
-            f'{var[3].zfill(max_lengths[3])}'
-            f'{var[4].zfill(max_lengths[4])}  '
+            f'{var[2]:>{max_lengths[2]}} '
+            f'{var[3]:>{max_lengths[3]}} '
+            f'{var[4]:>{max_lengths[4]}}  '
             f'{var[5]:<{max_lengths[5]}}  '
             f'{var[6]:>{max_lengths[6]}}  '
-            f'{var[7]:<{max_lengths[7]}}  '
-            f'{var[8]}'
+            f'{var[7]:>{max_lengths[7]}}  '
+            f'{var[8]:>{max_lengths[8]}}  '
+            f'{var[9]}'
         )

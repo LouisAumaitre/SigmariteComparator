@@ -8,6 +8,7 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, CommandAbility, Spell, MAGIC_SHIELD, ARCANE_BOLT
 from sigmar.basics.string_constants import SELF_NUMBERS, SELF_BASE, INCH, SELF_WOUNDS, REND, RANGE, SELF_MOVE
 from sigmar.basics.weapon import Weapon
+from sigmar.compendium.generic_keywords import MONSTER, HERO
 
 
 class Unit:
@@ -46,6 +47,7 @@ class Unit:
         self.special_users = []
         self.casting_value = value('2D6')
         self.unbinding_value = value('2D6')
+        self.morale_roll = value('D6')
         self.notes = []
 
         self.spells_per_turn = value(cast)
@@ -124,7 +126,7 @@ class Unit:
 
     def speed_grade(self, context: dict):
         m, s, c = self.average_speed(context)
-        return round((m + s + c) / 3)
+        return round((m + s + c) / 3) - 3
 
     def speed_description(self, context: dict):
         flight = 'F' if self.can_fly else ''
@@ -150,6 +152,12 @@ class Unit:
             chances = sum(proba for val, proba in potential_unbind if val >= sp_power)
             spells.append(chances * sp_power)
         return self.unbind_per_turn.average(context) * sum(spells) / len(spells)
+
+    def morale_grade(self, context: dict):
+        if HERO in self.keywords or MONSTER in self.keywords:
+            return self.bravery
+        mod = value('D6').average(context) - self.morale_roll.average(context)
+        return self.bravery + mod
 
 
 class WeaponRule(Rule):
