@@ -4,11 +4,13 @@ from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule, CommentRu
 from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBERS, FEAR, ENEMY_BRAVERY, ENEMY_WOUNDS, \
     SELF_WOUNDS
 from sigmar.basics.unit import Unit
-from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells, extra_save
+from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells, extra_save, \
+    regeneration
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded
+from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded, \
+    impact_x_mortal_wound
 from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, GOR, MORTAL, EVERCHOSEN
 
 TZEENTCH_WS = []
@@ -341,11 +343,11 @@ TZEENTCH_WS.append(Warscroll(
     'Ogroid Traumaturge', [
         [Weapon('Traumaturge Staff', 2, 2, 3, 3, -1, 'D3', []),
          Weapon('Great Horns', 1, 1, 3, 3, -2, 3, []),
-         Weapon('Cloven Hooves', 1, 4, 4, 3, 0, 1, [])],
+         Weapon('Cloven Hooves', 1, 4, 4, 3, 0, 1, []),
+         Weapon('Mighty Bulk', 1, 1, 7, 7, 0, 1, [Rule('', impact_x_mortal_wound('D3'))])],
     ], 6, 5, 8, 8, 1, large_infantry_base, rules=[
         Rule('Brutal Rage', brutal_rage),
-        CommentRule('Mighty Bulk', 'Impact D3'),
-        CommentRule('Overwhelming Power', 'Regeneration 1'),
+        Rule('Overwhelming Power', regeneration(1)),
         Spell('Fireblast', 7, None),
     ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, HERO, WIZARD], cast=1, unbind=1))
 

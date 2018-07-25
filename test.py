@@ -17,7 +17,7 @@ warscrolls = TZEENTCH_WS
 
 test_armour = Roll(4)
 context = {
-    CHARGING: True,
+    CHARGING: False,
     ENEMY_BASE: infantry_base,
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,

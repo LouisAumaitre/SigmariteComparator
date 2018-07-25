@@ -27,6 +27,15 @@ def deal_x_mortal_wound_on_roll(mortal_wounds: Union[int, str, Value], roll: Rol
     return rule_func
 
 
+def impact_x_mortal_wound(mortal_wounds: Union[int, str, Value]):
+    def rule_func(w: Weapon):
+        def buff(data):
+            if data.get(CHARGING, False):
+                data[MORTAL_WOUNDS_PER_ATTACK] = value(mortal_wounds)
+        w.attack_rules.append(buff)
+    return rule_func
+
+
 def hits_on_crit(amount: Union[int, str, Value]):
     def rule_func(w: Weapon):
         def buff(data):

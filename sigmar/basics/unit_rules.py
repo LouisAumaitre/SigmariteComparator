@@ -17,6 +17,12 @@ def extra_save(roll: int):
     return rule_func
 
 
+def regeneration(amount: Union[Value, int, str]=1):
+    def rule_func(u: Unit):
+        u.notes.append(f'Regeneration{value(amount)}')
+    return rule_func
+
+
 def can_steal_spells(
         range_: Union[Value, int, str]=18,
         chances: Union[Value, int, str]=1,
