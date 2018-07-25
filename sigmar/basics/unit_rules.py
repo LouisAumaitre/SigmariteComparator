@@ -17,7 +17,7 @@ def can_steal_spells(
 ):
     def rule_func(u: Unit):
         value(range_)
-        u.notes.append(f'Spell stealer ({value(chances).average({}) * value(tries_per_turn).average({})})')
+        u.notes.append(f'Spell stealer ({round(value(chances).average({}) * value(tries_per_turn).average({}), 1)})')
     return rule_func
 
 

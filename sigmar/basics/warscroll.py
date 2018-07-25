@@ -179,14 +179,6 @@ class Warscroll:
         return variants
 
 
-def _push_right(_str, _len, fill=' '):
-    return fill * max(0, _len - len(_str)) + _str
-
-
-def _push_left(_str, _len, fill=' '):
-    return _str + fill * max(0, _len - len(_str))
-
-
 def formatted_scrolls(warscroll_list: List[Warscroll], context: dict, *args, **kwargs):
     all_variants = [[
         'NB',
@@ -205,15 +197,14 @@ def formatted_scrolls(warscroll_list: List[Warscroll], context: dict, *args, **k
     for i in range(len(all_variants[0])):
         max_lengths.append(max([len(var[i]) for var in all_variants]))
     for var in all_variants:
-        fill_0 = '0'
         print(
-            f'{_push_right(var[0], max_lengths[0])} '
-            f'{_push_left(var[1], max_lengths[1])} '
-            f'{_push_right(var[2], max_lengths[2])}'
-            f'{_push_right(var[3], max_lengths[3], fill_0)}'
-            f'{_push_right(var[4], max_lengths[4], fill_0)}  '
-            f'{_push_left(var[5], max_lengths[5])}  '
-            f'{_push_right(var[6], max_lengths[6])}  '
-            f'{_push_left(var[7], max_lengths[7])} '
+            f'{var[0]:>{max_lengths[0]}} '
+            f'{var[1]:<{max_lengths[1]}} '
+            f'{var[2]:>{max_lengths[2]}}'
+            f'{var[3].zfill(max_lengths[3])}'
+            f'{var[4].zfill(max_lengths[4])}  '
+            f'{var[5]:<{max_lengths[5]}}  '
+            f'{var[6]:>{max_lengths[6]}}  '
+            f'{var[7]:<{max_lengths[7]}}  '
             f'{var[8]}'
         )
