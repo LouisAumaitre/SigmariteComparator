@@ -1,7 +1,7 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule
-from sigmar.basics.string_constants import UNBIND_RANGE
+from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule, CommentRule
+from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells
 from sigmar.basics.value import value, RandomValue, OncePerGame
@@ -90,7 +90,7 @@ TZEENTCH_WS.append(Warscroll(
     'The Changeling', [
         [Weapon('The Trickster`s Staff', 2, 1, 4, 3, -1, 'D3', [])],
     ], 5, 5, 10, 5, 1, infantry_base, rules=[
-        TodoRule('Arch-Deceiver'),
+        CommentRule('Arch-Deceiver', DEPLOYMENT),
         TodoRule('Puckish Misdirection'),
         TodoRule('Formless Horror'),
         Rule('', copy_spells(9))

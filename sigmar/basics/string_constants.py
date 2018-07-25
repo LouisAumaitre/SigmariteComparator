@@ -19,7 +19,7 @@ WEAPON_RANGE = 'weapon range'  # range of the weapon
 MORTAL_WOUNDS = 'mortal wounds'
 MORTAL_WOUNDS_PER_ATTACK = 'mortal wounds_per_attack'
 
-# done
+# weapon effects
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
 CRIT_BONUS_REND = 'crit bonus rend'
 EXTRA_ATTACK_ON_HIT = 'extra attack on _hit'
@@ -32,6 +32,9 @@ MW_ON_HIT_CRIT = 'mortal wound on tohit crit'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
 NUMBER_OF_HITS = 'number of hits'
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
+
+# rules generalization
+DEPLOYMENT = 'deployment'
 
 INCH = 25.6
 UNBIND_RANGE = 30

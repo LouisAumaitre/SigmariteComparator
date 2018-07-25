@@ -6,8 +6,7 @@ from sigmar.basics.value import value, Value
 
 def can_reroll_x_dice_during_game(amount: Union[Value, int, str]=1):
     def rule_func(u: Unit):
-        value(amount)
-        pass
+        u.notes.append(f'Reroll{value(amount)}')
     return rule_func
 
 
@@ -18,9 +17,7 @@ def can_steal_spells(
 ):
     def rule_func(u: Unit):
         value(range_)
-        value(chances)
-        value(tries_per_turn)
-        pass
+        u.notes.append(f'Spell stealer ({value(chances).average({}) * value(tries_per_turn).average({})})')
     return rule_func
 
 
