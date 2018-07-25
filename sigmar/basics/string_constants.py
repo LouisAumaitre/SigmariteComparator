@@ -8,6 +8,7 @@ ENEMY_BASE = 'enemy base'
 ENEMY_WOUNDS = 'enemy wounds'
 ENEMY_KEYWORDS = 'enemy keywords'
 ENEMY_SAVE = 'enemy_save'
+ENEMY_BRAVERY = 'enemy_bravery'
 
 CHARGING = 'charging'
 DID_MOVE = 'did move'

@@ -3,7 +3,7 @@ from sigmar.basics.roll import Roll
 from sigmar.basics.value import DiceValue, value, MultValue, RandomValue
 from sigmar.basics.rules import Rule, Spell, CommandAbility
 from sigmar.basics.string_constants import (
-    SELF_NUMBERS, MW_ON_WOUND_CRIT, EXTRA_WOUND_ON_CRIT,
+    SELF_NUMBERS, MW_ON_WOUND_CRIT,
     EXTRA_DAMAGE_ON_CRIT_WOUND, ENEMY_KEYWORDS, RANGE
 )
 from sigmar.basics.unit import Unit, WeaponRule

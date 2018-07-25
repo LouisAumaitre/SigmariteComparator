@@ -1,7 +1,9 @@
 from sigmar.basics.base import large_infantry_base, monster_base
 from sigmar.basics.rules import Rule, CommandAbility
-from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS, \
-    DID_MOVE, MORTAL_WOUNDS_PER_ATTACK
+from sigmar.basics.string_constants import (
+    MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS,
+    DID_MOVE, MORTAL_WOUNDS_PER_ATTACK,
+)
 from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly, charge_at_3d6
 from sigmar.basics.value import value, RandomValue

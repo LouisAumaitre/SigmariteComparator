@@ -1,14 +1,14 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule, CommentRule
-from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBERS, FEAR
+from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBERS, FEAR, ENEMY_BRAVERY, ENEMY_WOUNDS
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded
-from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, GOR, MORTAL
+from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, GOR, MORTAL, EVERCHOSEN
 
 TZEENTCH_WS = []
 
@@ -259,6 +259,49 @@ TZEENTCH_WS.append(Warscroll(
     ], 5, 4, 7, 5, 1, infantry_base, rules=[
         CommentRule('Vessel of Chaos', 'Rebound unbound spells'),
         Spell('Glean Magic', 3, None),
-    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, WIZARD, HERO], cast=2, unbind=2))
+    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, WIZARD, HERO], cast=2, unbind=2, named=True))
+
+
+def magic_touched(u: Unit):
+    # when casting a spell, any double gives an extra spell
+    one = 5/6
+    two = 1/6
+    three = two * two
+    u.spells_per_turn = RandomValue({
+        1: one,
+        2: two - three,
+        3: three
+    })
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Magister', [
+        [Weapon('Warpsteel Sword', 1, 1, 4, 4, 0, 1, []),
+         Weapon('Tzeentchian Staff', 18, 1, 3, 4, 0, 'D3', [])],
+    ], 6, 5, 7, 5, 1, infantry_base, rules=[
+        Rule('Magic-touched', magic_touched),
+        Spell('Bolt of Change', 7, None),
+    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
+
+
+def warptongue_blade(w: Weapon):
+    # If a Warptongue Blade inflicts damage on an enemy unit, roll two dice. If the roll is higher than the enemy
+    # unit’s Bravery, one model in the unit is slain. Otherwise, the blade inflicts 1 wound.
+    def buff(data):
+        bravery = data.get(ENEMY_BRAVERY, 7)
+        roll_higher = sum([proba for val, proba in value('2D6').potential_values(data) if val > bravery])
+        return RandomValue({0: 1 - roll_higher, data.get(ENEMY_WOUNDS, 1) - 1: roll_higher})
+    w.damage.rules.append(buff)
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Gaunt Summoner of Tzeentch', [
+        [Weapon('Warptongue Blade', 1, 1, 3, 4, 0, 1, [Rule('', warptongue_blade)]),
+         Weapon('Changestaff', 18, 1, 3, 4, 0, 'D3', [])],
+    ], 5, 6, 8, 5, 1, large_infantry_base, rules=[
+        CommentRule('Book of Profane Secrets', 'Can summon DAEMONS through Realmgates'),
+        Spell('Infernal Flames', 8, None),
+    ], keywords=[CHAOS, MORTAL, DAEMON, ARCANITE, EVERCHOSEN, TZEENTCH, WIZARD, HERO, 'GAUNT SUMMONER'],
+    cast=2, unbind=2))
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}

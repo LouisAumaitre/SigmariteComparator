@@ -73,8 +73,8 @@ class Weapon:
             potential_attacks = [{
                 'attacks': nb * users,
                 'proba': proba,
-                'mortal_wounds': my_context.get(MORTAL_WOUNDS, value(0))
-                                 + my_context.get(MORTAL_WOUNDS_PER_ATTACK, 0) * nb * users,
+                'mortal_wounds': my_context.get(
+                    MORTAL_WOUNDS, value(0)) + my_context.get(MORTAL_WOUNDS_PER_ATTACK, 0) * nb * users,
             } for (nb, proba) in self.attacks.potential_values(my_context)]
             assert abs(sum([att['proba'] for att in potential_attacks]) - 1) <= pow(0.1, 5)
             potential_attacks = cleaned_dict_list(potential_attacks, ['attacks', 'mortal_wounds'])

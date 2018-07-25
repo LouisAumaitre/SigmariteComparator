@@ -1,6 +1,6 @@
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
-from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS, ENEMY_WOUNDS, ENEMY_SAVE, SELF_NUMBERS
+from sigmar.basics.string_constants import CHARGING, ENEMY_BASE, ENEMY_NUMBERS, ENEMY_SAVE, SELF_NUMBERS
 from sigmar.compendium.sylvaneth import sylvaneth_by_name
 
 
