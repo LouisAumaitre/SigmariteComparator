@@ -196,17 +196,17 @@ class MoveAcrossValue(Value):
     def _average(self, context: dict):
         if not context.get(DID_MOVE, True):
             return 0
-        return context.get(SELF_MOVE, 0)
+        return context.get(SELF_MOVE, 0) // 2
 
     def _max(self, context: dict):
         if not context.get(DID_MOVE, True):
             return 0
-        return context.get(SELF_MOVE, 0)
+        return context.get(SELF_MOVE, 0) // 2
 
     def _potential_values(self, context: dict):
         if not context.get(DID_MOVE, True):
             return 0
-        return [(context.get(SELF_MOVE, 0), 1)]
+        return [(context.get(SELF_MOVE, 0) // 2, 1)]
 
 
 def make_dice_value(amount: int, val: int) -> Value:

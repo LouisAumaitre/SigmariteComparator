@@ -1,7 +1,7 @@
 from sigmar.basics.base import large_infantry_base, monster_base
 from sigmar.basics.rules import Rule, CommandAbility
 from sigmar.basics.string_constants import MW_ON_HIT_CRIT, CHARGING, ENEMY_KEYWORDS, ENEMY_NUMBERS, MORTAL_WOUNDS, \
-    DID_MOVE
+    DID_MOVE, MORTAL_WOUNDS_PER_ATTACK
 from sigmar.basics.unit import WeaponRule
 from sigmar.basics.unit_rules import reroll_1_save, fly, charge_at_3d6
 from sigmar.basics.value import value, RandomValue
@@ -185,7 +185,7 @@ def thunderbolt(w: Weapon):
         possible_success = sum([proba for val, proba in possibilities.items() if val <= nb_enemies])
         possible_damage = {val: proba * possible_success for val, proba in value('D3').potential_values(data)}
         possible_damage[0] = 1 - possible_success
-        data[MORTAL_WOUNDS] = RandomValue(possible_damage)
+        data[MORTAL_WOUNDS_PER_ATTACK] = RandomValue(possible_damage)
     w.attack_rules.append(buff)
 
 
@@ -204,7 +204,7 @@ STORMCAST_WS.append(Warscroll(
         {'type': 'special weapon',
          'weapons': [Weapon('Shockbolt Bow', 24, 1, 3, 3, -1, 1, [Rule('', multiple_hits('D6'))]), storm_gladius]},
         {'type': 'special weapon',
-         'weapons': [Weapon('Thunderbolt Crossbow', 18, 0, 0, 0, 0, 0, [Rule('', thunderbolt)]), storm_gladius]},
+         'weapons': [Weapon('Thunderbolt Crossbow', 18, 1, 0, 0, 0, 0, [Rule('', thunderbolt)]), storm_gladius]},
     ]))
 
 STORMCAST_WS.append(Warscroll(

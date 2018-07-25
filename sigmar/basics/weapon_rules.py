@@ -7,7 +7,8 @@ from sigmar.basics.string_constants import (
     EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE,
     EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND,
     NUMBER_OF_HITS, ENEMY_KEYWORDS,
-    MORTAL_WOUNDS)
+    MORTAL_WOUNDS_PER_ATTACK,
+)
 from sigmar.basics.value import value, RandomValue, Value
 from sigmar.basics.weapon import Weapon
 
@@ -21,7 +22,7 @@ def deal_x_mortal_wound_on_roll(mortal_wounds: Union[int, str, Value], roll: Rol
             possible_damage = {
                 val: proba * possible_success for val, proba in value(mortal_wounds).potential_values(data)}
             possible_damage[0] = possible_damage.get(0, 0) + 1 - possible_success
-            data[MORTAL_WOUNDS] = RandomValue(possible_damage)
+            data[MORTAL_WOUNDS_PER_ATTACK] = RandomValue(possible_damage)
         w.attack_rules.append(buff)
     return rule_func
 

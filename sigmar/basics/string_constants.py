@@ -17,6 +17,7 @@ RANGE = 'range'  # distance to enemy
 WEAPON_RANGE = 'weapon range'  # range of the weapon
 
 MORTAL_WOUNDS = 'mortal wounds'
+MORTAL_WOUNDS_PER_ATTACK = 'mortal wounds_per_attack'
 
 # done
 AUTO_WOUND_ON_CRIT = 'auto wound on crit'
