@@ -22,7 +22,6 @@ context = {
     ENEMY_NUMBERS: 10,
     ENEMY_WOUNDS: 1,
     # DID_MOVE: False,
-    REND: -1,
     ENEMY_KEYWORDS: [],
     RANGE: 0.1,
     ENEMY_SAVE: test_armour,

@@ -8,12 +8,13 @@ from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded
-from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER
+from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, GOR, MORTAL
 
 TZEENTCH_WS = []
 
 HORROR = 'HORROR'
 FLAMER = 'FLAMER'
+ARCANITE = 'ARCANITE'
 
 
 def mastery_of_magic(u: Unit):
@@ -213,5 +214,51 @@ TZEENTCH_WS.append(Warscroll(
             Weapon('Magical Flames', 18, 1, 4, 4, 0, 1, [Rule('Flickering Flames', flickering_flames)]),
             Weapon('Grasping Hands', 1, 2, 5, 4, 0, 1, [])]}
     ]))
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Blue Horrors of Tzeentch', [
+        [Weapon('Magical Flames', 14, 1, 4, 4, 0, 1, []),
+         Weapon('Taloned Hands', 1, 1, 5, 5, 0, 1, [])],
+    ], 5, 6, 10, 1, 10, infantry_base, rules=[
+        TodoRule('Split'),
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BLUE HORRORS']))
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Brimstone Horrors of Tzeentch', [
+        [Weapon('Magical Flames', 12, 2, 5, 5, 0, 1, []),
+         Weapon('Taloned Hands', 1, 2, 5, 6, 0, 1, [])],
+    ], 5, 7, 10, 1, 10, infantry_base, rules=[
+        TodoRule('Split Again'),
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BRIMSTONE HORRORS']))
+
+
+def sorcerous_elixir(u: Unit):
+    u.spells_per_turn = u.spells_per_turn + OncePerGame(1)
+    # TODO: add reroll once per game
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Tzaangor Shaman', [
+        [Weapon('Staff of Change', 2, 1, 4, 3, -1, 'D3', []),
+         Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
+         Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+    ], 16, 5, 6, 6, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Sorcerous Elixir', sorcerous_elixir),
+        Spell('Boon of Mutation', 7, None),
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Curseling, Eye of Tzeentch', [
+        [Weapon('Blazing Sword', 1, 3, 3, 4, -1, 1, []),
+         Weapon('Threshing Flail', 1, 3, 4, 3, 0, 1, []),
+         Weapon('Staff of Tzeentch', 2, 1, 5, 4, 0, 'D3', [])],
+    ], 5, 4, 7, 5, 1, infantry_base, rules=[
+        CommentRule('Vessel of Chaos', 'Rebound unbound spells'),
+        Spell('Glean Magic', 3, None),
+    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, WIZARD, HERO], cast=2, unbind=2))
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}

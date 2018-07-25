@@ -165,7 +165,7 @@ class Warscroll:
                 f'{v.name}{health}{equip}:',
                 '' if ranged == '0' else ranged,
                 str(int(round(v.average_damage(unit_context, front_size) * 10))),
-                str(int(round(v.average_health(unit_context) * 4))),
+                str(int(round(v.average_health(unit_context)))),
                 v.describe_formation(unit_context, front_size),
                 f'{int(spell_power)}/{int(unbind_power)}' if spell_power or unbind_power else '',
                 f'{flight}{v.speed_grade(unit_context)}',
