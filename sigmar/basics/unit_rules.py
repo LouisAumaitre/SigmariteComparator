@@ -1,5 +1,6 @@
 from typing import Union
 
+from sigmar.basics.roll import Roll
 from sigmar.basics.unit import Unit
 from sigmar.basics.value import value, Value
 
@@ -7,6 +8,12 @@ from sigmar.basics.value import value, Value
 def can_reroll_x_dice_during_game(amount: Union[Value, int, str]=1):
     def rule_func(u: Unit):
         u.notes.append(f'Reroll{value(amount)}')
+    return rule_func
+
+
+def extra_save(roll: int):
+    def rule_func(u: Unit):
+        u.extra_save = Roll(roll)
     return rule_func
 
 

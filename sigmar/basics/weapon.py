@@ -132,6 +132,7 @@ class Weapon:
                 'potential_damage': potential_damage,
                 'cleaned_damage': cleaned_damage,
             }
+            print(self.name)
             for k, potent in info.items():
                 print(f'- {k}:')
                 for e in potent:

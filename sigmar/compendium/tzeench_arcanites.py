@@ -1,9 +1,10 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.roll import Roll
 from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule, CommentRule
-from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBERS, FEAR, ENEMY_BRAVERY, ENEMY_WOUNDS
+from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBERS, FEAR, ENEMY_BRAVERY, ENEMY_WOUNDS, \
+    SELF_WOUNDS
 from sigmar.basics.unit import Unit
-from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells
+from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells, extra_save
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
@@ -288,9 +289,12 @@ def warptongue_blade(w: Weapon):
     # If a Warptongue Blade inflicts damage on an enemy unit, roll two dice. If the roll is higher than the enemy
     # unit’s Bravery, one model in the unit is slain. Otherwise, the blade inflicts 1 wound.
     def buff(data):
+        enemy_wounds = data.get(ENEMY_WOUNDS, 1)
+        if enemy_wounds <= 1:
+            return 0
         bravery = data.get(ENEMY_BRAVERY, 7)
         roll_higher = sum([proba for val, proba in value('2D6').potential_values(data) if val > bravery])
-        return RandomValue({0: 1 - roll_higher, data.get(ENEMY_WOUNDS, 1) - 1: roll_higher})
+        return RandomValue({0: 1 - roll_higher, enemy_wounds - 1: roll_higher})
     w.damage.rules.append(buff)
 
 
@@ -303,5 +307,47 @@ TZEENTCH_WS.append(Warscroll(
         Spell('Infernal Flames', 8, None),
     ], keywords=[CHAOS, MORTAL, DAEMON, ARCANITE, EVERCHOSEN, TZEENTCH, WIZARD, HERO, 'GAUNT SUMMONER'],
     cast=2, unbind=2))
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Fatemaster', [
+        [Weapon('Fireglaive of Tzeentch', 2, 3, 3, 4, 0, 'D3', []),
+         Weapon('Disc of Tzeentch`s Protuding Blades', 1, 'D3', 4, 4, 0, 1, [])],
+    ], 16, 4, 8, 6, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        Rule('Soulbound Shield', extra_save(4)),
+        CommentRule('Hovering Disc of Tzeentch', '+2 save against non flyers'),
+        CommandAbility('Lord of Fate', None),
+    ], keywords=[CHAOS, MORTAL, DAEMON, ARCANITE, TZEENTCH, HERO]))
+
+
+def brutal_rage(u: Unit):
+    def buff(data):
+        if data.get(SELF_WOUNDS, 8) <= 3:
+            return 1, 0
+        return 0, 0
+    for w in u.weapons:
+        w.tohit.rules.append(buff)
+
+    def debuff(data):
+        if data.get(SELF_WOUNDS, 8) <= 3:
+            return -1
+        return 0
+    u.casting_value.rules.append(debuff)
+    u.unbinding_value.rules.append(debuff)
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Ogroid Traumaturge', [
+        [Weapon('Traumaturge Staff', 2, 2, 3, 3, -1, 'D3', []),
+         Weapon('Great Horns', 1, 1, 3, 3, -2, 3, []),
+         Weapon('Cloven Hooves', 1, 4, 4, 3, 0, 1, [])],
+    ], 6, 5, 8, 8, 1, large_infantry_base, rules=[
+        Rule('Brutal Rage', brutal_rage),
+        CommentRule('Mighty Bulk', 'Impact D3'),
+        CommentRule('Overwhelming Power', 'Regeneration 1'),
+        Spell('Fireblast', 7, None),
+    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, HERO, WIZARD], cast=1, unbind=1))
+
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}

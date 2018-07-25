@@ -6,7 +6,7 @@ from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
     CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
-    SELF_NUMBERS, DID_MOVE, SELF_MOVE, ENEMY_BRAVERY)
+    SELF_NUMBERS, DID_MOVE, SELF_MOVE, ENEMY_BRAVERY, SELF_WOUNDS)
 from sigmar.basics.warscroll import formatted_scrolls
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import deal_x_mortal_wound_on_roll
