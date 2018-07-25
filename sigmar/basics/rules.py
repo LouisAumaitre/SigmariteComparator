@@ -37,5 +37,8 @@ class CommandAbility(Rule):
 
 
 class TodoRule(Rule):
+    def __init__(self, name):
+        Rule.__init__(self, name, None)
+
     def apply(self, item):
         print(f'Remember to do rule {self.name} for item {item.name}')

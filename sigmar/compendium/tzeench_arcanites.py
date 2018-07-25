@@ -1,6 +1,6 @@
 from sigmar.basics.base import monster_base, large_infantry_base, infantry_base
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule, Spell, CommandAbility
+from sigmar.basics.rules import Rule, Spell, CommandAbility, TodoRule
 from sigmar.basics.string_constants import UNBIND_RANGE
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells
@@ -54,18 +54,16 @@ def arcane_tome(u: Unit):
     u.casting_value = u.casting_value + OncePerGame('D6')
 
 
+sky_sharks = Rule('Sky-sharks', extra_damage_on_keyword(value('D3') - 1, MONSTER))
+
 TZEENTCH_WS.append(Warscroll(
     'Herald of Tzeentch on Burning Chariot', [
         [Weapon('Staff of Change', 2, 1, 4, 3, -1, 'D3', []),
          Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
-         Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [
-             Rule('Sky-sharks', extra_damage_on_keyword(value('D3') - 1, MONSTER))
-         ])],
+         Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [sky_sharks])],
         [Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
          Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
-         Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [
-             Rule('Sky-sharks', extra_damage_on_keyword(value('D3') - 1, MONSTER))
-         ])],
+         Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [sky_sharks])],
     ], 14, 5, 10, 8, 1, monster_base, rules=[
         Rule('Fly', fly),
         Rule('Arcane Tome', arcane_tome),
@@ -92,9 +90,9 @@ TZEENTCH_WS.append(Warscroll(
     'The Changeling', [
         [Weapon('The Trickster`s Staff', 2, 1, 4, 3, -1, 'D3', [])],
     ], 5, 5, 10, 5, 1, infantry_base, rules=[
-        Rule('Arch-Deceiver', lambda x: None),
-        Rule('Puckish Misdirection', lambda x: None),
-        Rule('Formless Horror', lambda x: None),
+        TodoRule('Arch-Deceiver'),
+        TodoRule('Puckish Misdirection'),
+        TodoRule('Formless Horror'),
         Rule('', copy_spells(9))
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1, named=True))
 
@@ -139,5 +137,15 @@ TZEENTCH_WS.append(Warscroll(
         Rule('Scrolls of Sorcery', scrolls_of_sorcery),
         Spell('Boon of Tzeentch', 4, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO], cast=1, unbind=1, named=True))
+
+
+TZEENTCH_WS.append(Warscroll(
+    'Screamers of Tzeentch', [
+        [Weapon('Lamprey Bite', 1, 3, 4, 3, 0, 1, [sky_sharks]),
+         Weapon('Slashing Fins', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll(1, Roll(6)))])],
+    ], 16, 5, 10, 3, 3, large_infantry_base, rules=[
+        Rule('Fly', fly),
+        TodoRule('Locus of Change'),
+    ], keywords=[CHAOS, DAEMON, TZEENTCH]))
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}
