@@ -7,12 +7,13 @@ from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_ste
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
-from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll
+from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded
 from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER
 
 TZEENTCH_WS = []
 
 HORROR = 'HORROR'
+FLAMER = 'FLAMER'
 
 
 def mastery_of_magic(u: Unit):
@@ -147,5 +148,34 @@ TZEENTCH_WS.append(Warscroll(
         Rule('Fly', fly),
         TodoRule('Locus of Change'),
     ], keywords=[CHAOS, DAEMON, TZEENTCH]))
+
+capricious_warpflame = Rule('Capricious Warpflame', d3_mw_on_4_if_wounded)
+
+TZEENTCH_WS.append(Warscroll(
+    'Burning Chariots of Tzeentch', [
+        [Weapon('Billowing Warpflame', 18, 6, 4, 3, 0, 'D3', [capricious_warpflame]),
+         Weapon('Flaming Maw', 2, 4, 5, 3, 0, 1, []),
+         Weapon('Blue Horrors` Jabs', 1, 3, 5, 5, 0, 1, []),
+         Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
+         Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [sky_sharks])],
+    ], 14, 5, 10, 6, 1, monster_base, rules=[
+        Rule('Fly', fly),
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, FLAMER]))
+
+TZEENTCH_WS.append(Warscroll(
+    'Exalted Flamers of Tzeentch', [
+        [Weapon('Billowing Warpflame', 18, 6, 4, 3, 0, 'D3', [capricious_warpflame]),
+         Weapon('Flaming Maw', 2, 4, 5, 3, 0, 1, [])],
+    ], 9, 5, 10, 4, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH]))
+
+TZEENTCH_WS.append(Warscroll(
+    'Flamers of Tzeentch', [
+        [Weapon('Billowing Warpflame', 18, 6, 4, 3, 0, 'D3', [capricious_warpflame]),
+         Weapon('Flaming Maw', 2, 4, 5, 3, 0, 1, [])],
+    ], 9, 5, 10, 4, 1, large_infantry_base, rules=[
+        Rule('Fly', fly),
+    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH]))
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}
