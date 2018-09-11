@@ -2,8 +2,8 @@ from typing import Union
 
 from sigmar.basics.roll import Roll
 from sigmar.basics.string_constants import (
-    ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT, EXTRA_HIT_ON_CRIT,
-    AUTO_WOUND_ON_CRIT,
+    ENEMY_WOUNDS, CHARGING, MW_ON_WOUND_CRIT,
+    AUTO_WOUND_ON_CRIT, EXTRA_HIT_ON_CRIT,
     EXTRA_ATTACK_ON_HIT, MW_IF_DAMAGE,
     EXTRA_DAMAGE_ON_CRIT_WOUND, CRIT_BONUS_REND,
     NUMBER_OF_HITS, ENEMY_KEYWORDS,

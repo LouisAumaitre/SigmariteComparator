@@ -369,11 +369,10 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
          Rule('Arcanite Shield', extra_save(6))],
     ], 6, 5, 5, 2, 5, infantry_base, rules=[
-        FLIGHT,
         TodoRule('Icon Bearers'),
         Rule('Brayhorn', run_and_charge),
         TodoRule('Anarchy and Mayhem'),
-    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH], max_size=30,
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH], max_size=20,
     special_options=[
         {
             'name': 'Twistbray', 'type': 'leader',
@@ -394,6 +393,74 @@ TZEENTCH_WS.append(Warscroll(
             'weapons': [
                 Weapon('Paired Savage Blades', 1, 3, 3, 4, 0, 1, [savagery_unleashed]),
                 Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])]
+        }
+    ]))
+
+sorcerous_bolt = Weapon('Sorcerous Bolt', 18, 1, 5, 4, 0, 1, [])  # range 12 without scroll of Dark Arts
+sorcerous_bolt_2 = Weapon('Sorcerous Bolt', 18, 2, 5, 4, 0, 1, [])  # range 12 without scroll of Dark Arts
+
+TZEENTCH_WS.append(Warscroll(
+    'Kairic Acolytes', [
+        [sorcerous_bolt, Weapon('Cursed Blade', 1, 1, 4, 4, 0, 1, [])],
+        [sorcerous_bolt, Weapon('Cursed Blade', 1, 1, 4, 4, 0, 1, []), Rule('Arcanite Shield', extra_save(6))],
+        [sorcerous_bolt, Weapon('Paired Cursed Blades', 1, 1, 3, 4, 0, 1, [])],
+    ], 6, 6, 5, 1, 10, infantry_base, rules=[
+        TodoRule('Scroll of Dark Arts'),
+        TodoRule('Vulcharc'),
+    ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH], max_size=30,
+    special_options=[
+        {
+            'name': 'Kairic Adept', 'type': 'leader',
+            'weapons': [sorcerous_bolt_2, Weapon('Cursed Blade', 1, 1, 4, 4, 0, 1, [])],
+        }, {
+            'name': 'Kairic Adept', 'type': 'leader',
+            'weapons': [sorcerous_bolt_2, Weapon('Cursed Blade', 1, 1, 4, 4, 0, 1, [])],
+            'rules': [Rule('Arcanite Shield', extra_save(6))],
+        }, {
+            'name': 'Kairic Adept', 'type': 'leader',
+            'weapons': [sorcerous_bolt_2, Weapon('Paired Cursed Blades', 1, 1, 3, 4, 0, 1, [])],
+        }, {
+            'type': 'special weapon',
+            'weapons': [sorcerous_bolt, Weapon('Double-handed Cursed Glaive', 1, 1, 4, 4, -1, 1, [])],
+        }
+    ]))
+
+TZEENTCH_WS.append(Warscroll(
+    'Tzaangor Enlightened', [
+        [Weapon('Tzeentchian Spear', 2, 2, 4, 3, -1, 2, []),
+         Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])],
+    ], 6, 5, 6, 3, 3, infantry_base, rules=[
+        CommentRule('Babbling Stream of Secrets', FEAR),
+        TodoRule('Guided by the Past'),
+        TodoRule('Perpetual Enhancement'),
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH], max_size=9,
+    special_options=[
+        {
+            'name': 'Aviarch', 'type': 'leader',
+            'weapons': [
+                Weapon('Tzeentchian Spear', 2, 3, 4, 3, -1, 2, []),
+                Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])],
+        }
+    ]))
+
+TZEENTCH_WS.append(Warscroll(
+    'Tzaangor Enlightened on Discs of Tzeentch', [
+        [Weapon('Tzeentchian Spear', 2, 2, 4, 3, -1, 2, []),
+         Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
+         Weapon('Disc of Tzeentch`s Teeths and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+    ], 16, 5, 6, 4, 3, infantry_base, rules=[
+        FLIGHT,
+        CommentRule('Babbling Stream of Secrets', FEAR),
+        TodoRule('Guided by the Past'),
+        TodoRule('Perpetual Enhancement'),
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH, DAEMON], max_size=9,
+    special_options=[
+        {
+            'name': 'Aviarch', 'type': 'leader',
+            'weapons': [
+                Weapon('Tzeentchian Spear', 2, 3, 4, 3, -1, 2, []),
+                Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
+                Weapon('Disc of Tzeentch`s Teeths and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
         }
     ]))
 
