@@ -11,7 +11,7 @@ from sigmar.basics.string_constants import (
     ENEMY_SAVE,
     AUTO_WOUND_ON_CRIT, CRIT_BONUS_REND, TOWOUND_MOD_ON_CRIT_HIT, EXTRA_HIT_ON_CRIT, EXTRA_ATTACK_ON_HIT,
     EXTRA_WOUND_ON_CRIT, MW_ON_WOUND_CRIT, MW_ON_HIT_CRIT, MW_ON_DAMAGE, MW_IF_DAMAGE, EXTRA_DAMAGE_ON_CRIT_WOUND,
-    NUMBER_OF_HITS, MORTAL_WOUNDS, MORTAL_WOUNDS_PER_ATTACK)
+    NUMBER_OF_HITS, MORTAL_WOUNDS, MORTAL_WOUNDS_PER_ATTACK, STOP_ON_CRIT_HIT)
 
 
 class Weapon:
@@ -238,6 +238,14 @@ def compute_potential_hits(context, potential_attacks, tohit):
             'proba': hit['proba'] * proba,
         } for hit in potential_hits for (nb, proba) in hit['hits'].potential_values(context)
     ]
+    if context.get(STOP_ON_CRIT_HIT, False):
+        potential_hits = [
+            {
+                **hit,
+                'hits': hit['hits'] - hit['crit_hits'],
+                'crit_hits': 0,
+            } for hit in potential_hits
+        ]
     return potential_hits
 
 

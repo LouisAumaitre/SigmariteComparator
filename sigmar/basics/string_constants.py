@@ -33,6 +33,7 @@ MW_ON_HIT_CRIT = 'mortal wound on tohit crit'
 MW_ON_WOUND_CRIT = 'mortal wound on towound crit'
 NUMBER_OF_HITS = 'number of hits'
 TOWOUND_MOD_ON_CRIT_HIT = 'towound mod on crit hit'
+STOP_ON_CRIT_HIT = 'stop on crit hit'
 
 # rules generalization
 DEPLOYMENT = 'Deployment advantage'

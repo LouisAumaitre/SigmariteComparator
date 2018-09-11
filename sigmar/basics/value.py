@@ -232,7 +232,7 @@ def _value(defined_value: Union[str, int, Value]):
         return AllInRangeValue()
     if defined_value == 'move across':
         return MoveAcrossValue()
-    raise ValueError(f'{defined_value} is not recognised to define a value')
+    raise ValueError(f'{defined_value}({type(defined_value)}) is not recognised to define a value')
 
 
 class MonsterValue(Value):

@@ -10,7 +10,7 @@ from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import extra_damage_on_keyword, deal_x_mortal_wound_on_roll, d3_mw_on_4_if_wounded, \
-    impact_x_mortal_wound
+    impact_x_mortal_wound, deal_x_mortal_wound_crit_tohit
 from sigmar.compendium.generic_keywords import CHAOS, DAEMON, TZEENTCH, WIZARD, HERO, MONSTER, GOR, MORTAL, EVERCHOSEN
 
 TZEENTCH_WS = []
@@ -432,7 +432,7 @@ TZEENTCH_WS.append(Warscroll(
     ], 6, 5, 6, 3, 3, infantry_base, rules=[
         CommentRule('Babbling Stream of Secrets', FEAR),
         TodoRule('Guided by the Past'),
-        TodoRule('Perpetual Enhancement'),
+        TodoRule('Prepernatural Enhancement'),
     ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH], max_size=9,
     special_options=[
         {
@@ -447,12 +447,12 @@ TZEENTCH_WS.append(Warscroll(
     'Tzaangor Enlightened on Discs of Tzeentch', [
         [Weapon('Tzeentchian Spear', 2, 2, 4, 3, -1, 2, []),
          Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
-         Weapon('Disc of Tzeentch`s Teeths and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
-    ], 16, 5, 6, 4, 3, infantry_base, rules=[
+         Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+    ], 16, 5, 6, 4, 3, large_infantry_base, rules=[
         FLIGHT,
         CommentRule('Babbling Stream of Secrets', FEAR),
         TodoRule('Guided by the Past'),
-        TodoRule('Perpetual Enhancement'),
+        TodoRule('Prepernatural Enhancement'),
     ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH, DAEMON], max_size=9,
     special_options=[
         {
@@ -460,7 +460,32 @@ TZEENTCH_WS.append(Warscroll(
             'weapons': [
                 Weapon('Tzeentchian Spear', 2, 3, 4, 3, -1, 2, []),
                 Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
-                Weapon('Disc of Tzeentch`s Teeths and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+                Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+        }
+    ]))
+
+TZEENTCH_WS.append(Warscroll(
+    'Tzaangor Skyfires', [
+        [Weapon('Greatbow`s Arrow of Fate', 24, 1, 4, 3, -1, 'D3', [
+            Rule('Judgement from Afar', deal_x_mortal_wound_crit_tohit('D3'))]),
+         Weapon('Greatbow', 1, 2, 5, 5, 0, 1, []),
+         Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
+         Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
+    ], 16, 5, 6, 4, 3, large_infantry_base, rules=[
+        FLIGHT,
+        CommentRule('Babbling Stream of Secrets', FEAR),
+        TodoRule('Guided by the Future'),
+        TodoRule('Prepernatural Enhancement'),
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH, DAEMON], max_size=9,
+    special_options=[
+        {
+            'name': 'Aviarch', 'type': 'leader',
+            'weapons': [
+                Weapon('Greatbow`s Arrow of Fate', 24, 1, 3, 3, -1, 'D3', [
+                    Rule('Judgement from Afar', deal_x_mortal_wound_crit_tohit('D3'))]),
+                Weapon('Greatbow', 1, 2, 5, 5, 0, 1, []),
+                Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
+                Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
         }
     ]))
 
