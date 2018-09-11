@@ -2,11 +2,11 @@ import time
 
 from sigmar.basics.base import infantry_base
 from sigmar.basics.roll import Roll
-from sigmar.basics.rules import Rule
 from sigmar.basics.string_constants import (
-    CHARGING, ENEMY_BASE, ENEMY_NUMBERS, REND, ENEMY_KEYWORDS, RANGE,
+    CHARGING, ENEMY_BASE, ENEMY_NUMBERS, ENEMY_KEYWORDS, RANGE,
     ENEMY_SAVE, ENEMY_WOUNDS,
-    SELF_NUMBERS, DID_MOVE, SELF_MOVE, ENEMY_BRAVERY, SELF_WOUNDS)
+    SELF_NUMBERS, ENEMY_BRAVERY,
+)
 from sigmar.basics.warscroll import formatted_scrolls
 from sigmar.basics.weapon import Weapon
 from sigmar.basics.weapon_rules import deal_x_mortal_wound_on_roll
@@ -23,14 +23,17 @@ context = {
     ENEMY_WOUNDS: 1,
     ENEMY_BRAVERY: 7,
     # DID_MOVE: False,
+    SELF_NUMBERS: 30,
     ENEMY_KEYWORDS: [],
     RANGE: 0.1,
     ENEMY_SAVE: test_armour,
 }
 
 start = time.time()
-formatted_scrolls(warscrolls, context, front_size=145, max_variants=3)
+formatted_scrolls(warscrolls, context, front_size=145, max_variants=5)
 print(f't={time.time() - start}s')
+# for ws in warscrolls:
+#     ws.simplest_stats(context, max_variants=5)
 
 # for k, u in seraphons_by_name['Kroxigors'].units.items():
 #     for w in u.weapons:

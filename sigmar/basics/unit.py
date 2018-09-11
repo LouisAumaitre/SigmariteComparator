@@ -27,6 +27,7 @@ class Unit:
             cast=0,
             unbind=0,
             named=False,
+            max_size=None,
     ):
         self.name = name
         self.weapons = weapons
@@ -37,6 +38,9 @@ class Unit:
         self.wounds = wounds
         self.min_size = min_size
         self.size = min_size
+        self.max_size = max_size
+        if self.max_size is None:
+            self.max_size = min_size if 'MONSTER' in keywords or 'HERO' in keywords else min_size
         self.base = base
         self.keywords = keywords
         keywords.append(self.name.upper())
@@ -44,6 +48,7 @@ class Unit:
         self.can_fly = False
         self.run_distance = value('D6')
         self.charge_range = value('2D6')
+        self.can_run_and_charge = False
         self.special_users = []
         self.casting_value = value('2D6')
         self.unbinding_value = value('2D6')
@@ -59,7 +64,7 @@ class Unit:
         for r in self.rules:
             r.apply(self)
 
-    def formation(self, data: dict, front_size):
+    def formation(self, data: dict, front_size) -> List[int]:
         nb = data.get(SELF_NUMBERS, self.size)
         data[SELF_NUMBERS] = nb
         rows = []
@@ -69,7 +74,7 @@ class Unit:
             nb -= row
         return rows
 
-    def describe_formation(self, data: dict, front_size):
+    def describe_formation(self, data: dict, front_size) -> str:
         rows = self.formation(data, front_size)
         if len(rows) == 1 and rows[0] <= 1:
             return ''
@@ -91,6 +96,7 @@ class Unit:
         unit_data[SELF_BASE] = self.base
         unit_data[SELF_MOVE] = self.move.average(data)
         _range = data.get(RANGE, 0)
+        data[RANGE] = _range
         for row in self.formation(unit_data, front_size):
             # specials
             specials = 0
@@ -100,12 +106,12 @@ class Unit:
                     specials += sp_usr.size
 
             users = row - specials
-            if users < 20:
+            if users <= 5:
                 total += sum([w.average_damage(copy(unit_data), users=users) for w in self.weapons])
             else:  # let's avoid taking years to compute
                 total += users * sum([w.average_damage(copy(unit_data)) for w in self.weapons])
-            _range += self.base.depth / INCH
-
+            data[RANGE] += self.base.depth / INCH
+        data[RANGE] = _range
         return total
 
     def average_health(self, context: dict):
@@ -122,6 +128,8 @@ class Unit:
         average_move = self.move.average(context)
         average_sprint = self.run_distance.average(context) + average_move
         average_charge = self.charge_range.average(context) + average_move
+        if self.can_run_and_charge:
+            average_charge += self.run_distance.average(context)
         return average_move, average_sprint, average_charge
 
     def speed_grade(self, context: dict):

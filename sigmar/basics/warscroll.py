@@ -146,7 +146,7 @@ class Warscroll:
                     print('...')
                 break
             unit_context = copy(context)
-            numbers = context.get(SELF_NUMBERS, v.size)
+            numbers = max(min(context.get(SELF_NUMBERS, v.size), v.max_size), v.min_size)
             unit_context[SELF_NUMBERS] = numbers
             health = unit_context.get(SELF_WOUNDS, v.wounds)
             health = f' ({health}/{v.wounds})' if health != v.wounds else ''

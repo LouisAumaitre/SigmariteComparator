@@ -1,6 +1,7 @@
 from typing import Union
 
 from sigmar.basics.roll import Roll
+from sigmar.basics.rules import Rule
 from sigmar.basics.unit import Unit
 from sigmar.basics.value import value, Value
 
@@ -47,6 +48,9 @@ def fly(u: Unit):
     u.can_fly = True
 
 
+FLIGHT = Rule('Fly', fly)
+
+
 def reroll_1_save(u: Unit):
     u.save.rerolls = 1
 
@@ -66,3 +70,7 @@ def march_double(u: Unit):
 
 def charge_at_3d6(u: Unit):
     u.charge_range = value('3D6')
+
+
+def run_and_charge(u: Unit):
+    u.can_run_and_charge = True

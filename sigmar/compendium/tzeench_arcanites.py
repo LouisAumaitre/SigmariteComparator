@@ -5,7 +5,7 @@ from sigmar.basics.string_constants import UNBIND_RANGE, DEPLOYMENT, SELF_NUMBER
     SELF_WOUNDS
 from sigmar.basics.unit import Unit
 from sigmar.basics.unit_rules import fly, can_reroll_x_dice_during_game, can_steal_spells, copy_spells, extra_save, \
-    regeneration
+    regeneration, run_and_charge, FLIGHT
 from sigmar.basics.value import value, RandomValue, OncePerGame
 from sigmar.basics.warscroll import Warscroll
 from sigmar.basics.weapon import Weapon
@@ -35,7 +35,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Baleful Sword', 1, 2, 4, 2, -2, 3, []),
          Weapon('Curved Beak and Wicked Talons', 1, 4, 4, 3, -1, 2, [])],
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Mastery of Magic', mastery_of_magic),
         Rule('Spell-thief', can_steal_spells(UNBIND_RANGE, RandomValue({1: 5/9, 0: 4/9}), 2)),
         CommandAbility('Beacon of Sorcery', None),
@@ -48,7 +48,7 @@ TZEENTCH_WS.append(Warscroll(
         [Weapon('Staff of Tomorrow', 3, 2, 4, {11: 2, 5: 3, 0: 4}, -1, 2, []),
          Weapon('Beaks and Talons', 1, 5, 4, 3, -1, 2, [])],
     ], {11: 10, 8: 9, 5: 8, 2: 7, 0: 6}, 4, 10, 14, 1, monster_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Mastery of Magic', mastery_of_magic),
         Rule('Oracle of Eternity', can_reroll_x_dice_during_game(1)),
         Spell('Gift of Change', 8, None),
@@ -70,7 +70,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
          Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [sky_sharks])],
     ], 14, 5, 10, 8, 1, monster_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Arcane Tome', arcane_tome),
         Spell('Tzeentch`s Firestorm', 9, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO, 'HERALD ON CHARIOT'], cast=1, unbind=1))
@@ -85,7 +85,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
          Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
     ], 16, 5, 10, 5, 1, large_infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Arcane Tome', arcane_tome),
         Spell('Blue Fire of Tzeentch', 4, None),
     ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, WIZARD, HERO, 'HERALD ON DISC'], cast=1, unbind=1))
@@ -137,7 +137,7 @@ TZEENTCH_WS.append(Warscroll(
         [Weapon('Sharpened Quills', 1, 2, 5, 5, 0, 1, []),
          Weapon('Disc`s Many-fanged Mouths', 1, 'D3', 4, 4, 0, 1, [])],
     ], 16, 5, 10, 5, 1, large_infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Frantic Scribbling', can_steal_spells(18, RandomValue({1: 0.5, 0: 0.5}), 3)),  # tries illimited?
         Rule('Scrolls of Sorcery', scrolls_of_sorcery),
         Spell('Boon of Tzeentch', 4, None),
@@ -149,9 +149,9 @@ TZEENTCH_WS.append(Warscroll(
         [Weapon('Lamprey Bite', 1, 3, 4, 3, 0, 1, [sky_sharks]),
          Weapon('Slashing Fins', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll(1, Roll(6)))])],
     ], 16, 5, 10, 3, 3, large_infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         TodoRule('Locus of Change'),
-    ], keywords=[CHAOS, DAEMON, TZEENTCH, 'SCREAMERS']))
+    ], keywords=[CHAOS, DAEMON, TZEENTCH, 'SCREAMERS'], max_size=9))
 
 capricious_warpflame = Rule('Capricious Warpflame', d3_mw_on_4_if_wounded)
 
@@ -163,25 +163,25 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Wake of Fire', 'move across', 1, 7, 7, 0, 0, [Rule('', deal_x_mortal_wound_on_roll('D3', Roll(4)))]),
          Weapon('Screamer`s Lamprey Bites', 1, 6, 4, 3, 0, 1, [sky_sharks])],
     ], 14, 5, 10, 6, 1, monster_base, rules=[
-        Rule('Fly', fly),
-    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, FLAMER]))
+        FLIGHT,
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, FLAMER], max_size=3))
 
 TZEENTCH_WS.append(Warscroll(
     'Exalted Flamers of Tzeentch', [
         [Weapon('Billowing Warpflame', 18, 6, 4, 3, 0, 'D3', [capricious_warpflame]),
          Weapon('Flaming Maw', 2, 4, 5, 3, 0, 1, [])],
     ], 9, 5, 10, 4, 1, large_infantry_base, rules=[
-        Rule('Fly', fly),
-    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH]))
+        FLIGHT,
+    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH], max_size=3))
 
 TZEENTCH_WS.append(Warscroll(
     'Flamers of Tzeentch', [
         [Weapon('Warpflame', 18, 3, 4, 3, 0, 'D3', [capricious_warpflame]),
          Weapon('Flaming Maw', 1, 2, 5, 3, 0, 1, [])],
     ], 9, 5, 10, 2, 3, infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         TodoRule('Locus of Transmogrification'),
-    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH],
+    ], keywords=[CHAOS, DAEMON, FLAMER, TZEENTCH], max_size=9,
     special_options=[
         {'name': 'Pyrocaster', 'weapons': [
             Weapon('Warpflame', 18, 4, 4, 3, 0, 'D3', [capricious_warpflame]),
@@ -211,7 +211,7 @@ TZEENTCH_WS.append(Warscroll(
         Rule('Icon Bearer', deamon_icon_bearer),
         CommentRule('Hornblower', FEAR),
         TodoRule('Locus of Conjuration'),
-    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'PINK HORRORS'],
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'PINK HORRORS'], max_size=40,
     special_options=[
         {'name': 'Iridescent Horror', 'weapons': [
             Weapon('Magical Flames', 18, 1, 4, 4, 0, 1, [Rule('Flickering Flames', flickering_flames)]),
@@ -225,7 +225,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Taloned Hands', 1, 1, 5, 5, 0, 1, [])],
     ], 5, 6, 10, 1, 10, infantry_base, rules=[
         TodoRule('Split'),
-    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BLUE HORRORS']))
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BLUE HORRORS'], max_size=40))
 
 
 TZEENTCH_WS.append(Warscroll(
@@ -234,7 +234,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Taloned Hands', 1, 2, 5, 6, 0, 1, [])],
     ], 5, 7, 10, 1, 10, infantry_base, rules=[
         TodoRule('Split Again'),
-    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BRIMSTONE HORRORS']))
+    ], keywords=[CHAOS, DAEMON, HORROR, TZEENTCH, 'BRIMSTONE HORRORS'], max_size=40))
 
 
 def sorcerous_elixir(u: Unit):
@@ -248,7 +248,7 @@ TZEENTCH_WS.append(Warscroll(
          Weapon('Ritual Dagger', 1, 2, 4, 4, 0, 1, []),
          Weapon('Disc of Tzeentch`s Teeth and Horns', 1, 'D3', 4, 3, -1, 'D3', [])],
     ], 16, 5, 6, 6, 1, large_infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Sorcerous Elixir', sorcerous_elixir),
         Spell('Boon of Mutation', 7, None),
     ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH, WIZARD, HERO], cast=1, unbind=1))
@@ -316,7 +316,7 @@ TZEENTCH_WS.append(Warscroll(
         [Weapon('Fireglaive of Tzeentch', 2, 3, 3, 4, 0, 'D3', []),
          Weapon('Disc of Tzeentch`s Protuding Blades', 1, 'D3', 4, 4, 0, 1, [])],
     ], 16, 4, 8, 6, 1, large_infantry_base, rules=[
-        Rule('Fly', fly),
+        FLIGHT,
         Rule('Soulbound Shield', extra_save(4)),
         CommentRule('Hovering Disc of Tzeentch', '+2 save against non flyers'),
         CommandAbility('Lord of Fate', None),
@@ -350,6 +350,52 @@ TZEENTCH_WS.append(Warscroll(
         Rule('Overwhelming Power', regeneration(1)),
         Spell('Fireblast', 7, None),
     ], keywords=[CHAOS, MORTAL, ARCANITE, TZEENTCH, HERO, WIZARD], cast=1, unbind=1))
+
+
+def savagery_unleashed_func(w: Weapon):
+    def buff(data):
+        nb = data.get(SELF_NUMBERS)
+        return min(3, nb // 9)
+    w.attacks.rules.append(buff)
+
+
+savagery_unleashed = Rule('Savagery Unleashed', savagery_unleashed_func)
+
+TZEENTCH_WS.append(Warscroll(
+    'Tzaangors', [
+        [Weapon('Paired Savage Blades', 1, 2, 3, 4, 0, 1, [savagery_unleashed]),
+         Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])],
+        [Weapon('Savage Blade', 1, 2, 4, 4, 0, 1, [savagery_unleashed]),
+         Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, []),
+         Rule('Arcanite Shield', extra_save(6))],
+    ], 6, 5, 5, 2, 5, infantry_base, rules=[
+        FLIGHT,
+        TodoRule('Icon Bearers'),
+        Rule('Brayhorn', run_and_charge),
+        TodoRule('Anarchy and Mayhem'),
+    ], keywords=[CHAOS, GOR, ARCANITE, TZEENTCH], max_size=30,
+    special_options=[
+        {
+            'name': 'Twistbray', 'type': 'leader',
+            'weapons': [
+                Weapon('Paired Savage Blades', 1, 2, 2, 4, 0, 1, [savagery_unleashed]),
+                Weapon('Vicious Beak', 1, 1, 3, 5, 0, 1, [])]
+        }, {
+            'name': 'Twistbray', 'type': 'leader', 'rules': [Rule('Arcanite Shield', extra_save(6))],
+            'weapons': [
+                Weapon('Savage Blade', 1, 2, 3, 4, 0, 1, [savagery_unleashed]),
+                Weapon('Vicious Beak', 1, 1, 3, 5, 0, 1, [])]
+        }, {
+            'type': 'special weapon', 'weapons': [
+                Weapon('Savage Greatblade', 1, 1, 4, 4, -1, 2, [savagery_unleashed]),
+                Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])]
+        }, {
+            'name': 'Mutant', 'type': 'mutant',
+            'weapons': [
+                Weapon('Paired Savage Blades', 1, 3, 3, 4, 0, 1, [savagery_unleashed]),
+                Weapon('Vicious Beak', 1, 1, 4, 5, 0, 1, [])]
+        }
+    ]))
 
 
 tzeentchites_by_name = {unit.name: unit for unit in TZEENTCH_WS}
