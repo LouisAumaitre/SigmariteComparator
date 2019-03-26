@@ -1,6 +1,7 @@
 language: python
 python:
   - "3.6"
+install:
+  - docker build --file Dockerfile -t test_sigmarite
 script:
-  - pytest
-  - make clean
+  - docker run test_sigmarite pytest
