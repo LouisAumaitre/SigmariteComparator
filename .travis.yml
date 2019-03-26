@@ -4,6 +4,6 @@ python:
 install:
   - pwd
   - ls
-  - docker build -t test_sigmarite docker
+  - docker build -t test_sigmarite .
 script:
   - docker run test_sigmarite pytest
