@@ -2,6 +2,8 @@ language: python
 python:
   - "3.6"
 install:
+  - pwd
+  - ls
   - docker build -t test_sigmarite docker
 script:
   - docker run test_sigmarite pytest
