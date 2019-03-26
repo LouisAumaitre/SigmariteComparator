@@ -10,6 +10,5 @@ COPY requirements.txt /library
 RUN pip3 install --no-cache-dir -r requirements.txt
 
 COPY . /library
-RUN pip3 install -e .
 
 CMD sleep infinity
